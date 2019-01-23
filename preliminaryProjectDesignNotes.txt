@@ -1,0 +1,40 @@
+- Allow business to keep track of people visiting their store
+- Allow push notifications to users
+- Start with small business testing (beta)
+- 3 major functions:
+	- dashboards (on business side, can be app or browser), login on computer to see stats on customers
+	- app (customer), rewards based on frequency
+	- hotspot area, shopping closer to home adds rewards
+- push notifications on deals to customers in proximity of the store
+- tier 1, 2, 3, higher number = more notifications and better incentives
+- businesess should not hand over personal info, just allow pushing notifications to customers
+- client app, log in running in background
+- bluetooth or location services
+	- bluetooth has higher battery drain
+	- location services are inaccurate and spoofable
+- make sure whole project is scaleable 
+- open source POS as example businesess dashboards side
+	- if inegrateable with POS system, can combine all stats with sales of customers
+
+- core functionality
+	- generic logon
+	- business dashboards (web or app)
+		- create promotions
+		- user statistics (time, frequency)
+			- customers coming in and out of store
+			- stats on tier
+			- views (clicks) on promotions from customer dashboards
+	- customer dashboards
+		- tiers for customers
+		- see all promotions from companies that customer have connected to
+		- see map of companies customer connected to
+		- send push notifications when customer enters vincinity of stores telling them to turn on bluetooth
+	- track customers in stores (time duration, frequency of visits)
+	- data base
+- additional functionality
+	- friends list
+	- stats on demmographics (based on personal information, given to reach "gold tier")
+	- accurate customer pathing trackinng in the store
+	- integration with POS system
+	- adds on customer dashboards
+	- company rating system
