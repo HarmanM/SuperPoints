@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +26,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 
+import q.john.superpointsv001.R;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener {
@@ -38,8 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private float defaultZoom = 10.0f;
     private int locationRequestInterval = 15; //in seconds, how often maps will update
-    int MY_PERMISSION_ACCESS_COARSE_LOCATION=100; //???? why is it a random int
-
+    int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int
 
 
     @Override
@@ -50,7 +50,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         //API client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -65,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        Button apartmentBtn = new Button(this);
     }
 
     @Override
@@ -100,9 +98,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        //LatLng vancouver = new LatLng(49.2827, -123.1207);
-        //mMap.addMarker(new MarkerOptions().position(vancouver).title("Marker in Vancouver"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(vancouver, defaultZoom));
+        /*LatLng vancouver = new LatLng(49.2827, -123.1207);
+        mMap.addMarker(new MarkerOptions().position(vancouver).title("Marker in Vancouver"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(vancouver, defaultZoom));*/
         //it should return to users current destination zoomed in, need to grab location
         //from onConnected and get lat/lang somehow
 
@@ -112,10 +110,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnected(@Nullable Bundle bundle) {
         //check permissions
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSION_ACCESS_COARSE_LOCATION);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_ACCESS_FINE_LOCATION);
         }
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null)
@@ -169,24 +167,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.i(TAG, "---------------------------------------Location has been changed-----------");
         handleNewLocation(location);
     }
 
     public boolean onMarkerClick(final Marker marker) {
-        /*Loop through db pull coords creates markers for coords
-        if (marker.equals(myMarker))
-        {
-            //handle click here
-        }*/
-        //Intent i = new Intent(MapsActivity.this, ApartmentActivity.class)
-        //i.putExtra("XCoord", 20);
-        //start(intent);
-
+        //Loop through db pull coords creates markers for coords
+//        if (marker.equals(myMarker))
+//        {
+        //Intent i = new Intent(this, ApartmentActivity.class);
+        //startActivity(i);
+//        }
         return true;
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-        //?? was part of implementation for marker
     }
 }
