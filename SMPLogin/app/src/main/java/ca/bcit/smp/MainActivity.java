@@ -25,12 +25,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void login(View view){
+    public void login(View view) {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
-        new SigninActivity(this,status,role,0).execute(username,password);
-        Intent i = new Intent(MainActivity.this, TestActivity.class);
-        startActivity(i);
-
+        new SigninActivity(this, status, role, 0).execute(username, password);
     }
 }
