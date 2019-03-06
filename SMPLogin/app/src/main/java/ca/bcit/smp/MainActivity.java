@@ -1,5 +1,6 @@
 package ca.bcit.smp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         new SigninActivity(this,status,role,0).execute(username,password);
+        Intent i = new Intent(MainActivity.this, TestActivity.class);
+        startActivity(i);
 
     }
 }
