@@ -41,8 +41,7 @@ public class SigninActivity  extends AsyncTask{
             try{
                 String username = (String)arg0[0];
                 String password = (String)arg0[1];
-                String link = "http://192.168.1.138/connect.php?username=" + username + "&password=" + password;
-                //String link = "http://myphpmysqlweb.hostei.com/login.php?username="+username+"& password="+password;
+                String link = "http://192.168.1.102/connect.php?username=" + username + "&password=" + password;
 
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
@@ -106,7 +105,14 @@ public class SigninActivity  extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object obj){
-        this.statusField.setText("Login Successful");
-        this.roleField.setText((String) obj);
+        String strObject = (String) obj;
+        if (!strObject.isEmpty()) {
+            this.statusField.setText("Login Successful");
+            String[] arr = strObject.split(" ");
+            this.roleField.setText("User ID : " + arr[0] + " Business ID: " + arr[1]);
+        } else {
+            this.statusField.setText("Login Failed");
+            this.roleField.setText("Check credentials");
+        }
     }
 }

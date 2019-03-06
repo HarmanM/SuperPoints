@@ -11,10 +11,8 @@
         echo "Failed to connect to database: " . mysqli_connect_error();
     }
 
-    //$username = $_POST['username'];
-    //$password = $_POST['password'];
-    $username = "default";
-    $password = "password";
+    $username = $_GET['username'];
+    $password = $_GET['password'];
     $result = mysqli_query($con,"SELECT * FROM superpoints.Users where 
     userName='$username' and password='$password'", MYSQLI_STORE_RESULT);
     echo $result ? 'true' : 'false';
