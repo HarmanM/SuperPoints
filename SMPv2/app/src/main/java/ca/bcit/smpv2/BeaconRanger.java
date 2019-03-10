@@ -72,24 +72,12 @@ public class BeaconRanger implements BeaconConsumer {
                 for(Beacon beacon : beacons)
                     if(beacon.getIdentifier(0).toString().compareToIgnoreCase(region.getUniqueId()) == 0) {
                         //beacon.setRunningAverageRssi(beacon.getRssi());
-                        Toast.makeText(context, beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
+                        /*Toast.makeText(context, beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
                                 + "\n" + beacon.getTxPower()
                                 + "\n" + beacon.getRssi()
-                                + "\n" + beacon.getDistance(), Toast.LENGTH_LONG).show();
-                        /*((TextView) findViewById(R.id.test2)).setText(
-                                beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
-                                        + "\n" + beacon.getTxPower()
-                                        + "\n" + beacon.getRssi()
-                                        + "\n" + beacon.getDistance());*/
+                                + "\n" + beacon.getDistance(), Toast.LENGTH_LONG).show();*/
                         foundB = true;
                     }
-                /*if(!foundB)
-                    ((TextView) findViewById(R.id.test2)).setText("IT FAILED ;(");
-                if (beacons.size() > 0) {
-                    Log.i(TAG, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
-                    ((TextView) findViewById(R.id.test2)).setText(beacons.size() + "\n" + beacons.iterator().next().getIdentifier(0) + "\n" + String.valueOf(beacons.iterator().next().getDistance()) + "\n" + region.getUniqueId());
-                } else
-                    ((TextView) findViewById(R.id.test2)).setText("IT FAILED ;(");*/
             }
         });
 

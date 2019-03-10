@@ -133,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return;
             }
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
