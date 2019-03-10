@@ -2,12 +2,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/cityEditText"
+        android:id="@+id/emailEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -19,8 +20,8 @@
         android:inputType="textWebEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cityTextView"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameTextView" />
+        app:layout_constraintStart_toEndOf="@+id/emailTextView"
+        app:layout_constraintTop_toBottomOf="@+id/signupTextView" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -37,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/passwordTextView"
-        app:layout_constraintTop_toBottomOf="@+id/cityEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
     <Button
         android:id="@+id/submitButton"
@@ -56,19 +57,22 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
     <TextView
-        android:id="@+id/cityTextView"
+        android:id="@+id/emailTextView"
         android:layout_width="67sp"
         android:layout_height="31sp"
-        android:layout_alignLeft="@+id/cityEditText"
+        android:layout_alignLeft="@+id/emailEditText"
         android:layout_alignParentLeft="false"
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="false"
-        android:layout_marginStart="32sp"
-        android:layout_marginTop="340sp"
-        android:text="Email:"
-        app:layout_constraintEnd_toStartOf="@+id/cityEditText"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="107dp"
+        android:layout_marginEnd="16dp"
+        android:text="Email"
+        app:layout_constraintBottom_toTopOf="@+id/passwordTextView"
+        app:layout_constraintEnd_toStartOf="@+id/emailEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/logoImageView"
+        app:layout_constraintVertical_bias="0.138" />
 
     <TextView
         android:id="@+id/passwordTextView"
@@ -87,14 +91,15 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="22sp"
         android:layout_marginEnd="332sp"
-        android:layout_marginBottom="224sp"
+        android:layout_marginBottom="168dp"
         android:layout_toLeftOf="@+id/passwordEditText"
         android:hapticFeedbackEnabled="false"
         android:text="Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.281"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
     <ImageView
         android:id="@+id/logoImageView"
@@ -106,7 +111,7 @@
         android:layout_marginTop="32sp"
         android:layout_marginEnd="73sp"
         android:layout_marginBottom="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileNameTextView"
+        app:layout_constraintBottom_toTopOf="@+id/signupTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,15 +121,18 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/profileNameTextView"
+        android:id="@+id/signupTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="163sp"
-        android:layout_marginTop="16sp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="145sp"
         android:layout_marginBottom="28sp"
-        android:text="SuperPoints"
-        app:layout_constraintBottom_toTopOf="@+id/cityEditText"
+        android:text="Log In"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/emailEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

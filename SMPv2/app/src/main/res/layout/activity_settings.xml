@@ -73,7 +73,7 @@
         android:id="@+id/passwordTextView"
         android:layout_width="68dp"
         android:layout_height="34dp"
-        android:layout_alignTop="@+id/cityEditText"
+        android:layout_alignTop="@+id/emailEditText"
         android:layout_marginStart="30dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="33dp"

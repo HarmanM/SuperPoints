@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
-        Intent i = new Intent(getBaseContext(), SettingsActivity.class);
+        Intent i = new Intent(getBaseContext(), LandingActivity.class);
         startActivity(i);
 
 
