@@ -18,7 +18,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
-public class SigninActivity  extends AsyncTask{
+public class    SigninActivity  extends AsyncTask{
 
     private TextView statusField,roleField;
 
