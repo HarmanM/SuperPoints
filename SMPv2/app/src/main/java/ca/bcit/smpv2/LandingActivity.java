@@ -11,7 +11,7 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        Intent i = new Intent(getBaseContext(), ProfileActivity.class);
+        Intent i = new Intent(getBaseContext(), MainActivity.class);
         startActivity(i);
     }
 
