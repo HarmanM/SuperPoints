@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             String strObject = (String) obj;
             if (!strObject.isEmpty()) {
                 //TODO: send intent to proper activity
-                Intent i = new Intent(context, LoginActivity.class);
+                Intent i = new Intent(context, MapsActivity.class);
                 i.putExtra("username", username);
                 context.startActivity(i);
             } else {
