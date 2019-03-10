@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/usernameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -17,10 +17,10 @@
         android:layout_marginEnd="87sp"
         android:layout_marginBottom="20sp"
         android:ems="10"
-        android:inputType="textWebEmailAddress"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/emailTextView"
+        app:layout_constraintStart_toEndOf="@+id/usernameTextView"
         app:layout_constraintTop_toBottomOf="@+id/signupTextView" />
 
     <EditText
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/passwordTextView"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
 
     <Button
         android:id="@+id/submitButton"
@@ -57,19 +57,19 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/usernameTextView"
         android:layout_width="67sp"
         android:layout_height="31sp"
-        android:layout_alignLeft="@+id/emailEditText"
+        android:layout_alignLeft="@+id/usernameEditText"
         android:layout_alignParentLeft="false"
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="false"
         android:layout_marginStart="35dp"
         android:layout_marginTop="107dp"
         android:layout_marginEnd="16dp"
-        android:text="Email"
+        android:text="Username"
         app:layout_constraintBottom_toTopOf="@+id/passwordTextView"
-        app:layout_constraintEnd_toStartOf="@+id/emailEditText"
+        app:layout_constraintEnd_toStartOf="@+id/usernameEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoImageView"
         app:layout_constraintVertical_bias="0.138" />
@@ -99,7 +99,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.281"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
     <ImageView
         android:id="@+id/logoImageView"
@@ -132,7 +132,7 @@
         android:textColor="#000000"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/emailEditText"
+        app:layout_constraintBottom_toTopOf="@+id/usernameEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

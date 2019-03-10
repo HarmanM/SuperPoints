@@ -24,7 +24,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginBottom="27dp"
         android:text="Address"
-        app:layout_constraintBottom_toTopOf="@+id/emailTextView"
+        app:layout_constraintBottom_toTopOf="@+id/usernameTextView"
         app:layout_constraintEnd_toStartOf="@+id/addressEditText"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/passwordTextView"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
 
     <ImageView
         android:id="@+id/logoImageView"
@@ -74,7 +74,7 @@
 
 
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/usernameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/confirmTextView"
@@ -88,7 +88,7 @@
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/emailTextView"
+        app:layout_constraintStart_toEndOf="@+id/usernameTextView"
         app:layout_constraintTop_toBottomOf="@+id/addressEditText" />
 
     <EditText
@@ -110,7 +110,7 @@
 
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/usernameTextView"
         android:layout_width="42dp"
         android:layout_height="29dp"
         android:layout_above="@+id/confirmEditText"
@@ -118,7 +118,7 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="36dp"
         android:text="City"
-        app:layout_constraintEnd_toStartOf="@+id/emailEditText"
+        app:layout_constraintEnd_toStartOf="@+id/usernameEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressTextView" />
 
@@ -126,7 +126,7 @@
         android:id="@+id/passwordTextView"
         android:layout_width="79dp"
         android:layout_height="41dp"
-        android:layout_alignTop="@+id/emailEditText"
+        android:layout_alignTop="@+id/usernameEditText"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="16dp"
         android:layout_toStartOf="@+id/logoImageView"
@@ -135,7 +135,7 @@
         app:layout_constraintEnd_toStartOf="@+id/passwordEditText"
         app:layout_constraintHorizontal_bias="0.791"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextView"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
@@ -183,7 +183,7 @@
         app:layout_constraintTop_toBottomOf="@+id/signupTextView" />
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
@@ -204,6 +204,6 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/emailTextView"
+        app:layout_constraintStart_toEndOf="@+id/usernameTextView"
         app:layout_constraintTop_toBottomOf="@+id/confirmEditText" />
 </android.support.constraint.ConstraintLayout>

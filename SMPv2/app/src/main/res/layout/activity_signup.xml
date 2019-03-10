@@ -84,7 +84,7 @@
         android:id="@+id/passwordTextView"
         android:layout_width="68dp"
         android:layout_height="34dp"
-        android:layout_alignTop="@+id/emailEditText"
+        android:layout_alignTop="@+id/usernameEditText"
         android:layout_marginTop="36dp"
         android:layout_toStartOf="@+id/logoImageView"
         android:text="Password"

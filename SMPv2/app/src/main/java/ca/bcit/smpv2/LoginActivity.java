@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameField = (EditText) findViewById(R.id.cityEditText);
+        usernameField = (EditText) findViewById(R.id.usernameEditText);
         passwordField = (EditText) findViewById(R.id.passwordEditText);
 
     }
