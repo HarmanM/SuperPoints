@@ -32,8 +32,8 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         usernameField = (EditText) findViewById(R.id.addressEditText);
-        passwordField = (EditText) findViewById(R.id.passwordEditText);
-        passwordConfirmField = (EditText) findViewById(R.id.confirmEditText);
+        passwordField = (EditText) findViewById(R.id.postalEditText);
+        passwordConfirmField = (EditText) findViewById(R.id.phoneEditText);
 
     }
 

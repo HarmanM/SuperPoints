@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -32,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameField = (EditText) findViewById(R.id.usernameEditText);
-        passwordField = (EditText) findViewById(R.id.passwordEditText);
+        usernameField = (EditText) findViewById(R.id.cityEditText);
+        passwordField = (EditText) findViewById(R.id.postalEditText);
 
     }
 
