@@ -59,13 +59,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:text="Status"
+        android:layout_marginBottom="60dp"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.664"
+        app:layout_constraintHorizontal_bias="0.273"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView6"
         android:layout_marginBottom="100dp"
-        android:text="Role"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"

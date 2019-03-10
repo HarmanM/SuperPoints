@@ -14,13 +14,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
 public class SigninActivity  extends AsyncTask{
+
     private TextView statusField,roleField;
+
     private Context context;
+
     private int byGetOrPost = 0;
+
+    private String username;
 
     //flag 0 means get and 1 means post.(By default it is get.)
     public SigninActivity(Context context,TextView statusField,TextView roleField,int flag) {
@@ -39,11 +45,10 @@ public class SigninActivity  extends AsyncTask{
         if(byGetOrPost == 0){ //means by Get Method
 
             try{
-                String username = (String)arg0[0];
+                username = (String)arg0[0];
                 String password = (String)arg0[1];
-                String link = "http://192.168.1.138/connect.php?username=" + username + "&password=" + password;
-                //String link = "http://myphpmysqlweb.hostei.com/login.php?username="+username+"& password="+password;
-
+                //String link = "http://142.232.148.173/connect.php?username=" + username + "&password=" + password;
+                String link = "http://142.232.154.199/scripts.php?function=login&username=" + username + "&password="+ password;
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -69,8 +74,8 @@ public class SigninActivity  extends AsyncTask{
             try{
                 String username = (String)arg0[0];
                 String password = (String)arg0[1];
-
-                String link="http://myphpmysqlweb.hostei.com/loginpost.php";
+                // TODO: Can add POST option instead of GET to call PHP
+                String link="";
                 String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                         URLEncoder.encode(username, "UTF-8");
                 data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
@@ -106,7 +111,14 @@ public class SigninActivity  extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object obj){
-        this.statusField.setText("Login Successful");
-        this.roleField.setText((String) obj);
+        String strObject = (String) obj;
+        if (!strObject.isEmpty()) {
+            Intent i = new Intent(context, TestActivity.class);
+            i.putExtra("username", username);
+            context.startActivity(i);
+        } else {
+            this.statusField.setText("Login Failed");
+            this.roleField.setText("Check credentials");
+        }
     }
 }
