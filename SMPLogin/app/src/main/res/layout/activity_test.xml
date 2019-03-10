@@ -8,12 +8,12 @@
 
     <TextView
         android:id="@+id/usrTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="476dp"
+        android:layout_width="78dp"
+        android:layout_height="19dp"
+        android:layout_marginBottom="488dp"
         android:text="test if user info was retained"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

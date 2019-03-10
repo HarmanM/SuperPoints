@@ -1,4 +1,4 @@
-package ca.bcit.smp;
+package ca.bcit.smpv2;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,10 +17,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class SigninActivity  extends AsyncTask{
-
-    private TextView statusField,roleField;
+public class SigninTask  extends AsyncTask{
 
     private Context context;
 
@@ -29,10 +28,8 @@ public class SigninActivity  extends AsyncTask{
     private String username;
 
     //flag 0 means get and 1 means post.(By default it is get.)
-    public SigninActivity(Context context,TextView statusField,TextView roleField,int flag) {
+    public SigninTask(Context context, int flag) {
         this.context = context;
-        this.statusField = statusField;
-        this.roleField = roleField;
         byGetOrPost = flag;
     }
 
@@ -48,7 +45,8 @@ public class SigninActivity  extends AsyncTask{
                 username = (String)arg0[0];
                 String password = (String)arg0[1];
                 //String link = "http://142.232.148.173/connect.php?username=" + username + "&password=" + password;
-                String link = "http://142.232.154.199/scripts.php?function=login&username=" + username + "&password="+ password;
+                String link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=login&username="
+                        + username + "&password="+ password;
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -113,12 +111,12 @@ public class SigninActivity  extends AsyncTask{
     protected void onPostExecute(Object obj){
         String strObject = (String) obj;
         if (!strObject.isEmpty()) {
-            Intent i = new Intent(context, TestActivity.class);
+            //TODO: send intent to proper activity
+            Intent i = new Intent(context, LoginActivity.class);
             i.putExtra("username", username);
             context.startActivity(i);
         } else {
-            this.statusField.setText("Login Failed");
-            this.roleField.setText("Check credentials");
+            Toast.makeText(context, "Please check your credentials", Toast.LENGTH_SHORT).show();
         }
     }
 }
