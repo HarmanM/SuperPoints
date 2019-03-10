@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.MapView;
 
@@ -60,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
-        Intent i = new Intent(getBaseContext(), SettingsActivity.class);
-        startActivity(i);
-
 
     }
+
 
     @Override
     public final void onResume() {
@@ -133,6 +133,21 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return;
             }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.dashboard:
+                Intent i = new Intent(getBaseContext(), DashboardActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.settings:
+
+                return true;
+            case R.id.profile:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

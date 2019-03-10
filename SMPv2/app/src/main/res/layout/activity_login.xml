@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
@@ -16,14 +17,14 @@
         android:layout_marginEnd="87sp"
         android:layout_marginBottom="20sp"
         android:ems="10"
-        android:inputType="textWebEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/postalEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cityTextView"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameTextView" />
+        app:layout_constraintStart_toEndOf="@+id/emailTextView"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/postalEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/submitButton"
@@ -53,29 +54,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/postalEditText" />
 
     <TextView
-        android:id="@+id/cityTextView"
+        android:id="@+id/emailTextView"
         android:layout_width="67sp"
         android:layout_height="31sp"
         android:layout_alignLeft="@+id/cityEditText"
         android:layout_alignParentLeft="false"
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="false"
-        android:layout_marginStart="32sp"
-        android:layout_marginTop="340sp"
-        android:text="Email:"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="107dp"
+        android:layout_marginEnd="16dp"
+        android:text="Username"
+        app:layout_constraintBottom_toTopOf="@+id/passwordTextView"
         app:layout_constraintEnd_toStartOf="@+id/cityEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/logoImageView"
+        app:layout_constraintVertical_bias="0.138" />
 
     <TextView
         android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_alignRight="@+id/passwordEditText"
+        android:layout_alignRight="@+id/postalEditText"
         android:layout_alignParentStart="false"
         android:layout_alignParentLeft="false"
         android:layout_alignParentTop="false"
@@ -87,14 +91,15 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="22sp"
         android:layout_marginEnd="332sp"
-        android:layout_marginBottom="224sp"
-        android:layout_toLeftOf="@+id/passwordEditText"
+        android:layout_marginBottom="168dp"
+        android:layout_toLeftOf="@+id/postalEditText"
         android:hapticFeedbackEnabled="false"
         android:text="Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.281"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
     <ImageView
         android:id="@+id/logoImageView"
@@ -106,7 +111,7 @@
         android:layout_marginTop="32sp"
         android:layout_marginEnd="73sp"
         android:layout_marginBottom="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileNameTextView"
+        app:layout_constraintBottom_toTopOf="@+id/nameTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,14 +121,17 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/profileNameTextView"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="163sp"
-        android:layout_marginTop="16sp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="145sp"
         android:layout_marginBottom="28sp"
-        android:text="SuperPoints"
+        android:text="Log In"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/cityEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
