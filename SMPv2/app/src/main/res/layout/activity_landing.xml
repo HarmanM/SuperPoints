@@ -47,7 +47,7 @@
         android:layout_marginStart="52dp"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/signupTextView"
+        app:layout_constraintBottom_toTopOf="@+id/nameTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/signupTextView"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="153dp"
