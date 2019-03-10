@@ -140,7 +140,7 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object obj) {
             String strObject = (String) obj;
-            if (!strObject.isEmpty()) {
+            if (strObject.equals("true")) {
                 //TODO: send intent to proper activity
                 Intent i = new Intent(context, LoginActivity.class);
                 i.putExtra("username", username);
