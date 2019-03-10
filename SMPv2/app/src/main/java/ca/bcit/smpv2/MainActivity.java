@@ -24,14 +24,10 @@ public class MainActivity extends AppCompatActivity {
     protected static final String TAG = "MainActivity";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
-    BeaconRanger br;
-
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mMapView = new MapView(this);
-
-        br = new BeaconRanger(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check
@@ -82,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     public final void onDestroy() {
         super.onDestroy();
         this.getMapView().onDestroy();
-        br.onDestroy();
     }
 
     @Override

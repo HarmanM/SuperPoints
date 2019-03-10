@@ -1,18 +1,10 @@
 package ca.bcit.smpv2;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.RemoteException;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
@@ -23,13 +15,14 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 
 public class BeaconRanger implements BeaconConsumer {
 
     protected static final String TAG = "MonitoringActivity";
     private BeaconManager beaconManager;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private final Context context;
 
     public BeaconRanger(Context c) {
@@ -68,16 +61,18 @@ public class BeaconRanger implements BeaconConsumer {
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                boolean foundB = false;
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                 for(Beacon beacon : beacons)
                     if(beacon.getIdentifier(0).toString().compareToIgnoreCase(region.getUniqueId()) == 0) {
                         //beacon.setRunningAverageRssi(beacon.getRssi());
-                        /*Toast.makeText(context, beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
+                        Toast.makeText(context, beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
+                                + "\n" + sdf.format(cal.getTime())
                                 + "\n" + beacon.getTxPower()
                                 + "\n" + beacon.getRssi()
-                                + "\n" + beacon.getDistance(), Toast.LENGTH_LONG).show();*/
-                        foundB = true;
+                                + "\n" + beacon.getDistance(), Toast.LENGTH_LONG).show();
                     }
+                Log.i(TAG, "~We connectected~   ");
             }
         });
 
@@ -85,12 +80,14 @@ public class BeaconRanger implements BeaconConsumer {
             @Override
             public void didEnterRegion(Region region) {
                 Log.i(TAG, "I just saw an beacon for the first time!");
+                Toast.makeText(context, "You have connect to [Store]", Toast.LENGTH_LONG).show();
                 //((TextView) findViewById(R.id.test)).setText(region.getUniqueId());
             }
 
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "I no longer see an beacon");
+                Toast.makeText(context, "You have left [Store]", Toast.LENGTH_LONG).show();
                 //((TextView) findViewById(R.id.test)).setText("Left");
             }
 

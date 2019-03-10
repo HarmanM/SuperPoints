@@ -59,11 +59,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int locationRequestInterval = 15; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int
 
+    BeaconRanger br;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        br = new BeaconRanger(this);
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -92,6 +95,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         this.showNotification("Test");
         this.showNotification("Test2");
+    }
+
+    @Override
+    public final void onDestroy() {
+        super.onDestroy();
+        br.onDestroy();
     }
 
     @Override
