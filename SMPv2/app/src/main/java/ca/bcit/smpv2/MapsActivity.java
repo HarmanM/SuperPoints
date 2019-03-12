@@ -36,6 +36,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
+
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
 
@@ -93,8 +96,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        this.showNotification("Test");
-        this.showNotification("Test2");
+        //TODO What oliver needs in this
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        showNotification("Test", "SuperPoints are up for grabs near you!", pendingIntent, this);
     }
 
     @Override
@@ -185,6 +192,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         handleNewLocation(location);
+        //TODO
+        /*ArrayList<Store> storesNearby = generateStoresNearby(location);
+        if(!storesNearUser.isEmpty())
+        {
+            Intent intent = new Intent(this, MapsActivity.class);
+            String message = "Notification message";
+
+            generateStoreMarkers(storesNearby);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+            showNotification(message, pendingIntent);
+        }
+        */
+        Log.i(TAG, "LOCATION CHANGED.");
     }
 
     public boolean onMarkerClick(final Marker marker) {
@@ -198,27 +220,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
-    private void showNotification(String message) {
+    static private void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
 
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MyChannel")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
                 .setSmallIcon(R.drawable.aptimg)
-                .setContentTitle(message)
-                .setContentText("A SuperPoints store is near you.")
+                .setContentTitle(title)
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) callingContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("MyChannel", name, importance);
+            CharSequence name = "Channel_Name";
+            //this code cannot be referred to in static context
+            //getString(R.string.channel_name);
+            //getString(R.string.channel_description);
+            //inconsequential maybe?
+            String description = "Channel_Description";
+            NotificationChannel channel = new NotificationChannel("MyChannel", name, IMPORTANCE_HIGH);
             channel.setDescription(description);
             channel.setLightColor(Color.RED);
             channel.enableVibration(true);
@@ -229,6 +250,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
+
     // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -238,6 +261,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    /*
+    public ArrayList<String> generateStoresNearby (Location location)
+    {
+        ArrayList<String> storesNearby = new ArrayList<String>();
+        //TODO assign database results into this? or similar container
+        ArrayList<String> databaseStores = new ArrayList<String>();
+        //TODO investigate what accuracy to use
+        double threshold = 0.00001;
 
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+
+        for(int i = 0; i < databaseStores.size(); i++)
+        {
+            if(currentLatitude < (databaseStores.get(i).latitude + threshold)
+                    && currentLatitude > (databaseStores.get(i).latitude - threshold)
+                    && currentLongitude <(databaseStores.get(i).longitude + threshold)
+                    && currentLongitude > (databaseStores.get(i).longitude - threshold))
+            {
+                storesNearby.add(databaseStores.get(i));
+            }
+        }
+        return storesNearby;
+    }
+    */
+
+    /*
+    public void generateStoreMarkers(ArrayList<String> storesNearby)
+    {
+        double storeLatitude;
+        double storeLongitude;
+        for(int i = 0; i < storesNearby.size(); i++)
+        {
+            Location location = storesNearby.get(i);
+            storeLatitude = location.getLatitude();
+            storeLongitude = location.getLongitude();
+            LatLng latLng = new LatLng(storeLatitude, storeLongitude);
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng);
+            mMap.addMarker(options);
+        }
+    }
+    */
 
 }
