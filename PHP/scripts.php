@@ -74,6 +74,28 @@
         mysqli_close($con);
     }
 
+    function incrementClick() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+    
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        $promoid = $_GET['pid'];
+        
+        // Get number of clicks before increment
+        $select = mysqli_query($con,"SELECT clicks FROM superpoints.Promotions
+            WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
+        $clickNo = mysqli_fetch_array($select);
+        // increment
+        $clicks = $clickNo[0] + 1;
+        
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = '$clicks' 
+            WHERE (`promotionID` = '$promoid');", MYSQLI_STORE_RESULT);
+        
+        echo $result ? 'true' : 'false';
+        mysqli_close($con);
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "login":
@@ -87,6 +109,9 @@
             break;
         case "addPromo":
             insertPromotions();
+            break;
+        case "promoClick":
+            incrementClick();
             break;
     }
     
