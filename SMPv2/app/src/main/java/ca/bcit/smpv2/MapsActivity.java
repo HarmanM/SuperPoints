@@ -221,7 +221,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
-    static private void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
+    static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
                 .setSmallIcon(R.drawable.aptimg)

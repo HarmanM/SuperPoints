@@ -1,10 +1,12 @@
 package ca.bcit.smpv2;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
@@ -16,14 +18,22 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 public class BeaconRanger implements BeaconConsumer {
 
     protected static final String TAG = "MonitoringActivity";
     private BeaconManager beaconManager;
     private final Context context;
+    private Visit visit;
+    public long q = 0;
+    public ArrayList<Boolean> connected = new ArrayList<>();
+    public ArrayList<Long> time = new ArrayList<>();
+    private boolean inStore = false;
 
     public BeaconRanger(Context c) {
         context = c;
@@ -61,18 +71,61 @@ public class BeaconRanger implements BeaconConsumer {
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                String s = "";
+                for(int i = 0; i < connected.size(); ++i)
+                    s += connected.get(i) + "~";
                 Calendar cal = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                for(Beacon beacon : beacons)
-                    if(beacon.getIdentifier(0).toString().compareToIgnoreCase(region.getUniqueId()) == 0) {
-                        //beacon.setRunningAverageRssi(beacon.getRssi());
-                        Toast.makeText(context, beacon.getIdentifier(1) + "~" + beacon.getIdentifier(2)
-                                + "\n" + sdf.format(cal.getTime())
-                                + "\n" + beacon.getTxPower()
-                                + "\n" + beacon.getRssi()
-                                + "\n" + beacon.getDistance(), Toast.LENGTH_LONG).show();
+                boolean foundB = false;
+                for(Beacon beacon : beacons) {
+                    if (beacon.getIdentifier(0).toString().compareToIgnoreCase(region.getUniqueId()) == 0) {
+                        foundB = true;
                     }
-                Log.i(TAG, "~We connectected~   ");
+                }
+
+                if(foundB){
+                    connected.add(true);
+                    time.add(System.currentTimeMillis());
+                }
+                else {
+                    connected.add(false);
+                    time.add(System.currentTimeMillis());
+                }
+
+                while(System.currentTimeMillis() - time.get(0) > 5000) {
+                    connected.remove(0);
+                    time.remove(0);
+                }
+                boolean wasInStore = inStore;
+                inStore = false;
+                for(int i = 0; i < connected.size(); ++i) {
+                    if (connected.get(i)) {
+                        inStore = true;
+                        q = connected.size();
+                        break;
+                    }
+                }
+                if(!wasInStore && inStore) {
+                    Toast.makeText(context, "Entered store [" + region.getUniqueId() + "}", Toast.LENGTH_LONG).show();
+                    visit = new Visit(0, 4968, Calendar.getInstance());
+                }
+                else if(wasInStore && !inStore) {
+                    Toast.makeText(context, "Exited store [" + region.getUniqueId() + "}", Toast.LENGTH_LONG).show();
+                    visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
+                    visit.setDuration(7548);
+                    Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
+                            + "\nBusiness: " + visit.getBusinessID()
+                            + "\nStart: " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(visit.getDate().getTime())
+                            + "\nDuration: "
+                                    + String.format("%02d", visit.getDuration() / 3600)
+                                    + ":" + String.format("%02d", visit.getDuration() % 3600 / 60)
+                                    + ":" + String.format("%02d", visit.getDuration() % 60),
+                            Toast.LENGTH_LONG).show();
+                    MapsActivity.showNotification("Store Visit",
+                            "You visited [" + region.getUniqueId() + "] for "
+                                + ":" + String.format("%02d", visit.getDuration() % 3600 / 60),
+                            PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
+                            context);
+                }
             }
         });
 
@@ -80,15 +133,13 @@ public class BeaconRanger implements BeaconConsumer {
             @Override
             public void didEnterRegion(Region region) {
                 Log.i(TAG, "I just saw an beacon for the first time!");
-                Toast.makeText(context, "You have connect to [Store]", Toast.LENGTH_LONG).show();
-                //((TextView) findViewById(R.id.test)).setText(region.getUniqueId());
+                //Toast.makeText(context, "You have connect to [Store]", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "I no longer see an beacon");
-                Toast.makeText(context, "You have left [Store]", Toast.LENGTH_LONG).show();
-                //((TextView) findViewById(R.id.test)).setText("Left");
+                //Toast.makeText(context, "You have left [Store]", Toast.LENGTH_LONG).show();
             }
 
             @Override

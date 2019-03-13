@@ -1,5 +1,6 @@
 package ca.bcit.smpv2;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Visit {
@@ -7,7 +8,13 @@ public class Visit {
     private int userID;
     private int businessID;
     private int duration;
-    private Date date;
+    private Calendar date;
+
+    public Visit(int userID, int businessID, Calendar date){
+        this.userID = userID;
+        this.businessID = businessID;
+        this.date = date;
+    }
 
     public int getVisitID() {
         return visitID;
@@ -41,11 +48,11 @@ public class Visit {
         this.duration = duration;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 }
