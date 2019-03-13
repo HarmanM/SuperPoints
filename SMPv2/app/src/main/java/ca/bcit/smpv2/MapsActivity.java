@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private float defaultZoom = 26.0f;
+    private float defaultZoom = 10.0f;
     private int locationRequestInterval = 15; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int
 
@@ -266,6 +266,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.home:
+                Intent h = new Intent(getBaseContext(), MapsActivity.class);
+                startActivity(h);
+                return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
                 startActivity(i);

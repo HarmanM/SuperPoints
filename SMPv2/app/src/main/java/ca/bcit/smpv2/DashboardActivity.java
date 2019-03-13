@@ -33,6 +33,10 @@ public class DashboardActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.home:
+                Intent h = new Intent(getBaseContext(), MapsActivity.class);
+                startActivity(h);
+                return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
                 startActivity(i);

@@ -131,23 +131,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.dashboard:
-                Intent i = new Intent(getBaseContext(), DashboardActivity.class);
-                startActivity(i);
-                return true;
-            case R.id.settings:
-                Intent k = new Intent(getBaseContext(), SettingsActivity.class);
-                startActivity(k);
-                return true;
-            case R.id.profile:
-                Intent j = new Intent(getBaseContext(), ProfileActivity.class);
-                startActivity(j);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
 }
