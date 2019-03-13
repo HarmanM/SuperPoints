@@ -97,12 +97,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        //TODO What oliver needs in this
         Intent intent = new Intent(this, MapsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        showNotification("Test", "SuperPoints are up for grabs near you!", pendingIntent, this);
+        showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, this);
     }
 
     @Override
@@ -149,8 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else
         {
             Log.i(TAG, "Location was found");
-
             handleNewLocation(location);
+            //generateBusinessMarkers(generateBusinesssNearby(location));
         }
         Log.i(TAG, "Location services connected.");
     }
@@ -194,19 +193,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         handleNewLocation(location);
         //TODO
-        /*ArrayList<Store> storesNearby = generateStoresNearby(location);
-        if(!storesNearUser.isEmpty())
+        ArrayList<Business> BusinessesNearby = generateBusinessesNearby(location);
+        if(!BusinessesNearby.isEmpty())
         {
             Intent intent = new Intent(this, MapsActivity.class);
+            String title = "Notification Title";
             String message = "Notification message";
 
-            generateStoreMarkers(storesNearby);
+            generateBusinessMarkers(BusinessesNearby);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-            showNotification(message, pendingIntent);
+            showNotification(title, message, pendingIntent, this);
         }
-        */
+
         Log.i(TAG, "LOCATION CHANGED.");
     }
 
@@ -287,48 +287,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /*
-    public ArrayList<String> generateStoresNearby (Location location)
+
+    public ArrayList<Business> generateBusinessesNearby (Location location)
     {
-        ArrayList<String> storesNearby = new ArrayList<String>();
+        ArrayList<Business> BusinesssNearby = new ArrayList<Business>();
         //TODO assign database results into this? or similar container
-        ArrayList<String> databaseStores = new ArrayList<String>();
+        ArrayList<Business> databaseBusinesses = new ArrayList<Business>();
         //TODO investigate what accuracy to use
         double threshold = 0.00001;
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        for(int i = 0; i < databaseStores.size(); i++)
+        for(int i = 0; i < databaseBusinesses.size(); i++)
         {
-            if(currentLatitude < (databaseStores.get(i).latitude + threshold)
-                    && currentLatitude > (databaseStores.get(i).latitude - threshold)
-                    && currentLongitude <(databaseStores.get(i).longitude + threshold)
-                    && currentLongitude > (databaseStores.get(i).longitude - threshold))
+            if(currentLatitude < (databaseBusinesses.get(i).getLatitude() + threshold)
+                    && currentLatitude > (databaseBusinesses.get(i).getLatitude() - threshold)
+                    && currentLongitude <(databaseBusinesses.get(i).getLongitude() + threshold)
+                    && currentLongitude > (databaseBusinesses.get(i).getLongitude() - threshold))
             {
-                storesNearby.add(databaseStores.get(i));
+                BusinesssNearby.add(databaseBusinesses.get(i));
             }
         }
-        return storesNearby;
+        return BusinesssNearby;
     }
-    */
 
-    /*
-    public void generateStoreMarkers(ArrayList<String> storesNearby)
+
+
+    public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby)
     {
-        double storeLatitude;
-        double storeLongitude;
-        for(int i = 0; i < storesNearby.size(); i++)
+        double BusinessLatitude;
+        double BusinessLongitude;
+        for(int i = 0; i < BusinessesNearby.size(); i++)
         {
-            Location location = storesNearby.get(i);
-            storeLatitude = location.getLatitude();
-            storeLongitude = location.getLongitude();
-            LatLng latLng = new LatLng(storeLatitude, storeLongitude);
+            BusinessLatitude = BusinessesNearby.get(i).getLatitude();
+            BusinessLongitude = BusinessesNearby.get(i).getLongitude();
+            LatLng latLng = new LatLng(BusinessLatitude, BusinessLongitude);
             MarkerOptions options = new MarkerOptions()
                     .position(latLng);
             mMap.addMarker(options);
         }
     }
-    */
+
 
 }
