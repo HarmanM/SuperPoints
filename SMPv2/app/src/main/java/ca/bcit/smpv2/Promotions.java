@@ -7,6 +7,23 @@ public class Promotions {
     private String details;
     private int clicks;
 
+    public Promotions(int promotionID, int businessID, int tierID, String details, int clicks) {
+        this.promotionID = promotionID;
+        this.businessID = businessID;
+        this.tierID = tierID;
+        this.details = details;
+        this.clicks = clicks;
+    }
+
+    public Promotions(String sqlResult) {
+        String[] result = sqlResult.split(" ");
+        this.promotionID = Integer.parseInt(result[0]);
+        this.businessID = Integer.parseInt(result[1]);
+        this.tierID = Integer.parseInt(result[2]);
+        this.details = result[3];
+        this.clicks = Integer.parseInt(result[4]);
+    }
+
     public int getPromotionID() {
         return promotionID;
     }

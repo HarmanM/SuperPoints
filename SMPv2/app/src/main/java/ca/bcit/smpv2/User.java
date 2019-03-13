@@ -7,6 +7,24 @@ public class User {
     private String username;
     private boolean setting;
 
+    public User(int userID, int businessID, String password, String username, boolean setting) {
+        this.userID = userID;
+        this.businessID = businessID;
+        this.password = password;
+        this.username = username;
+        this.setting = setting;
+    }
+
+    // Parses a string from the php query to the MySQL database.
+    // First value is the userID, second value is the username, third value is the integer representing the setting
+    // No other values are sent
+    public User(String sqlResult) {
+        String[] result = sqlResult.split(" ");
+        this.userID = Integer.parseInt(result[0]);
+        this.username = result[1];
+        this.setting = (result[2].equals("0") ? false : true);
+    }
+
     public int getUserID() {
         return userID;
     }

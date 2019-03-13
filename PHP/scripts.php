@@ -74,6 +74,28 @@
         mysqli_close($con);
     }
 
+    function selectPromotion() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+    
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        
+        $promoid = $_GET['pid'];
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions
+            WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
+        $row = mysqli_fetch_array($result);
+        $promoid = $row[0];
+        $businessid = $row[1];
+        $tierid = $row[2];
+        $details = $row[3];
+        $clicks = $row[4];
+        
+        echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks;
+        
+        mysqli_close($con);
+    }
+
     function incrementClick() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
     
@@ -112,6 +134,9 @@
             break;
         case "promoClick":
             incrementClick();
+            break;
+        case "getPromo":
+            selectPromotion();
             break;
     }
     
