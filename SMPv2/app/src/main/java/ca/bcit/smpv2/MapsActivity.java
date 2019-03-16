@@ -33,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -97,11 +98,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, this);
     }
 
     @Override
@@ -290,9 +286,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public ArrayList<Business> generateBusinessesNearby (Location location)
     {
-        ArrayList<Business> BusinesssNearby = new ArrayList<Business>();
+        ArrayList<Business> businessesNearby = new ArrayList<>();
         //TODO assign database results into this? or similar container
-        ArrayList<Business> databaseBusinesses = new ArrayList<Business>();
+        ArrayList<Business> databaseBusinesses = new ArrayList<>();
         //TODO investigate what accuracy to use
         double threshold = 0.00001;
 
@@ -306,13 +302,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     && currentLongitude <(databaseBusinesses.get(i).getLongitude() + threshold)
                     && currentLongitude > (databaseBusinesses.get(i).getLongitude() - threshold))
             {
-                BusinesssNearby.add(databaseBusinesses.get(i));
+                businessesNearby.add(databaseBusinesses.get(i));
             }
         }
-        return BusinesssNearby;
+        if(!businessesNearby.isEmpty())
+        {
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+            showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, this);
+        }
+        return businessesNearby;
     }
-
-
 
     public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby)
     {
@@ -324,7 +326,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             BusinessLongitude = BusinessesNearby.get(i).getLongitude();
             LatLng latLng = new LatLng(BusinessLatitude, BusinessLongitude);
             MarkerOptions options = new MarkerOptions()
-                    .position(latLng);
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             mMap.addMarker(options);
         }
     }
