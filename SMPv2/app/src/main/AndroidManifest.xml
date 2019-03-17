@@ -39,7 +39,6 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".BusinessDashboard" />
         <activity android:name=".MapsActivity" />
-        <activity android:name=".PromotionsActivity"></activity>
     </application>
 
 </manifest>

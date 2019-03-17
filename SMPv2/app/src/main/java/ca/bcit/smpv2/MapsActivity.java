@@ -193,8 +193,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(!BusinessesNearby.isEmpty())
         {
             Intent intent = new Intent(this, MapsActivity.class);
-            String title = "Notification Title";
-            String message = "Notification message";
+            String title = "SuperPoints are up for grabs near you!";
+            String message = "Check it out!";
 
             generateBusinessMarkers(BusinessesNearby);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -202,14 +202,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             showNotification(title, message, pendingIntent, this);
         }
-
         Log.i(TAG, "LOCATION CHANGED.");
     }
 
     public boolean onMarkerClick(final Marker marker) {
-
-        //Intent i = new Intent(this, ApartmentActivity.class);
-        //startActivity(i);
         return true;
     }
 
@@ -231,10 +227,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Channel_Name";
-            //this code cannot be referred to in static context
-            //getString(R.string.channel_name);
-            //getString(R.string.channel_description);
-            //inconsequential maybe?
             String description = "Channel_Description";
             NotificationChannel channel = new NotificationChannel("MyChannel", name, IMPORTANCE_HIGH);
             channel.setDescription(description);
