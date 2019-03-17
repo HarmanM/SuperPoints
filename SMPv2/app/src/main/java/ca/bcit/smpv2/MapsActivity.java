@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 
@@ -24,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -62,7 +65,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest mLocationRequest;
     private float defaultZoom = 10.0f;
     private int locationRequestInterval = 15; //in seconds, how often maps will update
-    int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int
+    int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int, reason its not private?
+
+    //Seekbar variables
+    private SeekBar seekBarPrivacy;
+    private int privacyStep = 50; // 3 levels of user privacy
 
     BeaconRanger br;
 
@@ -78,6 +85,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
+
+        //Grab seek bar to attack listener
+        seekBarPrivacy = findViewById(R.id.seekBarPrivacy);
+        //TODO Seek bar needs to set progress to users privacy from database, defaults to 2 right now
+        //TODO set a different color
+        seekBarPrivacy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress = ((int)Math.round(progress/privacyStep)) * privacyStep;
+                seekBar.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //TODO write to database new privacy setting
+            }
+        });
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -179,7 +208,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
-                .title("I am here!");
+                .title("I am here!")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_map_resize_p));
         mMap.addMarker(options);
         mMap.setOnMarkerClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom));
