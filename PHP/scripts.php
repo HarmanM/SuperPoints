@@ -82,7 +82,9 @@
         }
         
         $promoid = $_GET['pid'];
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions
+        $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, tierID, details, clicks, businessName
+            FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON 
+            superpoints.Promotions.businessID = superpoints.Businesses.businessID
             WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
         $row = mysqli_fetch_array($result);
         $promoid = $row[0];
@@ -90,8 +92,9 @@
         $tierid = $row[2];
         $details = $row[3];
         $clicks = $row[4];
+        $businessName = $row[5];
         
-        echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks;
+        echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
         
         mysqli_close($con);
     }
