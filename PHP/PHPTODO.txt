@@ -1,0 +1,31 @@
+Seek bar(oncreate mapsactivity)
+1. 
+SELECT
+	PRIVACY
+FROM
+	USER
+WHERE
+	UID = $uid
+2. 
+UPDATE USER
+SET PRIVACY = $androidPrivacyVariableFromSeekbar
+WHERE UID = $uid
+	
+
+Location services
+1.
+SELECT
+	ID,
+	BUSINESSNAME,
+	LONGITUDE,
+	LATITUDE
+FROM
+	BUSINESS //I determine which businesses are in range in android, probably easier here but idk how hard it is to pass shit back and forth
+	
+Preferred Businesses
+1.
+create a table for preferred businesses, with user id, and the business id probably
+
+Points
+1.
+create a table for points, with user id, business id, and point total
