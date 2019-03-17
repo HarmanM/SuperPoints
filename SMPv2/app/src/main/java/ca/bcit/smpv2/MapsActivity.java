@@ -188,7 +188,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         handleNewLocation(location);
-        //TODO
+        //TODO check if this works
         ArrayList<Business> BusinessesNearby = generateBusinessesNearby(location);
         if(!BusinessesNearby.isEmpty())
         {
@@ -213,6 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
+    //TODO add on click action to open maps activity
     static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
@@ -275,7 +276,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
+    //TODO check if this works
     public ArrayList<Business> generateBusinessesNearby (Location location)
     {
         ArrayList<Business> businessesNearby = new ArrayList<>();
@@ -308,6 +309,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return businessesNearby;
     }
 
+    //TODO check if this works
     public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby)
     {
         double BusinessLatitude;

@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -22,6 +25,22 @@ public class DashboardActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
+        // Construct the data source, maybe construct arraylist beforehand
+        ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
+        PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
+
+        ListView listView = (ListView) findViewById(R.id.lvPromotions);
+        listView.setAdapter(adapter);
+
+        //The sql script needs to query based on user
+        Promotions tProm = new Promotions("3 777666555 1 Details 0 BCIT");
+        Promotions tProm2 = new Promotions("3 213123123 1 Details2 0 SFUBUSINESSNAME");
+        adapter.add(tProm);
+        adapter.add(tProm2);
+
+
+
+        //TODO add items to listView
 
 
     }

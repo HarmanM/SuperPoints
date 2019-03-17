@@ -4,15 +4,17 @@ public class Promotions {
     private int promotionID;
     private int businessID;
     private int tierID;
+    private String businessName;
     private String details;
     private int clicks;
 
-    public Promotions(int promotionID, int businessID, int tierID, String details, int clicks) {
+    public Promotions(int promotionID, int businessID, int tierID, String details, int clicks, String businessName) {
         this.promotionID = promotionID;
         this.businessID = businessID;
         this.tierID = tierID;
         this.details = details;
         this.clicks = clicks;
+        this.businessName = businessName;
     }
 
     public Promotions(String sqlResult) {
@@ -22,6 +24,7 @@ public class Promotions {
         this.tierID = Integer.parseInt(result[2]);
         this.details = result[3];
         this.clicks = Integer.parseInt(result[4]);
+        this.businessName = result[5];
     }
 
     public int getPromotionID() {
@@ -62,5 +65,13 @@ public class Promotions {
 
     public void setClicks(int clicks) {
         this.clicks = clicks;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 }
