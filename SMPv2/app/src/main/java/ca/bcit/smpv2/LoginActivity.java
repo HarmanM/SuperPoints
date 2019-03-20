@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object obj) {
             String strObject = (String) obj;
-            if (!strObject.isEmpty()) {
+            if (!strObject.trim().isEmpty()) {
                 Toast.makeText(context, "Pinged successfully", Toast.LENGTH_SHORT).show();
                 //TODO: send intent to proper activity
                 Intent i = new Intent(context, MapsActivity.class);

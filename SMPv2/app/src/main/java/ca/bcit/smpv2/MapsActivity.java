@@ -65,7 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest mLocationRequest;
     private float defaultZoom = 10.0f;
     private int locationRequestInterval = 15; //in seconds, how often maps will update
-    int MY_PERMISSION_ACCESS_FINE_LOCATION=100; //???? why is it a random int, reason its not private?
+    int MY_PERMISSION_ACCESS_FINE_LOCATION = 100; //???? why is it a random int, reason its not private?
 
     //Seekbar variables
     private SeekBar seekBarPrivacy;
@@ -126,7 +126,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY) // may need to change we dont need incredibly accuracy for promotions
                 .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-
     }
 
     @Override
@@ -136,8 +135,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         //setUpMapIfNeeded();
         mGoogleApiClient.connect();
@@ -198,8 +196,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void handleNewLocation(Location location)
-    {
+    private void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
 
         double currentLatitude = location.getLatitude();
@@ -270,14 +267,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
-
     // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
@@ -307,8 +301,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //TODO check if this works
-    public ArrayList<Business> generateBusinessesNearby (Location location)
-    {
+    public ArrayList<Business> generateBusinessesNearby (Location location) {
         ArrayList<Business> businessesNearby = new ArrayList<>();
         //TODO assign database results into this? or similar container
         ArrayList<Business> databaseBusinesses = new ArrayList<>();
@@ -340,8 +333,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //TODO check if this works
-    public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby)
-    {
+    public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby) {
         double BusinessLatitude;
         double BusinessLongitude;
         for(int i = 0; i < BusinessesNearby.size(); i++)
@@ -355,6 +347,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.addMarker(options);
         }
     }
-
-
 }
