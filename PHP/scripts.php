@@ -138,6 +138,32 @@
         mysqli_close($con);
     }
 
+    function selectBusiness() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+    
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        
+        $lat = $_GET['lat'];
+        $long = $_GET['long'];
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Businesses
+            WHERE 6371 * acos( cos( radians('$lat') )  
+            * cos( radians( superpoints.Businesses.latitude ) ) 
+            * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') ) 
+            * sin(radians(superpoints.Businesses.latitude)) ) < 5 ;", MYSQLI_STORE_RESULT);
+        while($row_data = mysqli_fetch_array($result)) {
+            $businessid = $row_data['businessID'];
+            $businessname = $row_data['businessName'];
+            $latitude = $row_data['latitude'];
+            $longitude = $row_data['longitude'];
+            echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+            echo "<br>";
+        }
+        
+        mysqli_close($con);
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "login":
@@ -160,6 +186,9 @@
             break;
         case "settings":
             updateSettings();
+            break;
+        case "getBusinesses":
+            selectBusiness();
             break;
     }
     
