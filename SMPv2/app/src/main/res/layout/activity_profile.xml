@@ -67,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layout_marginRight="20dp"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent" />
     </LinearLayout>
@@ -88,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:paddingLeft="17dp"
+            android:layout_marginRight="5dp"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -111,8 +112,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:paddingRight="30dp"
+            android:layout_marginRight="43dp"
             android:inputType="textPostalAddress"
+            android:paddingRight="30dp"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </LinearLayout>
@@ -134,7 +136,7 @@
             android:id="@+id/phoneEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:inputType="phone" />
 
@@ -171,6 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="15dp"
             android:text="update" />
 
     </LinearLayout>

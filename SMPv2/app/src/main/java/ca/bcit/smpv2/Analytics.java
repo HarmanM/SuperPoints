@@ -7,28 +7,20 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-
-public class BusinessDashboard extends AppCompatActivity {
+public class Analytics extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_dashboard);
+        setContentView(R.layout.activity_analytics);
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
-        PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
-
-        ListView listView = (ListView) findViewById(R.id.lvAnalytics);
-        listView.setAdapter(adapter);
-
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
+        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
     }
 
     // Menu icons are inflated just as they were with actionbar
@@ -37,8 +29,11 @@ public class BusinessDashboard extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_business, menu);
 
+
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
