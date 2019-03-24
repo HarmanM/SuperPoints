@@ -70,7 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/passwordTextView"
+        android:id="@+id/postalTextView"
         android:layout_width="68dp"
         android:layout_height="34dp"
         android:layout_alignTop="@+id/cityEditText"
@@ -93,7 +93,7 @@
         android:text="Confirm Password"
         app:layout_constraintEnd_toStartOf="@+id/phoneEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/postalTextView" />
 
     <EditText
         android:id="@+id/postalEditText"
@@ -105,7 +105,7 @@
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/passwordTextView"
+        app:layout_constraintStart_toEndOf="@+id/postalTextView"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <EditText

@@ -26,6 +26,22 @@
         mysqli_close($con);
     }
 
+    function updateSettings() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+    
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        
+        $userID = $_GET['uid'];
+        $setting = $_GET['setting'];
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Users` SET `settings` = '$setting' 
+            WHERE (`userID` = '$userID');", MYSQLI_STORE_RESULT);
+        echo $result ? 'true' : 'false';
+        
+        mysqli_close($con);
+    }
+
     function register() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
     
@@ -66,8 +82,7 @@
         $businessid = $_GET['bid'];
         $tierid = $_GET['tid'];
         $detail = $_GET['detail'];
-        // replaces the %20s in the url string
-        $new = str_replace('%20', ' ', $detail);
+        $new = str_replace(' ', '&', $detail);
         $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions` (`businessID`, `tierID`, `details`)
             VALUES ('$businessid', '$tierid', '$new');", MYSQLI_STORE_RESULT);
         echo $result ? 'true' : 'false';
@@ -80,22 +95,24 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
-        $promoid = $_GET['pid'];
+        $userID = $_GET['uid'];
         $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, tierID, details, clicks, businessName
             FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON 
             superpoints.Promotions.businessID = superpoints.Businesses.businessID
-            WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
-        $row = mysqli_fetch_array($result);
-        $promoid = $row[0];
-        $businessid = $row[1];
-        $tierid = $row[2];
-        $details = $row[3];
-        $clicks = $row[4];
-        $businessName = $row[5];
+            INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
+            WHERE (SELECT points FROM superpoints.Points WHERE userID = '$userID' AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
+				(SELECT minPoints FROM superpoints.Tiers WHERE tierID = superpoints.Promotions.tierID);", MYSQLI_STORE_RESULT);
         
-        echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
-        
+        while($row_data = mysqli_fetch_array($result)) {
+            $promoid = $row_data['promotionID'];
+            $businessid = $row_data['businessID'];
+            $tierid = $row_data['tierID'];
+            $details = $row_data['details'];
+            $clicks = $row_data['clicks'];
+            $businessName = $row_data['businessName'];
+            echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
+            echo "<br>";
+        }
         mysqli_close($con);
     }
 
@@ -121,6 +138,32 @@
         mysqli_close($con);
     }
 
+    function selectBusiness() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+    
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        
+        $lat = $_GET['lat'];
+        $long = $_GET['long'];
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Businesses
+            WHERE 6371 * acos( cos( radians('$lat') )  
+            * cos( radians( superpoints.Businesses.latitude ) ) 
+            * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') ) 
+            * sin(radians(superpoints.Businesses.latitude)) ) < 5 ;", MYSQLI_STORE_RESULT);
+        while($row_data = mysqli_fetch_array($result)) {
+            $businessid = $row_data['businessID'];
+            $businessname = $row_data['businessName'];
+            $latitude = $row_data['latitude'];
+            $longitude = $row_data['longitude'];
+            echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+            echo "<br>";
+        }
+        
+        mysqli_close($con);
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "login":
@@ -140,6 +183,12 @@
             break;
         case "getPromo":
             selectPromotion();
+            break;
+        case "settings":
+            updateSettings();
+            break;
+        case "getBusinesses":
+            selectBusiness();
             break;
     }
     

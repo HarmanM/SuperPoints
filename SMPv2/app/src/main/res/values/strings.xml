@@ -4,4 +4,5 @@
     <string name="channel_name">Notif Name</string>
     <string name="channel_description">Notif Desc</string>
     <string name="action_settings">Settings</string>
+    <string name="dashboard_title">Promotions</string>
 </resources>
