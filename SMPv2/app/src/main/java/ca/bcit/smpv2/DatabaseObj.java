@@ -56,6 +56,13 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void getBusinessesNearby(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        function = "selectBusiness";
+        get = true;
+        this.execute();
+    }
+
     public void getPromotions(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
         function = "getPromotion";

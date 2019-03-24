@@ -5,9 +5,9 @@ public class User {
     private int businessID;
     private String password;
     private String username;
-    private boolean setting;
+    private int setting;
 
-    public User(int userID, int businessID, String password, String username, boolean setting) {
+    public User(int userID, int businessID, String password, String username, int setting) {
         this.userID = userID;
         this.businessID = businessID;
         this.password = password;
@@ -22,7 +22,7 @@ public class User {
         String[] result = sqlResult.split(" ");
         this.userID = Integer.parseInt(result[0]);
         this.username = result[1];
-        this.setting = (result[2].equals("0") ? false : true);
+        this.setting = Integer.parseInt(result[2]);
     }
 
     public int getUserID() {
@@ -57,11 +57,11 @@ public class User {
         this.username = username;
     }
 
-    public boolean getSetting() {
+    public int getSetting() {
         return setting;
     }
 
-    public void setSetting(boolean setting) {
+    public void setSetting(int setting) {
         this.setting = setting;
     }
 }
