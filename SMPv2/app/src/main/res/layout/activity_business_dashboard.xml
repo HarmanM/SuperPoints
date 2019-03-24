@@ -13,37 +13,40 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/analyticsButton"
+        android:id="@+id/addBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="5dp"
-        android:text="Analytics"
-        app:layout_constraintEnd_toStartOf="@+id/button5"
+        android:drawableStart="@drawable/ic_baseline_add_circle_outline_24px"
+        android:text="Add"
+        app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/deleteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="8dp"
-        android:text="Best Customers"
-        app:layout_constraintEnd_toStartOf="@+id/button6"
-        app:layout_constraintStart_toEndOf="@+id/analyticsButton"
+        android:drawableStart="@drawable/ic_baseline_remove_circle_outline_24px"
+        android:text="Remove"
+        app:layout_constraintEnd_toStartOf="@+id/editBtn"
+        app:layout_constraintStart_toEndOf="@+id/addBtn"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/editBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="15dp"
-        android:text="This Month"
+        android:drawableStart="@drawable/ic_baseline_edit_24px"
+        android:text="Edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button5"
+        app:layout_constraintStart_toEndOf="@+id/deleteBtn"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 

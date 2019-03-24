@@ -1,7 +1,11 @@
 package ca.bcit.smpv2;
 
+import android.content.Intent;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Visit {
     private int visitID;
@@ -14,6 +18,28 @@ public class Visit {
         this.userID = userID;
         this.businessID = businessID;
         this.date = date;
+    }
+
+    public Visit(int visitID, int userID, int businessID, int duration, Calendar date){
+        this.visitID = visitID;
+        this.userID = userID;
+        this.businessID = businessID;
+        this.duration = duration;
+        this.date = date;
+    }
+
+    public Visit(String sqlResult){
+        String[] result = sqlResult.split(" ");
+        this.visitID = Integer.parseInt(result[0]);
+        this.userID = Integer.parseInt(result[1]);
+        this.businessID = Integer.parseInt(result[2]);
+        this.duration = Integer.parseInt(result[3]);
+        try {
+            this.date = Calendar.getInstance();
+            this.date.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse(result[4]));
+        }catch(Exception e){
+
+        }
     }
 
     public int getVisitID() {

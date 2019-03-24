@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 public class DatabaseObj extends AsyncTask {
 
@@ -24,6 +25,7 @@ public class DatabaseObj extends AsyncTask {
     private String params;
     private String function;
     private Consumer<ArrayList<Object>> onCompleteFunction;
+    private Function<String, Object> objConstructor;
     private boolean get;
 
     public DatabaseObj(Context context) {
@@ -31,12 +33,22 @@ public class DatabaseObj extends AsyncTask {
     }
 
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
-        this.params = whereClause;
+        if(whereClause != "")
+            this.params = " AND " + whereClause;
         onCompleteFunction = f;
+    }
+
+    public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
+        setMembers("uid=" + userID, f);
+        objConstructor = User::new;
+        function = "getApplicablePromos";
+        get = true;
+        this.execute();
     }
 
     public void getUsers(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
+        objConstructor = User::new;
         function = "getUser";
         get = true;
         this.execute();
@@ -44,6 +56,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void getVisits(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
+        //objConstructor = Visit::new;
         function = "getVisit";
         get = true;
         this.execute();
@@ -51,14 +64,39 @@ public class DatabaseObj extends AsyncTask {
 
     public void getBusinesses(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
+        //objConstructor = Business::new;
         function = "getBusiness";
+        get = true;
+        this.execute();
+    }
+
+    public void getBusinessesNearby(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        function = "selectBusiness";
         get = true;
         this.execute();
     }
 
     public void getPromotions(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
+        objConstructor = Promotions::new;
         function = "getPromotion";
+        get = true;
+        this.execute();
+    }
+
+    public void getTiers(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Tiers::new;
+        function = "getTier";
+        get = true;
+        this.execute();
+    }
+
+    public void getPoints(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Points::new;
+        function = "getUserBusinessTier";
         get = true;
         this.execute();
     }
@@ -70,13 +108,13 @@ public class DatabaseObj extends AsyncTask {
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUser";
-        onCompleteFunction = f;
         params = "";
         params += "USER_ID" + o.getUserID();
         params += "BUSINESS_ID" + o.getBusinessID();
         params += "USERNAME" + o.getUsername();
         params += "PASSWORD" + o.getPassword();
         params += "SETTING" + o.getSetting();
+        setMembers(params, f);
         this.execute();
     }
 
@@ -87,12 +125,12 @@ public class DatabaseObj extends AsyncTask {
     public void setBusiness(Business o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUser";
-        onCompleteFunction = f;
         params = "";
         params += "BUSINESS_ID" + o.getBusinessID();
         params += "BUSINESS_NAME" + o.getBusinessName();
         params += "LATITUDE" + o.getLatitude();
         params += "LONGITUDE" + o.getLongitude();
+        setMembers(params, f);
         this.execute();
     }
 
@@ -103,7 +141,6 @@ public class DatabaseObj extends AsyncTask {
     public void setPromotion(Promotions o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setPromotion";
-        onCompleteFunction = f;
         params = "";
         params += "PROMOTION_ID" + o.getPromotionID();
         params += "BUSINESS_ID" + o.getBusinessID();
@@ -111,6 +148,7 @@ public class DatabaseObj extends AsyncTask {
         params += "DETAILS" + o.getDetails();
         params += "CLICKS" + o.getClicks();
         params += "TIER_ID" + o.getTierID();
+        setMembers(params, f);
         this.execute();
     }
 
@@ -121,13 +159,41 @@ public class DatabaseObj extends AsyncTask {
     public void setVisit(Visit o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setVisit";
-        onCompleteFunction = f;
         params = "";
         params += "VISIT_ID" + o.getVisitID();
         params += "BUSINESS_ID" + o.getBusinessID();
         params += "USER_ID" + o.getUserID();
         params += "DATE" + o.getDate();
         params += "DURATION" + o.getDuration();
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void setTier(Tiers o){
+        setTier(o, null);
+    }
+
+    public void setTier(Tiers o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setTier";
+        params = "";
+        params += "TIER_ID" + o.getTierID();
+        params += "MIN_POINTS" + o.getMinPoints();
+        setMembers(params, f);
+        this.execute();
+    }
+    public void setPoints(Points o){
+        setPoints(o, null);
+    }
+
+    public void setPoints(Points o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setUserBusinessTier";
+        params = "";
+        params += "USER_ID" + o.getUserID();
+        params += "BUSINESS_ID" + o.getBusinessID();
+        params += "POINTS" + o.getPoints();
+        setMembers(params, f);
         this.execute();
     }
 
@@ -171,7 +237,15 @@ public class DatabaseObj extends AsyncTask {
         if (!strObject.isEmpty()) {
             Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
-            onCompleteFunction.accept(new ArrayList<Object>());
+            if(onCompleteFunction != null) {
+                ArrayList<Object> res = new ArrayList<Object>();
+                if (objConstructor != null) {
+                    String resArr[] = strObject.split("\n");
+                    for(String sObj : resArr)
+                        res.add(objConstructor.apply(sObj));
+                }
+                onCompleteFunction.accept(res);
+            }
         } else {
             Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
