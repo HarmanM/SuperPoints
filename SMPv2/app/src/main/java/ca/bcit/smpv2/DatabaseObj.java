@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 public class DatabaseObj extends AsyncTask {
 
@@ -24,6 +25,7 @@ public class DatabaseObj extends AsyncTask {
     private String params;
     private String function;
     private Consumer<ArrayList<Object>> onCompleteFunction;
+    private Function<String, Object> objConstructor;
     private boolean get;
 
     public DatabaseObj(Context context) {
@@ -37,6 +39,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void getUsers(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
+        objConstructor = User::new;
         function = "getUser";
         get = true;
         this.execute();
@@ -178,7 +181,12 @@ public class DatabaseObj extends AsyncTask {
         if (!strObject.isEmpty()) {
             Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
-            onCompleteFunction.accept(new ArrayList<Object>());
+            if(onCompleteFunction != null) {
+                ArrayList<Object> res = new ArrayList<Object>();
+                if (objConstructor != null)
+                    res.add(objConstructor.apply(strObject));
+                onCompleteFunction.accept(res);
+            }
         } else {
             Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
