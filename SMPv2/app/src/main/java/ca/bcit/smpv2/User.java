@@ -57,7 +57,7 @@ public class User {
         this.username = username;
     }
 
-    public boolean isSetting() {
+    public boolean getSetting() {
         return setting;
     }
 
