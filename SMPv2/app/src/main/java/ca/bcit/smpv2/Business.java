@@ -5,6 +5,24 @@ public class Business {
     private String businessName;
     private double latitude;
     private double longitude;
+    private String region;
+
+    public Business(int businessID, String businessName, double latitude, double longitude, String region){
+        this.businessID = businessID;
+        this.businessName = businessName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.region = region;
+    }
+
+    public Business(String sqlResult){
+        String[] result = sqlResult.split(" ");
+        this.businessID = Integer.parseInt(result[0]);
+        this.businessName = result[1];
+        this.latitude = Integer.parseInt(result[2]);
+        this.longitude = Integer.parseInt(result[3]);
+        this.region = result[4];
+    }
 
     public int getBusinessID() {
         return businessID;

@@ -111,7 +111,6 @@ public class BeaconRanger implements BeaconConsumer {
                 else if(wasInStore && !inStore) {
                     Toast.makeText(context, "Exited store [" + region.getUniqueId() + "}", Toast.LENGTH_LONG).show();
                     visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
-                    visit.setDuration(7548);
                     Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
                             + "\nBusiness: " + visit.getBusinessID()
                             + "\nStart: " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(visit.getDate().getTime())
@@ -125,6 +124,7 @@ public class BeaconRanger implements BeaconConsumer {
                                 + ":" + String.format("%02d", visit.getDuration() % 3600 / 60),
                             PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
                             context);
+                    new DatabaseObj(context).setVisit(visit);
                 }
             }
         });
