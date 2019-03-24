@@ -3,8 +3,10 @@ package ca.bcit.smpv2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,8 +23,12 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
+
+    //TODO does this need to be destroyed
+    static User user;
 
     private EditText usernameField, passwordField;
 
@@ -135,7 +141,13 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Object obj) {
             String strObject = (String) obj;
             if (!strObject.trim().isEmpty()) {
-                Toast.makeText(context, "Pinged successfully", Toast.LENGTH_SHORT).show();
+                String objArr[] = strObject.split(" ", 0);
+                new DatabaseObj (LoginActivity.this).getUsers("USERID =" + objArr[0], new Consumer<ArrayList<Object>>() {
+                    @Override
+                    public void accept(ArrayList<Object> objects) {
+                        user = (User) objects.get(0);
+                    }
+                });
                 //TODO: send intent to proper activity
                 Intent i = new Intent(context, MapsActivity.class);
                 i.putExtra("username", username);
