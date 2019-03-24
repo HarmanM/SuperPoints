@@ -56,7 +56,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void getVisits(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
-        //objConstructor = Visit::new;
+        objConstructor = Visit::new;
         function = "getVisit";
         get = true;
         this.execute();
@@ -64,7 +64,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void getBusinesses(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
-        //objConstructor = Business::new;
+        objConstructor = Business::new;
         function = "getBusiness";
         get = true;
         this.execute();
