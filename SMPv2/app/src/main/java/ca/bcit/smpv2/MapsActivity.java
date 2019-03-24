@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,11 +43,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
-
-
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -67,10 +75,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int locationRequestInterval = 15; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100; //???? why is it a random int, reason its not private?
 
-    //Seekbar variables
-    private SeekBar seekBarPrivacy;
-    private int privacyStep = 50; // 3 levels of user privacy
-
     BeaconRanger br;
 
     @Override
@@ -86,30 +90,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
-        //Grab seek bar to attack listener
-        seekBarPrivacy = findViewById(R.id.seekBarPrivacy);
-        //TODO Seek bar needs to set progress to users privacy from database, defaults to 2 right now
-        //TODO set a different color
-        seekBarPrivacy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progress = ((int)Math.round(progress/privacyStep)) * privacyStep;
-                seekBar.setProgress(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                //TODO write to database new privacy setting
-            }
-        });
-
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -224,10 +204,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String message = "Check it out!";
 
             generateBusinessMarkers(BusinessesNearby);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-            showNotification(title, message, pendingIntent, this);
         }
         Log.i(TAG, "LOCATION CHANGED.");
     }
@@ -302,25 +278,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //TODO check if this works
     public ArrayList<Business> generateBusinessesNearby (Location location) {
-        ArrayList<Business> businessesNearby = new ArrayList<>();
+        final ArrayList<Business> businessesNearby = new ArrayList<>();
         //TODO assign database results into this? or similar container
-        ArrayList<Business> databaseBusinesses = new ArrayList<>();
         //TODO investigate what accuracy to use
-        double threshold = 0.00001;
 
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-
-        for(int i = 0; i < databaseBusinesses.size(); i++)
-        {
-            if(currentLatitude < (databaseBusinesses.get(i).getLatitude() + threshold)
-                    && currentLatitude > (databaseBusinesses.get(i).getLatitude() - threshold)
-                    && currentLongitude <(databaseBusinesses.get(i).getLongitude() + threshold)
-                    && currentLongitude > (databaseBusinesses.get(i).getLongitude() - threshold))
-            {
-                businessesNearby.add(databaseBusinesses.get(i));
+        new DatabaseObj (MapsActivity.this).getUsers("", new Consumer<ArrayList<Object>>() {
+            @Override
+            public void accept(ArrayList<Object> objects) {
+                for(Object o: objects)
+                    businessesNearby.add((Business) o);
             }
-        }
+        });
+
         if(!businessesNearby.isEmpty())
         {
             Intent intent = new Intent(this, MapsActivity.class);

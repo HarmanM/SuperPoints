@@ -57,6 +57,7 @@
 
         <TextView
             android:id="@+id/addressTextView"
+            android:paddingRight="17dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Address" />
@@ -79,6 +80,7 @@
             android:id="@+id/cityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="30dp"
             android:text="City" />
 
         <EditText
@@ -86,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:paddingLeft="17dp"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -100,6 +103,7 @@
             android:id="@+id/postalTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="17dp"
             android:text="Postal Code" />
 
         <EditText
@@ -107,6 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:paddingRight="30dp"
             android:inputType="textPostalAddress"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -122,6 +127,7 @@
             android:id="@+id/phoneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="17dp"
             android:text="Phone" />
 
         <EditText
@@ -143,6 +149,7 @@
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="17dp"
             android:text="Email" />
 
         <EditText
