@@ -142,10 +142,11 @@ public class LoginActivity extends AppCompatActivity {
             String strObject = (String) obj;
             if (!strObject.trim().isEmpty()) {
                 String objArr[] = strObject.split(" ", 0);
-                new DatabaseObj (LoginActivity.this).getUsers("USERID =" + objArr[0], new Consumer<ArrayList<Object>>() {
+                new DatabaseObj (LoginActivity.this).getUsers("USERID=" + objArr[0], new Consumer<ArrayList<Object>>() {
                     @Override
                     public void accept(ArrayList<Object> objects) {
                         user = (User) objects.get(0);
+                        Log.i("2222UID", Integer.toString(user.getUserID()));
                     }
                 });
                 //TODO: send intent to proper activity
