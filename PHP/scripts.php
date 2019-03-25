@@ -376,5 +376,48 @@
     mysqli_close($con);
     }
 
+    function calcAvgDurationPerVisitWeek () {
+	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+	
+	if (mysqli_connect_errno($con)) {
+		echo "Failed to connect to database: " . mysqli_connect_error();
+	}
+	
+    $currentYear = date('Y'); //1992
+    $month = date('m');//0-12
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth, currentYear); // 
+    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth - 1, currentYear); 
+    $currentDay = date('l'); //1-31
+        
+    if($currentDay < 7)
+    {
+        $daysFromPrevMonth = 7 - currentDay;
+    }
+        //01 - 31
+	
+	$result = mysqli_query($con, 
+    "
+    SELECT
+        SUM(DURATION)/COUNT(ID)
+    FROM 
+        superpoints.Visits 
+    WHERE
+        $daysFromPrevMonth > 0
+        AND YEAR(superpoints.Visit.date) = $currentYear
+        AND MONTH(superpoints.Visit.date) = $currentMonth 
+        AND DAY(superpoints.Visit.date) BETWEEN 1 AND $currentDay
+        OR (MONTH(superpoints.Visit.date) = $currentMonth - 1 OR $currentMonth = 1 AND YEAR(superpoints.Visit.date) = $currentYear - 1 AND MONTH(superpoints.Visit.date) = 12)
+            AND DAY(superpoints.Visit.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
+        OR YEAR(superpoints.Visit.date) = $currentYear 
+            AND MONTH(superpoints.Visit.date) = $currentMonth
+            AND DAY(superpoints.Visit.date) BETWEEN $currentDay - 7 AND $currentDay
+        ", MYSQLI_STORE_RESULT)
+    $row = mysqli_fetch_array($result);
+    $count = $result[0];
+        
+    echo $count                        
+    mysqli_close($con);
+    }
+
     
 ?>
