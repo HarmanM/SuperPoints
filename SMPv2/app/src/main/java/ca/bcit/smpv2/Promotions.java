@@ -18,6 +18,7 @@ public class Promotions {
     }
 
     public Promotions(String sqlResult) {
+        //TODO delimiter needs to change
         String[] result = sqlResult.split(" ");
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
