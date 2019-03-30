@@ -9,15 +9,20 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Users $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
 
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
-            $col_count = mysqli_num_fields($result);
-            for ($i = 0; $i < $col_count; $i++) {
-                echo $row[$i] . " ";
+            $userid = $row['userID'];
+            $businessid = $row['businessID'];
+            $userName = $row['userName'];
+            $settings = $row['settings'];
+            if ($businessid != "") {
+              echo $userid . " " . $businessid . " " . $userName . " " . $settings;
+            } else {
+              echo $userid . " " . $userName . " " . $settings;
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
@@ -130,8 +135,11 @@
         $userName = $row[3];
         $settings = $row[4];
 
-        echo $userid . " " . $businessid . " " . $userName . " " . $settings;
-
+        if ($businessid != "") {
+          echo $userid . " " . $businessid . " " . $userName . " " . $settings;
+        } else {
+          echo $userid . " " . $userName . " " . $settings;
+        }
         mysqli_close($con);
     }
 
@@ -386,6 +394,9 @@ function calcAvgVisitsWeek () {
         case "getUser":
             getUser();
             break;
+        case "login":
+            login();
+            break;
         case "getVisit":
             getVisits();
             break;
@@ -394,9 +405,6 @@ function calcAvgVisitsWeek () {
             break;
         case "user":
             handleUser();
-            break;
-        case "login":
-            getUser();
             break;
         case "register":
             register();

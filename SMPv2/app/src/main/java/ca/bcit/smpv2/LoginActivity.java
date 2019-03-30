@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     username = (String) arg0[0];
                     String password = (String) arg0[1];
-                    //String link = "http://142.232.148.173/connect.php?username=" + username + "&password=" + password;
                     String link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=login&username="
                             + username + "&password=" + password;
                     URL url = new URL(link);

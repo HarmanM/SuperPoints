@@ -34,7 +34,7 @@ public class DatabaseObj extends AsyncTask {
 
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
         if(whereClause != "")
-            this.params = " AND " + whereClause;
+            this.params = whereClause;
         onCompleteFunction = f;
     }
 
