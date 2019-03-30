@@ -5,14 +5,14 @@
 
     function getUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
         $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Users $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
-        
+
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
             $col_count = mysqli_num_fields($result);
@@ -34,14 +34,14 @@
 
     function getVisits() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
         $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Visits $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
-        
+
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
             $col_count = mysqli_num_fields($result);
@@ -64,14 +64,14 @@
 
     function getPromotion() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
         $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
-        
+
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
             $col_count = mysqli_num_fields($result);
@@ -94,11 +94,11 @@
 
     function handleUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
+
         $setters = $_GET['setClause'];
         $split_str = explode(", ", $setters);
         $userid = substr(split_str[0], 7);
@@ -115,45 +115,45 @@
 
     function login() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
+
         $username = $_GET['username'];
         $password = $_GET['password'];
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Users where 
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Users where
         userName='$username' and password='$password'", MYSQLI_STORE_RESULT);
         $row = mysqli_fetch_array($result);
         $userid = $row[0];
         $businessid = $row[1];
         $userName = $row[3];
         $settings = $row[4];
-        
+
         echo $userid . " " . $businessid . " " . $userName . " " . $settings;
-        
+
         mysqli_close($con);
     }
 
     function updateSettings() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
+
         $userID = $_GET['uid'];
         $setting = $_GET['setting'];
-        $result = mysqli_query($con,"UPDATE `superpoints`.`Users` SET `settings` = '$setting' 
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Users` SET `settings` = '$setting'
             WHERE (`userID` = '$userID');", MYSQLI_STORE_RESULT);
         echo $result ? 'true' : 'false';
-        
+
         mysqli_close($con);
     }
 
     function register() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
@@ -162,13 +162,13 @@
         $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
             (`password`,`userName`,`settings`) VALUES ('$password', '$username', 0);", MYSQLI_STORE_RESULT);
         echo $result ? 'true' : 'false';
-        
+
         mysqli_close($con);
     }
 
     function insertVisits() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
@@ -184,7 +184,7 @@
 
     function insertPromotions() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
@@ -200,18 +200,18 @@
 
     function getApplicablePromotions() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
         $userID = $_GET['uid'];
         $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, tierID, details, clicks, businessName
-            FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON 
+            FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON
             superpoints.Promotions.businessID = superpoints.Businesses.businessID
             INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
             WHERE (SELECT points FROM superpoints.Points WHERE userID = '$userID' AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
 				(SELECT minPoints FROM superpoints.Tiers WHERE tierID = superpoints.Promotions.tierID);", MYSQLI_STORE_RESULT);
-        
+
         while($row_data = mysqli_fetch_array($result)) {
             $promoid = $row_data['promotionID'];
             $businessid = $row_data['businessID'];
@@ -227,39 +227,39 @@
 
     function incrementClick() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
         $promoid = $_GET['pid'];
-        
+
         // Get number of clicks before increment
         $select = mysqli_query($con,"SELECT clicks FROM superpoints.Promotions
             WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
         $clickNo = mysqli_fetch_array($select);
         // increment
         $clicks = $clickNo[0] + 1;
-        
-        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = '$clicks' 
+
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = '$clicks'
             WHERE (`promotionID` = '$promoid');", MYSQLI_STORE_RESULT);
-        
+
         echo $result ? 'true' : 'false';
         mysqli_close($con);
     }
 
     function selectBusiness() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
+
         $lat = $_GET['lat'];
         $long = $_GET['long'];
         $result = mysqli_query($con,"SELECT * FROM superpoints.Businesses
             WHERE 6371 * acos( cos( radians('$lat') )
             * cos( radians( superpoints.Businesses.latitude ) )
-            * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') ) 
+            * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') )
             * sin(radians(superpoints.Businesses.latitude)) ) < 1;", MYSQLI_STORE_RESULT);
         while($row_data = mysqli_fetch_array($result)) {
             $businessid = $row_data['businessID'];
@@ -269,27 +269,116 @@
             echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
             echo "<br>";
         }
-        
+
         mysqli_close($con);
     }
 
     function getTier() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-    
+
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        
+
         $tierid = $_GET['tid'];
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Users where 
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Users where
         userName='$username' and password='$password'", MYSQLI_STORE_RESULT);
         $row = mysqli_fetch_array($result);
         $userid = $row[0];
         $businessid = $row[1];
         $userName = $row[3];
         $settings = $row[4];
-        
+
         echo $userid . " " . $businessid . " " . $userName . " " . $settings;
+    }
+
+function calcAvgVisitsWeek () {
+	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+	if (mysqli_connect_errno($con)) {
+		echo "Failed to connect to database: " . mysqli_connect_error();
+	}
+
+    $currentYear = date('Y'); //1992
+    $month = date('m');//0-12
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear); //
+    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $month - 1, $currentYear);
+    $currentDay = date('d'); //1-31
+
+    $daysFromPrevMonth = 0;
+
+    if($currentDay < 7)
+    {
+        $daysFromPrevMonth = 7 - $currentDay;
+    }
+        //01 - 31
+
+	$result = mysqli_query($con,
+    "
+    SELECT
+        COUNT(userID)/7
+    FROM
+        superpoints.Visits
+    WHERE
+        $daysFromPrevMonth > 0
+        AND YEAR(superpoints.Visits.date) = $currentYear
+        AND MONTH(superpoints.Visits.date) = $month
+        AND DAY(superpoints.Visits.date) BETWEEN 1 AND $currentDay
+        OR (MONTH(superpoints.Visits.date) = $month - 1 OR $month = 1 AND YEAR(superpoints.Visits.date) = $currentYear - 1 AND MONTH(superpoints.Visits.date) = 12)
+            AND DAY(superpoints.Visits.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
+        OR YEAR(superpoints.Visits.date) = $currentYear
+            AND MONTH(superpoints.Visits.date) = $month
+            AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
+        ", MYSQLI_STORE_RESULT);
+    $row = mysqli_fetch_array($result);
+    //$count = $result[0];
+
+    echo $row[0];
+    mysqli_close($con);
+    }
+
+
+    function calcAvgDurationPerVisitWeek () {
+	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+	if (mysqli_connect_errno($con)) {
+		echo "Failed to connect to database: " . mysqli_connect_error();
+	}
+
+    $currentYear = date('Y'); //1992
+    $month = date('m');//0-12
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear); //
+    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $month - 1, $currentYear);
+    $currentDay = date('d'); //1-31
+
+    $daysFromPrevMonth = 0;
+
+    if($currentDay < 7)
+    {
+        $daysFromPrevMonth = 7 - $currentDay;
+    }
+        //01 - 31
+
+	$result = mysqli_query($con,
+    "
+    SELECT
+            SUM(duration)/COUNT(visitID)
+        FROM
+            superpoints.Visits
+        WHERE
+            $daysFromPrevMonth > 0
+            AND YEAR(superpoints.Visits.date) = $currentYear
+            AND MONTH(superpoints.Visits.date) = $month
+            AND DAY(superpoints.Visits.date) BETWEEN 1 AND $currentDay
+            OR (MONTH(superpoints.Visits.date) = $month - 1 OR $month = 1 AND YEAR(superpoints.Visits.date) = $currentYear - 1 AND MONTH(superpoints.Visits.date) = 12)
+                AND DAY(superpoints.Visits.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
+            OR YEAR(superpoints.Visits.date) = $currentYear
+                AND MONTH(superpoints.Visits.date) = $month
+                AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay", MYSQLI_STORE_RESULT);
+    $row = mysqli_fetch_array($result);
+
+    echo $row[0];
+    mysqli_close($con);
     }
 
     $func = $_GET['function'];
@@ -330,94 +419,13 @@
         case "getBusinesses":
             selectBusiness();
             break;
+        case "calcAverageVisits":
+            calcAvgVisitsWeek();
+            break;
+        case "calcAverageDuration":
+            calcAvgDurationPerVisitWeek();
+            break;
     }
 
 
-    function calcAvgVisitsWeek () {
-	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-	
-	if (mysqli_connect_errno($con)) {
-		echo "Failed to connect to database: " . mysqli_connect_error();
-	}
-	
-    $currentYear = date('Y'); //1992
-    $month = date('m');//0-12
-    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth, currentYear); // 
-    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth - 1, currentYear); 
-    $currentDay = date('l'); //1-31
-        
-    if($currentDay < 7)
-    {
-        $daysFromPrevMonth = 7 - currentDay;
-    }
-        //01 - 31
-	
-	$result = mysqli_query($con, 
-    "
-    SELECT
-        COUNT(ID)/7
-    FROM 
-        superpoints.Visits 
-    WHERE
-        $daysFromPrevMonth > 0
-        AND YEAR(superpoints.Visit.date) = $currentYear
-        AND MONTH(superpoints.Visit.date) = $currentMonth 
-        AND DAY(superpoints.Visit.date) BETWEEN 1 AND $currentDay
-        OR (MONTH(superpoints.Visit.date) = $currentMonth - 1 OR $currentMonth = 1 AND YEAR(superpoints.Visit.date) = $currentYear - 1 AND MONTH(superpoints.Visit.date) = 12)
-            AND DAY(superpoints.Visit.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
-        OR YEAR(superpoints.Visit.date) = $currentYear 
-            AND MONTH(superpoints.Visit.date) = $currentMonth
-            AND DAY(superpoints.Visit.date) BETWEEN $currentDay - 7 AND $currentDay
-        ", MYSQLI_STORE_RESULT)
-    $row = mysqli_fetch_array($result);
-    $count = $result[0];
-        
-    echo $count                        
-    mysqli_close($con);
-    }
-
-    function calcAvgDurationPerVisitWeek () {
-	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-	
-	if (mysqli_connect_errno($con)) {
-		echo "Failed to connect to database: " . mysqli_connect_error();
-	}
-	
-    $currentYear = date('Y'); //1992
-    $month = date('m');//0-12
-    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth, currentYear); // 
-    $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, dayOfMonth - 1, currentYear); 
-    $currentDay = date('l'); //1-31
-        
-    if($currentDay < 7)
-    {
-        $daysFromPrevMonth = 7 - currentDay;
-    }
-        //01 - 31
-	
-	$result = mysqli_query($con, 
-    "
-    SELECT
-        SUM(DURATION)/COUNT(ID)
-    FROM 
-        superpoints.Visits 
-    WHERE
-        $daysFromPrevMonth > 0
-        AND YEAR(superpoints.Visit.date) = $currentYear
-        AND MONTH(superpoints.Visit.date) = $currentMonth 
-        AND DAY(superpoints.Visit.date) BETWEEN 1 AND $currentDay
-        OR (MONTH(superpoints.Visit.date) = $currentMonth - 1 OR $currentMonth = 1 AND YEAR(superpoints.Visit.date) = $currentYear - 1 AND MONTH(superpoints.Visit.date) = 12)
-            AND DAY(superpoints.Visit.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
-        OR YEAR(superpoints.Visit.date) = $currentYear 
-            AND MONTH(superpoints.Visit.date) = $currentMonth
-            AND DAY(superpoints.Visit.date) BETWEEN $currentDay - 7 AND $currentDay
-        ", MYSQLI_STORE_RESULT)
-    $row = mysqli_fetch_array($result);
-    $count = $result[0];
-        
-    echo $count                        
-    mysqli_close($con);
-    }
-
-    
 ?>
