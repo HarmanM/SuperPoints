@@ -43,12 +43,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        Promotions tProm = new Promotions("3 777666555 1 Details 0 BCIT");
-        Promotions tProm2 = new Promotions("3 213123123 1 Details2 0 SFUBUSINESSNAME");
-        adapter.add(tProm);
-        adapter.add(tProm2);*/
-
         //TODO add items to listView
 
     }

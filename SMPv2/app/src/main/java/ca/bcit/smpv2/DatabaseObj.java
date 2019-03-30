@@ -40,7 +40,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
         setMembers("uid=" + userID, f);
-        objConstructor = User::new;
+        objConstructor = Promotions::new;
         function = "getApplicablePromos";
         get = true;
         this.execute();
@@ -241,8 +241,10 @@ public class DatabaseObj extends AsyncTask {
                 ArrayList<Object> res = new ArrayList<Object>();
                 if (objConstructor != null) {
                     String resArr[] = strObject.split("\n");
-                    for(String sObj : resArr)
+                    for(String sObj : resArr) {
+                        Log.i("SOBJ", sObj);
                         res.add(objConstructor.apply(sObj));
+                    }
                 }
                 onCompleteFunction.accept(res);
             }

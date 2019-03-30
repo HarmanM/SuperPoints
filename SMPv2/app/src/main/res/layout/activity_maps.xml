@@ -17,6 +17,7 @@
         app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
 
+
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
