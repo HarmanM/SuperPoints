@@ -97,6 +97,7 @@
         mysqli_close($con);
     }
 
+    // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -104,17 +105,19 @@
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
 
-        $setters = $_GET['setClause'];
-        $split_str = explode(", ", $setters);
-        $userid = substr(split_str[0], 7);
+        $userid = $_GET['USER_ID'];
+        $businessid = $_GET['BUSINESS_ID'];
+        $username = $_GET['USERNAME'];
+        $password = $_GET['PASSWORD'];
+        $setting = $_GET['SETTING'];
+
         if ($userid != "") {
-            $username = split_str[2];
-            $password = split_str[3];
-            $setting = split_str[4];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
         } else {
-            $result = mysql_query($con, "UPDATE `superpoints`.`Users` SET $setters WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            $result = mysql_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
+              username = '$username', setting = '$setting'
+              WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
         }
     }
 

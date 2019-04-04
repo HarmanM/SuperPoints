@@ -109,11 +109,11 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setUser";
         params = "";
-        params += "USER_ID" + o.getUserID();
-        params += "BUSINESS_ID" + o.getBusinessID();
-        params += "USERNAME" + o.getUsername();
-        params += "PASSWORD" + o.getPassword();
-        params += "SETTING" + o.getSetting();
+        params += "USER_ID=" + o.getUserID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "USERNAME=" + o.getUsername() + "&";
+        params += "PASSWORD=" + o.getPassword() + "&";
+        params += "SETTING=" + o.getSetting();
         setMembers(params, f);
         this.execute();
     }
@@ -126,10 +126,10 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setUser";
         params = "";
-        params += "BUSINESS_ID" + o.getBusinessID();
-        params += "BUSINESS_NAME" + o.getBusinessName();
-        params += "LATITUDE" + o.getLatitude();
-        params += "LONGITUDE" + o.getLongitude();
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
+        params += "LATITUDE=" + o.getLatitude() + "&";
+        params += "LONGITUDE=" + o.getLongitude() + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -142,12 +142,12 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setPromotion";
         params = "";
-        params += "PROMOTION_ID" + o.getPromotionID();
-        params += "BUSINESS_ID" + o.getBusinessID();
-        params += "BUSINESS_NAME" + o.getBusinessName();
-        params += "DETAILS" + o.getDetails();
-        params += "CLICKS" + o.getClicks();
-        params += "TIER_ID" + o.getTierID();
+        params += "PROMOTION_ID=" + o.getPromotionID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
+        params += "DETAILS=" + o.getDetails() + "&";
+        params += "CLICKS=" + o.getClicks() + "&";
+        params += "TIER_ID=" + o.getTierID() + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -160,11 +160,11 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setVisit";
         params = "";
-        params += "VISIT_ID" + o.getVisitID();
-        params += "BUSINESS_ID" + o.getBusinessID();
-        params += "USER_ID" + o.getUserID();
-        params += "DATE" + o.getDate();
-        params += "DURATION" + o.getDuration();
+        params += "VISIT_ID=" + o.getVisitID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "USER_ID=" + o.getUserID() + "&";
+        params += "DATE=" + o.getDate() + "&";
+        params += "DURATION=" + o.getDuration() + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -177,8 +177,8 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setTier";
         params = "";
-        params += "TIER_ID" + o.getTierID();
-        params += "MIN_POINTS" + o.getMinPoints();
+        params += "TIER_ID=" + o.getTierID() + "&";
+        params += "MIN_POINTS=" + o.getMinPoints() + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -190,9 +190,9 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "setUserBusinessTier";
         params = "";
-        params += "USER_ID" + o.getUserID();
-        params += "BUSINESS_ID" + o.getBusinessID();
-        params += "POINTS" + o.getPoints();
+        params += "USER_ID=" + o.getUserID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "POINTS=" + o.getPoints() + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -207,7 +207,7 @@ public class DatabaseObj extends AsyncTask {
                         + "&whereClause=" + params;
             } else{
                 link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
-                        + params;
+                        + "&" + params;
             }
             URL url = new URL(link);
             HttpClient client = new DefaultHttpClient();
