@@ -30,19 +30,22 @@
         <ImageView
             android:id="@+id/logoImageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/logo" />
+            android:layout_height="132dp"
+            android:layout_marginTop="20dp"
+            app:srcCompat="@drawable/logo3" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:orientation="horizontal"
         android:gravity="center">
 
         <TextView
             android:id="@+id/nameTextView"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="John Doe" />
