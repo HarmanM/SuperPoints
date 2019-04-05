@@ -125,7 +125,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void setBusiness(Business o, Consumer<ArrayList<Object>> f){
         get = false;
-        function = "setUser";
+        function = "setBusiness";
         params = "";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
