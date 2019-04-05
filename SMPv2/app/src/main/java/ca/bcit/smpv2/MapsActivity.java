@@ -75,6 +75,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int locationRequestInterval = 15; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100; //???? why is it a random int, reason its not private?
 
+    static final ArrayList<Business> businessesNearby = new ArrayList<>();
+
     BeaconRanger br;
 
     @Override
@@ -152,7 +154,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             Log.i(TAG, "Location was found");
             handleNewLocation(location);
-            //generateBusinessMarkers(generateBusinesssNearby(location));
+            generateBusinessesNearby(location);
         }
         Log.i(TAG, "Location services connected.");
     }
@@ -196,14 +198,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         handleNewLocation(location);
         //TODO check if this works
-        ArrayList<Business> BusinessesNearby = generateBusinessesNearby(location);
-        if(!BusinessesNearby.isEmpty())
+        if(!businessesNearby.isEmpty())
         {
             Intent intent = new Intent(this, MapsActivity.class);
             String title = "SuperPoints are up for grabs near you!";
             String message = "Check it out!";
 
-            generateBusinessMarkers(BusinessesNearby);
+            generateBusinessMarkers(businessesNearby);
         }
         Log.i(TAG, "LOCATION CHANGED.");
     }
@@ -277,28 +278,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //TODO check if this works
-    public ArrayList<Business> generateBusinessesNearby (Location location) {
-        final ArrayList<Business> businessesNearby = new ArrayList<>();
+    public void generateBusinessesNearby (Location location) {
         //TODO assign database results into this? or similar container
         //TODO investigate what accuracy to use
+        double lat = location.getLatitude();
+        double lon= location.getLongitude();
 
-        new DatabaseObj (MapsActivity.this).getUsers("", new Consumer<ArrayList<Object>>() {
+        new DatabaseObj (MapsActivity.this).getBusinessesNearby("lat=" + lat + "%20" + "long=" + lon
+                , new Consumer<ArrayList<Object>>() {
             @Override
             public void accept(ArrayList<Object> objects) {
                 for(Object o: objects)
                     businessesNearby.add((Business) o);
+                if(!businessesNearby.isEmpty())
+                {
+                    Intent intent = new Intent(MapsActivity.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
+
+                    showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, MapsActivity.this);
+                    generateBusinessMarkers(businessesNearby);
+                    onLocationChanged(location);
+                }
             }
         });
-
-        if(!businessesNearby.isEmpty())
-        {
-            Intent intent = new Intent(this, MapsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-            showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, this);
-        }
-        return businessesNearby;
     }
 
     //TODO check if this works

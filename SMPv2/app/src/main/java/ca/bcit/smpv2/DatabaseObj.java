@@ -72,7 +72,8 @@ public class DatabaseObj extends AsyncTask {
 
     public void getBusinessesNearby(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
-        function = "selectBusiness";
+        objConstructor = Business::new;
+        function = "getBusinesses";
         get = true;
         this.execute();
     }

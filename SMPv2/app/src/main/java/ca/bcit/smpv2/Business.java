@@ -19,8 +19,8 @@ public class Business {
         String[] result = sqlResult.split(" ");
         this.businessID = Integer.parseInt(result[0]);
         this.businessName = result[1];
-        this.latitude = Integer.parseInt(result[2]);
-        this.longitude = Integer.parseInt(result[3]);
+        this.latitude = Double.parseDouble(result[2]);
+        this.longitude = Double.parseDouble(result[3]);
         this.region = result[4];
     }
 
