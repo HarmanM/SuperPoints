@@ -281,8 +281,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final ArrayList<Business> businessesNearby = new ArrayList<>();
         //TODO assign database results into this? or similar container
         //TODO investigate what accuracy to use
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
 
-        new DatabaseObj (MapsActivity.this).getUsers("", new Consumer<ArrayList<Object>>() {
+        new DatabaseObj (MapsActivity.this).getBusinessesNearby("lat=" + lat + " " +" long=" + lon, new Consumer<ArrayList<Object>>() {
             @Override
             public void accept(ArrayList<Object> objects) {
                 for(Object o: objects)
