@@ -49,10 +49,12 @@
 
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
-            $col_count = mysqli_num_fields($result);
-            for ($i = 0; $i < $col_count; $i++) {
-                echo $row[$i] . " ";
-            }
+            $visitid = $row['visitID'];
+            $userid = $row['userID'];
+            $businessid = $row['businessID'];
+            $duration = $row['duration'];
+            $date = $row['date'];
+            echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['visitID'];
@@ -79,10 +81,12 @@
 
         if ($row_count <= 1) {
             $row = mysqli_fetch_array($result);
-            $col_count = mysqli_num_fields($result);
-            for ($i = 0; $i < $col_count; $i++) {
-                echo $row[$i] . " ";
-            }
+            $visitid = $row['promotionID'];
+            $businessid = $row['businessID'];
+            $tiersid = $row['tierID'];
+            $details = $row['details'];
+            $clicks = $row['clicks'];
+            echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
@@ -96,6 +100,7 @@
         }
         mysqli_close($con);
     }
+
 
     // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
@@ -111,13 +116,36 @@
         $password = $_GET['PASSWORD'];
         $setting = $_GET['SETTING'];
 
-        if ($userid != "") {
+        if ($userid == "") {
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
         } else {
             $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
               username = '$username', setting = '$setting' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
         }
+    }
+
+    function handleBusiness() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $businessid = $_GET['BUSINESS_ID'];
+      $businessname = $_GET['BUSINESS_NAME'];
+      $latitude = $_GET['LATITUDE'];
+      $longitude = $_GET['LONGITUDE'];
+      $region = $_GET['REGION'];
+
+      if ($businessid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
+              (`businessID`,`businessName`,`latitude`, 'longitude') VALUES ('$businessid', '$businessname',
+                '$latitude', '$longitude', '$region');", MYSQLI_STORE_RESULT);
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
+            username = '$username', setting = '$setting' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+      }
     }
 
     function login() {
@@ -264,21 +292,40 @@
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
 
-        $lat = $_GET['lat'];
-        $long = $_GET['long'];
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Businesses
+        $where = $_GET['whereClause'];
+
+        if (isset($where)) {
+          $explode = explode(" ", $where);
+        }
+        $lat = substr($explode[0], 4);
+        $long = substr($explode[1], 5);
+
+        $result = mysqli_query($con, "SELECT * FROM superpoints.Businesses
             WHERE 6371 * acos( cos( radians('$lat') )
             * cos( radians( superpoints.Businesses.latitude ) )
             * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') )
             * sin(radians(superpoints.Businesses.latitude)) ) < 1;", MYSQLI_STORE_RESULT);
-        while($row_data = mysqli_fetch_array($result)) {
-            $businessid = $row_data['businessID'];
-            $businessname = $row_data['businessName'];
-            $latitude = $row_data['latitude'];
-            $longitude = $row_data['longitude'];
-            echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
-            echo "<br>";
-        }
+
+
+            $row_count = mysqli_num_rows($result);
+
+            if ($row_count <= 1) {
+                $row = mysqli_fetch_array($result);
+                    $businessid = $row['businessID'];
+                    $businessname = $row['businessName'];
+                    $latitude = $row['latitude'];
+                    $longitude = $row['longitude'];
+                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+            } else {
+                while($row_data = mysqli_fetch_array($result)) {
+                    $businessid = $row_data['businessID'];
+                    $businessname = $row_data['businessName'];
+                    $latitude = $row_data['latitude'];
+                    $longitude = $row_data['longitude'];
+                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+                    echo "<br>";
+                }
+            }
 
         mysqli_close($con);
     }
@@ -396,7 +443,6 @@ function calcAvgVisitsWeek () {
         case "getUser":
             getUser();
             break;
-        
         case "login":
             login();
             break;
