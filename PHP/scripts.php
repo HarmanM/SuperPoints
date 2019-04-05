@@ -139,12 +139,58 @@
       $region = $_GET['REGION'];
 
       if ($businessid == "") {
-          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Businesses`
               (`businessID`,`businessName`,`latitude`, 'longitude') VALUES ('$businessid', '$businessname',
                 '$latitude', '$longitude', '$region');", MYSQLI_STORE_RESULT);
       } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
-            username = '$username', setting = '$setting' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Businesses` SET businessName = '$businessname',
+            latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
+      }
+    }
+
+    function handlePromotions() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $promotionid = $_GET['PROMOTION_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+      $tierid = $_GET['TIER_ID'];
+      $details = $_GET['DETAILS'];
+      $clicks = $_GET['CLICKS'];
+
+      if ($promotionid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
+              (`businessID`,`tierID`,`details`, 'clicks') VALUES ('$businessid', '$tierid',
+                '$details', '$clicks');", MYSQLI_STORE_RESULT);
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
+            tierid = '$tierid', details = '$details', clicks = $clicks WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+      }
+    }
+
+    function handleVisits() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $visitid = $_GET['VISIT_ID'];
+      $userid = $_GET['USER_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+      $duration = $_GET['DURATION'];
+      $date = $_GET['DATE'];
+
+      if ($visitid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
+              (`userID`,`businessID`,`duration`, 'date') VALUES ('$userid', '$businessid',
+                '$duration', '$date');", MYSQLI_STORE_RESULT);
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
+            duration = '$duration', date = '$date' WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
     }
 
@@ -186,53 +232,6 @@
             WHERE (`userID` = '$userID');", MYSQLI_STORE_RESULT);
         echo $result ? 'true' : 'false';
 
-        mysqli_close($con);
-    }
-
-    function register() {
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-        $username = $_GET['username'];
-        $password = $_GET['password'];
-        $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
-            (`password`,`userName`,`settings`) VALUES ('$password', '$username', 0);", MYSQLI_STORE_RESULT);
-        echo $result ? 'true' : 'false';
-
-        mysqli_close($con);
-    }
-
-    function insertVisits() {
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-        $userid = $_GET['uid'];
-        $businessid = $_GET['bid'];
-        $duration = $_GET['dur'];
-        $date = $_GET['date'];
-        $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits` (`userID`,`businessID`,`duration`,`date`) VALUES
-            ('$userid', '$businessid', '$duration', '$date');", MYSQLI_STORE_RESULT);
-        echo $result ? 'true' : 'false';
-        mysqli_close($con);
-    }
-
-    function insertPromotions() {
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-        $businessid = $_GET['bid'];
-        $tierid = $_GET['tid'];
-        $detail = $_GET['detail'];
-        $new = str_replace(' ', '&', $detail);
-        $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions` (`businessID`, `tierID`, `details`)
-            VALUES ('$businessid', '$tierid', '$new');", MYSQLI_STORE_RESULT);
-        echo $result ? 'true' : 'false';
         mysqli_close($con);
     }
 
@@ -304,7 +303,7 @@
             WHERE 6371 * acos( cos( radians('$lat') )
             * cos( radians( superpoints.Businesses.latitude ) )
             * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') )
-            * sin(radians(superpoints.Businesses.latitude)) ) < 1;", MYSQLI_STORE_RESULT);
+            * sin(radians(superpoints.Businesses.latitude)) ) < 20;", MYSQLI_STORE_RESULT);
 
 
             $row_count = mysqli_num_rows($result);
@@ -315,14 +314,16 @@
                     $businessname = $row['businessName'];
                     $latitude = $row['latitude'];
                     $longitude = $row['longitude'];
-                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+                    $region = $row['region'];
+                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region;
             } else {
                 while($row_data = mysqli_fetch_array($result)) {
                     $businessid = $row_data['businessID'];
                     $businessname = $row_data['businessName'];
                     $latitude = $row_data['latitude'];
                     $longitude = $row_data['longitude'];
-                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " ";
+                    $region = $row_data['region'];
+                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region;
                     echo "<br>";
                 }
             }
@@ -454,15 +455,6 @@ function calcAvgVisitsWeek () {
             break;
         case "user":
             handleUser();
-            break;
-        case "register":
-            register();
-            break;
-        case "visit":
-            insertVisits();
-            break;
-        case "addPromo":
-            insertPromotions();
             break;
         case "promoClick":
             incrementClick();
