@@ -115,9 +115,8 @@
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
         } else {
-            $result = mysql_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
-              username = '$username', setting = '$setting'
-              WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
+              username = '$username', setting = '$setting' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
         }
     }
 
@@ -397,6 +396,7 @@ function calcAvgVisitsWeek () {
         case "getUser":
             getUser();
             break;
+        
         case "login":
             login();
             break;
