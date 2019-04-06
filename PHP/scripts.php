@@ -113,15 +113,15 @@
         $userid = $_GET['USER_ID'];
         $businessid = $_GET['BUSINESS_ID'];
         $username = $_GET['USERNAME'];
-        $password = $_GET['PASSWORD'];
         $setting = $_GET['SETTING'];
 
         if ($userid == "") {
+        $password = $_GET['PASSWORD'];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
         } else {
-            $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET password = '$password', businessid = '$businessid',
-              username = '$username', setting = '$setting' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
+              username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
         }
     }
 
@@ -260,7 +260,7 @@
             $clicks = $row_data['clicks'];
             $businessName = $row_data['businessName'];
             echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
-            echo "\n";
+            echo "<br>";
         }
         mysqli_close($con);
     }
