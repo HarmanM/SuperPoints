@@ -31,20 +31,16 @@ public class DashboardActivity extends AppCompatActivity {
         final PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
 
         ListView listView = (ListView) findViewById(R.id.lvPromotions);
-        listView.setAdapter(adapter);
-
-        //TODO The sql script needs to query based on user, need to generate list based on database return script
 
         new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), new Consumer<ArrayList<Object>>() {
             @Override
             public void accept(ArrayList<Object> objects) {
-                for(Object o : objects)
+                for(Object o : objects) {
                     adapter.add((Promotions) o);
+                }
+                listView.setAdapter(adapter);
             }
         });
-
-        //TODO add items to listView
-
     }
 
 

@@ -39,7 +39,7 @@ public class DatabaseObj extends AsyncTask {
     }
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
-        setMembers("uid=" + userID, f);
+        setMembers("userid=" + userID, f);
         objConstructor = Promotions::new;
         function = "getApplicablePromos";
         get = true;
