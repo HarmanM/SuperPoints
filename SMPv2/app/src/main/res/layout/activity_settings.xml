@@ -10,88 +10,84 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <TextView
         android:id="@+id/settingsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="161dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="198dp"
         android:text="Settings"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <SeekBar
         android:id="@+id/seekBarPrivacy"
         android:layout_width="200dp"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="92dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pushTextView" />
 
     <TextView
         android:id="@+id/pushTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="294dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="292dp"
         android:text="Push Notifications"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/postalTextView"
+        android:id="@+id/passwordTextView"
         android:layout_width="68dp"
         android:layout_height="34dp"
-        android:layout_alignTop="@+id/cityEditText"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="33dp"
+        android:layout_alignTop="@+id/usernameEditText"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="152dp"
         android:layout_toStartOf="@+id/logoImageView"
         android:text="Password"
-        app:layout_constraintEnd_toStartOf="@+id/postalEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="87dp"
         android:layout_height="43dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="13dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="27dp"
         android:text="Confirm Password"
-        app:layout_constraintEnd_toStartOf="@+id/phoneEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postalTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
     <EditText
-        android:id="@+id/postalEditText"
+        android:id="@+id/passwordEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="81dp"
+        android:layout_marginTop="196dp"
+        android:layout_marginEnd="36dp"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/postalTextView"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/phoneEditText"
+        android:id="@+id/confirmEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="82dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/postalEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
 </android.support.constraint.ConstraintLayout>
