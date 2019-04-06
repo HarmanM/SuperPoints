@@ -260,7 +260,7 @@
             $clicks = $row_data['clicks'];
             $businessName = $row_data['businessName'];
             echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
-            echo "<br>";
+            echo "\n";
         }
         mysqli_close($con);
     }
