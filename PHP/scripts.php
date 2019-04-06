@@ -241,12 +241,15 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $userID = $_GET['uid'];
+
+        // Becomes WHERE userid = userid
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+        //$userID = $_GET['uid'];
         $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, tierID, details, clicks, businessName
             FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON
             superpoints.Promotions.businessID = superpoints.Businesses.businessID
             INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
-            WHERE (SELECT points FROM superpoints.Points WHERE userID = '$userID' AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
+            WHERE (SELECT points FROM superpoints.Points $where AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
 				(SELECT minPoints FROM superpoints.Tiers WHERE tierID = superpoints.Promotions.tierID);", MYSQLI_STORE_RESULT);
 
         while($row_data = mysqli_fetch_array($result)) {
@@ -324,7 +327,7 @@
                     $longitude = $row_data['longitude'];
                     $region = $row_data['region'];
                     echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region;
-                    echo "<br>";
+                    echo "\n";
                 }
             }
 
