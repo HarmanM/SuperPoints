@@ -198,6 +198,17 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void setSettings(User o, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "settings";
+        params = "";
+        params += "USER_ID" + o.getUserID();
+        params += "SETTING" + o.getSetting();
+        setMembers(params, f);
+        this.execute();
+    }
+
     @Override
     protected String doInBackground(Object[] arg0) {
         try {

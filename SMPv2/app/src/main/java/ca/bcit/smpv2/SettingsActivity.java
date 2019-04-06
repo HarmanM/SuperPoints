@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
                     //probably need a better null check
                     if (privacySetting != 0 && userID != 0) {
                         LoginActivity.user.setSetting(privacySetting);
-                        new DatabaseObj (SettingsActivity.this).setUser(LoginActivity.user, null);
+                        new DatabaseObj (SettingsActivity.this).setSettings(LoginActivity.user, null);
                     }
                 } catch (Exception e) {
                     Log.i("SEEKBAR SETTINGS ACTIVITY:", e.toString());
