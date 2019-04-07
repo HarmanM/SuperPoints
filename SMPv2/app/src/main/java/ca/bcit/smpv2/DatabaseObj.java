@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -110,7 +111,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
-        function = "user";
+        function = "getUser";
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -166,8 +167,8 @@ public class DatabaseObj extends AsyncTask {
         params += "VISIT_ID=" + o.getVisitID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "USER_ID=" + o.getUserID() + "&";
-        params += "DATE=" + o.getDate() + "&";
-        String s = o.getDate().toString();
+        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime()) + "&";
+        String s = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime());
         params += "DURATION=" + o.getDuration() + "&";
         setMembers(params, f);
         this.execute();

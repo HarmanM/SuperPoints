@@ -283,9 +283,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         double lon = location.getLongitude();
 
         new DatabaseObj (MapsActivity.this).getBusinessesNearby("lat=" + lat + "%20" + "long=" + lon
-                , new Consumer<ArrayList<Object>>() {
-            @Override
-            public void accept(ArrayList<Object> objects) {
+                , (ArrayList<Object> objects)->{
                 for(Object o: objects)
                     businessesNearby.add((Business) o);
                 if(!businessesNearby.isEmpty())
@@ -298,7 +296,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     generateBusinessMarkers(businessesNearby);
                     onLocationChanged(location);
                 }
-            }
         });
     }
 

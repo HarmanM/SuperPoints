@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Object obj) {
             String strObject = (String) obj;
             if (!strObject.trim().isEmpty()) {
-                String objArr[] = strObject.split(" ", 0);
+                String objArr[] = strObject.split("~s", 0);
                 new DatabaseObj (LoginActivity.this).getUsers("USERID=" + objArr[0], new Consumer<ArrayList<Object>>() {
                     @Override
                     public void accept(ArrayList<Object> objects) {

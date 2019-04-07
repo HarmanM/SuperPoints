@@ -16,13 +16,15 @@ public class Business {
     }
 
     public Business(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.businessID = Integer.parseInt(result[0]);
         this.businessName = result[1];
         this.latitude = Double.parseDouble(result[2]);
         this.longitude = Double.parseDouble(result[3]);
         this.region = result[4];
     }
+
+    public String getRegion(){return region;}
 
     public int getBusinessID() {
         return businessID;
