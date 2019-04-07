@@ -213,6 +213,18 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void deletePromotion(int id){
+        deletePromotion(id, null);
+    }
+
+    public void deletePromotion(int id, Consumer<ArrayList<Object>> f) {
+        get = false;
+        function = "deletePromotion";
+        params = "PROMOTION_ID=" + id;
+        setMembers(params, f);
+        this.execute();
+    }
+
     @Override
     protected String doInBackground(Object[] arg0) {
         try {
