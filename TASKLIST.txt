@@ -11,3 +11,4 @@ Logic for promotions add edit and delete buttons, should call Database object:
 
 Incrementing points: OLIVER
 
+Creating a business on registration as a business user. Discuss how to handle lat long placement.:
