@@ -77,8 +77,14 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
+
+        $businessID = $_GET['whereClause'];
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions $where", MYSQLI_STORE_RESULT);
+
+        $result = mysqli_query($con,"SELECT promotionID, businessID, minPoints, details, clicks, businessName
+            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
+            $where", MYSQLI_STORE_RESULT);
+
         $row_count = mysqli_num_rows($result);
 
         if ($row_count <= 1) {
@@ -88,7 +94,11 @@
             $tiersid = $row['minPoints'];
             $details = $row['details'];
             $clicks = $row['clicks'];
-            echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks;
+            $businessName = $row['businessName'];
+
+            if (isset($businessid) && $businessid != "") {
+              echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~s" . $businessName;
+            }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
@@ -96,7 +106,11 @@
                 $tiersid = $row_data['minPoints'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
-                echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~n";
+                $businessName = $row_data['businessName'];
+
+                if (isset($businessid) && $businessid != "") {
+                  echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
+                }
             }
         }
         mysqli_close($con);
@@ -237,10 +251,12 @@
       }
 
       if ($visitid == "") {
+        echo "insert";
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
               (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
-                $duration, convert($date, DATETIME));", MYSQLI_STORE_RESULT);
+                $duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
       } else {
+        echo "update";
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
             duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
@@ -250,14 +266,15 @@
 	  $pointsFunc = function($minutes){
 		  $optimalTime = 20;
 		  $slope = 30;
-		  return pow($minutes - $optimalTime, 1 / 3) * $slope;
+      echo (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
+		  return (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
 	  };
 
-	  $points = $pointsFunc($duration) + $pointsFunc(0);
+	  $points = $pointsFunc($duration) + abs($pointsFunc(0));
 	  if($pointsResult == false)
 		  $pointsResult = mysqli_query($con,"INSERT INTO superpoints.Points ($businessid, $userid, $points)", MYSQLI_STORE_RESULT);
 	  else
-		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
+		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
 
     }
 
@@ -403,6 +420,7 @@ function calcAvgVisitsWeek () {
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear); //
     $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $month - 1, $currentYear);
     $currentDay = date('d'); //1-31
+    $businessID = $_GET['BUSINESS_ID'];
 
     $daysFromPrevMonth = 0;
 
@@ -428,6 +446,7 @@ function calcAvgVisitsWeek () {
         OR YEAR(superpoints.Visits.date) = $currentYear
             AND MONTH(superpoints.Visits.date) = $month
             AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
+        AND superPoints.Visits.businessID = $businessID
         ", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
     //$count = $result[0];
@@ -451,6 +470,7 @@ function calcAvgVisitsWeek () {
     $currentDay = date('d'); //1-31
 
     $daysFromPrevMonth = 0;
+    $businessID = $_GET['BUSINESS_ID'];
 
     if($currentDay < 7)
     {
@@ -473,7 +493,8 @@ function calcAvgVisitsWeek () {
                 AND DAY(superpoints.Visits.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
             OR YEAR(superpoints.Visits.date) = $currentYear
                 AND MONTH(superpoints.Visits.date) = $month
-                AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay", MYSQLI_STORE_RESULT);
+                AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
+                AND superPoints.Visits.businessID = $businessID", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
 
     echo $row[0];
