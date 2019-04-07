@@ -1,5 +1,5 @@
 Logic for registering as a business user, currently it does not seem to function properly
-it toasts "Check your credentials" from its post execute:
+it toasts "Check your credentials" from its post execute: Henry
 
 Logic for detecting a business user on login and direction to BusinessDashboard.java:
 
