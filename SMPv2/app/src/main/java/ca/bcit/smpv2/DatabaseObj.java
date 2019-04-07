@@ -150,7 +150,7 @@ public class DatabaseObj extends AsyncTask {
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
         params += "DETAILS=" + o.getDetails() + "&";
         params += "CLICKS=" + o.getClicks() + "&";
-        params += "TIER_ID=" + o.getTierID() + "&";
+        params += "MIN_POINTS=" + o.getMinimumPoints();
         setMembers(params, f);
         this.execute();
     }
