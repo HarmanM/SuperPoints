@@ -21,8 +21,10 @@ public class User {
     public User(String sqlResult) {
         String[] result = sqlResult.split(" ");
         this.userID = Integer.parseInt(result[0]);
-        this.username = result[1];
-        this.setting = Integer.parseInt(result[2]);
+        this.businessID = Integer.parseInt(result[1]);
+        this.username = result[2];
+        this.setting = Integer.parseInt(result[3]);
+
     }
 
     public int getUserID() {

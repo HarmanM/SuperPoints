@@ -8,8 +8,12 @@
 
 
 
-    <string name="add_promotion_name">What is the name of the promotion?</string>
-    <string name="add_promotion_tier">What tier of customer should it be offered to?</string>
+    <string name="add_promotion_points">How many points does this promotion need to be redeemed?</string>
     <string name="add_promotion_details">What should we say about your promotion?</string>
     <string name="add_promotion_submit">All Done!</string>
+    <string name="add_promotion_minimum_points">The minimum points will be 0 if nothing is entered.</string>
+
+    <string name="delete_promotion_title">Are you sure?</string>
+    <string name="delete_promotion_submit">Yes</string>
+    <string name="delete_promotion_cancel">No</string>
 </resources>

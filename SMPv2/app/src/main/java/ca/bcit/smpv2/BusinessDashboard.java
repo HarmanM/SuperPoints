@@ -14,22 +14,28 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class BusinessDashboard extends AppCompatActivity {
+public class BusinessDashboard extends AppCompatActivity
+{
 
-    NumberPicker NBPromotionTier;
-    int minimumUserTier = 1;
-    int maxmimumUserTier = 5;
+    int defaultPromotionPoints = 0;
+    Promotions selectedPromotion;
+    Button addBtn;
+    Button editBtn;
+    Button dltBtn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_dashboard);
 
@@ -45,9 +51,35 @@ public class BusinessDashboard extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
-        NBPromotionTier = (NumberPicker) findViewById(R.id.numberPickerPromotionTier);
-        NBPromotionTier.setMaxValue(maxmimumUserTier);
-        NBPromotionTier.setMinValue(minimumUserTier);
+        listView.setOnItemClickListener((parent, view, position, id) ->  {
+                selectedPromotion = usersPromotions.get(position);
+        });
+
+        addBtn.findViewById(R.id.addBtn);
+        editBtn.findViewById(R.id.editBtn);
+        dltBtn.findViewById(R.id.deleteBtn);
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddDialog();
+            }
+        });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUpdateDialog(selectedPromotion);
+            }
+        });
+
+        dltBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteDialog(selectedPromotion);
+            }
+        });
+
 
     }
 
@@ -78,63 +110,88 @@ public class BusinessDashboard extends AppCompatActivity {
     }
 
     private void showAddDialog() {
+        showUpdateDialog(null);
+    }
+
+    private void showDeleteDialog(Promotions promoToDelete) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        final View dialogView = inflater.inflate(R.layout.delete_promotion_dialogue, null);
+        final Button buttonDeletePromotion = dialogView.findViewById(R.id.buttonDeletePromotion);
+        final Button buttonCancelDeletePromotion = dialogView.findViewById(R.id.buttonCancelDeletePromotion);
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle("Delete Promotion");
+
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+        buttonDeletePromotion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO need delete operation in PHP
+                alertDialog.dismiss();
+            }
+        });
+        buttonCancelDeletePromotion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private void showUpdateDialog(Promotions updatedPromo) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
         final View dialogView = inflater.inflate(R.layout.add_promotion_dialogue, null);
-        final EditText editTextPromotionName = dialogView.findViewById(R.id.editTextPromotionName);
-        final NumberPicker numberPickerPromotionTier = dialogView.findViewById(R.id.numberPickerPromotionTier);
+        final EditText editTextPromotionPoints = dialogView.findViewById(R.id.editTextPromotionPoints);
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
 
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle("Add Promotion");
+        dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
 
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
 
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                String promotionName = editTextPromotionName.getText().toString().trim();
-                int promotionTier = numberPickerPromotionTier.getValue();
+            public void onClick(View v) {
+                int promotionPoints = defaultPromotionPoints;
                 String promotionDetails = editTextPromotionDetail.getText().toString();
-
-                if (TextUtils.isEmpty(promotionName))
+                try
                 {
-                    editTextPromotionName.setError("A promotion should have a name!");
-                    return;
+                    promotionPoints = Integer.parseInt(editTextPromotionPoints.getText().toString());
                 }
-                if (promotionTier == 0)
+                catch (Exception e)
                 {
-                    promotionTier = minimumUserTier;
+                    Toast.makeText(BusinessDashboard.this, "Please enter a number for the minimum amounts of points.", Toast.LENGTH_SHORT).show();
                 }
                 if (TextUtils.isEmpty(promotionDetails)) {
                     editTextPromotionDetail.setError("Your customer should know what it is you are offering!");
                 }
 
-                //TODO java initializes null ints to 0, PHP script checks if "" is given for ID then triggers insert, need to adjust somehow
-                int promoID = 0;
-                int businessID = LoginActivity.user.getBusinessID();
-                int tierID = numberPickerPromotionTier.getValue();
-                String details = editTextPromotionDetail.getText().toString();
-                int clicks = 0;
-                //TODO should we attach business name to user or handle at db level? probably db level
-                String businessName = "";
-                Promotions promo = new Promotions(promoID, businessID, tierID, details, clicks, businessName);
-
-                //TODO calls setPromotion which we decided would handle creation of row by if given object has no ID
-                new DatabaseObj (BusinessDashboard.this).setPromotion(promo, null);
-
-                //TODO call method to update promotions listview
-                /*helper.updateToDo(db ,new ToDo(newTask, newWho, newDueDate, newDone), toDoId);
-                lvToDo = findViewById(R.id.lvToDo);
-                final ArrayList<ToDo> toDoList = getToDos();
-                ToDoListAdapter adapter = new ToDoListAdapter(MainActivity.this, toDoList);
-                lvToDo.setAdapter(adapter);*/
-
+                if(updatedPromo == null)
+                {
+                    int promoID = 0;
+                    int businessID = LoginActivity.user.getBusinessID();
+                    String details = editTextPromotionDetail.getText().toString();
+                    int clicks = 0;
+                    String businessName = "";
+                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, details, clicks, businessName);
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, null);
+                }
+                else
+                {
+                    updatedPromo.setDetails(promotionDetails);
+                    updatedPromo.setMinimumPoints(promotionPoints);
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, null);
+                }
                 alertDialog.dismiss();
             }
         });
+    }
 }

@@ -3,15 +3,16 @@ package ca.bcit.smpv2;
 public class Promotions {
     private int promotionID;
     private int businessID;
+    private int minimumPoints;
     private int tierID;
     private String businessName;
     private String details;
     private int clicks;
 
-    public Promotions(int promotionID, int businessID, int tierID, String details, int clicks, String businessName) {
+    public Promotions(int promotionID, int businessID, int minimumPoints, String details, int clicks, String businessName) {
         this.promotionID = promotionID;
         this.businessID = businessID;
-        this.tierID = tierID;
+        this.minimumPoints = minimumPoints;
         this.details = details;
         this.clicks = clicks;
         this.businessName = businessName;
@@ -22,7 +23,7 @@ public class Promotions {
         String[] result = sqlResult.split(" ");
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
-        this.tierID = Integer.parseInt(result[2]);
+        this.minimumPoints = Integer.parseInt(result[2]);
         this.details = result[3];
         this.clicks = Integer.parseInt(result[4]);
         this.businessName = result[5];
@@ -44,13 +45,15 @@ public class Promotions {
         this.businessID = businessID;
     }
 
-    public int getTierID() {
-        return tierID;
+    public int getMinimumPoints() {
+        return minimumPoints;
     }
 
-    public void setTierID(int tierID) {
-        this.tierID = tierID;
+    public void setMinimumPoints(int minimumPoints) {
+        this.minimumPoints = minimumPoints;
     }
+
+    public int getTierID() {return tierID;}
 
     public String getDetails() {
         return details;
