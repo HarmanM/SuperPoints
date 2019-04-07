@@ -26,7 +26,7 @@ public class Promotions {
         this.minimumPoints = Integer.parseInt(result[2]);
         this.details = result[3];
         this.clicks = Integer.parseInt(result[4]);
-        this.businessName = result[5];
+        //this.businessName = result[5];
     }
 
     public int getPromotionID() {

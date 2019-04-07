@@ -162,7 +162,7 @@
         }
 
         if ($userid == "") {
-        $password = $_GET['PASSWORD'];
+			$password = $_GET['PASSWORD'];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
             echo ($result) ? "true" : "false";
@@ -172,6 +172,21 @@
             echo ($result) ? "true" : "false";
         }
     }
+	
+	function updatePassword() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $userid = $_GET['USER_ID'];
+		
+        $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
+            password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+			
+        echo ($result) ? "true" : "";
+	}
 
     function handleBusiness() {
       $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -266,14 +281,15 @@
 	  $pointsFunc = function($minutes){
 		  $optimalTime = 20;
 		  $slope = 30;
-		  return pow($minutes - $optimalTime, 1 / 3) * $slope;
+      echo (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
+		  return (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
 	  };
 
-	  $points = $pointsFunc($duration) + $pointsFunc(0);
+	  $points = $pointsFunc($duration) + abs($pointsFunc(0));
 	  if($pointsResult == false)
 		  $pointsResult = mysqli_query($con,"INSERT INTO superpoints.Points ($businessid, $userid, $points)", MYSQLI_STORE_RESULT);
 	  else
-		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
+		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
 
     }
 

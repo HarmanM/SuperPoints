@@ -122,6 +122,20 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void updatePassword(int userID, String newPW){
+        updatePassword(userID, newPW, null);
+    }
+
+    public void updatePassword(int userID, String newPW, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setUser";
+        params = "";
+        params += "USER_ID=" + userID + "&";
+        params += "NEW_PASSWORD=" + newPW;
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void setBusiness(Business o){
         setBusiness(o, null);
     }
@@ -167,8 +181,7 @@ public class DatabaseObj extends AsyncTask {
         params += "VISIT_ID=" + o.getVisitID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "USER_ID=" + o.getUserID() + "&";
-        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime()) + "&";
-        String s = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime());
+        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss")).format(o.getDate().getTime()) + "&";
         params += "DURATION=" + o.getDuration();
         setMembers(params, f);
         this.execute();
@@ -209,6 +222,17 @@ public class DatabaseObj extends AsyncTask {
         params = "";
         params += "USER_ID" + o.getUserID();
         params += "SETTING" + o.getSetting();
+        setMembers(params, f);
+        this.execute();
+    }
+    public void deletePromotion(int id){
+        deletePromotion(id, null);
+    }
+
+    public void deletePromotion(int id, Consumer<ArrayList<Object>> f) {
+        get = false;
+        function = "deletePromotion";
+        params = "PROMOTION_ID=" + id;
         setMembers(params, f);
         this.execute();
     }
