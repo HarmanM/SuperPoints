@@ -32,14 +32,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.lvPromotions);
 
-        new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), new Consumer<ArrayList<Object>>() {
-            @Override
-            public void accept(ArrayList<Object> objects) {
+        new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> objects)-> {
                 for(Object o : objects) {
                     adapter.add((Promotions) o);
                 }
                 listView.setAdapter(adapter);
-            }
         });
     }
 
@@ -54,11 +51,11 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+        finish();
         switch (item.getItemId()) {
             case R.id.home:
-                Intent h = new Intent(getBaseContext(), MapsActivity.class);
-                startActivity(h);
+                //Intent h = new Intent(getBaseContext(), MapsActivity.class);
+                //startActivity(h);
                 return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);

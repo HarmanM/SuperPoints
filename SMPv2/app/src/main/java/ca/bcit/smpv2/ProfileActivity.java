@@ -31,10 +31,11 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        finish();
         switch (item.getItemId()) {
             case R.id.home:
-                Intent h = new Intent(getBaseContext(), MapsActivity.class);
-                startActivity(h);
+                //Intent h = new Intent(getBaseContext(), MapsActivity.class);
+                //startActivity(h);
                 return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
