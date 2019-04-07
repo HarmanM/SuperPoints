@@ -45,7 +45,8 @@ public class BusinessDashboard extends AppCompatActivity
         ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
         PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
 
-        ListView listView = (ListView) findViewById(R.id.lvAnalytics);
+        
+        ListView listView = (ListView) findViewById(R.id.lvPromotions);
         listView.setAdapter(adapter);
 
         setSupportActionBar(toolbar);
@@ -55,9 +56,9 @@ public class BusinessDashboard extends AppCompatActivity
                 selectedPromotion = usersPromotions.get(position);
         });
 
-        addBtn.findViewById(R.id.addBtn);
-        editBtn.findViewById(R.id.editBtn);
-        dltBtn.findViewById(R.id.deleteBtn);
+        addBtn = findViewById(R.id.addBtn);
+        editBtn =  findViewById(R.id.editBtn);
+        dltBtn = findViewById(R.id.deleteBtn);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +163,7 @@ public class BusinessDashboard extends AppCompatActivity
             public void onClick(View v) {
                 int promotionPoints = defaultPromotionPoints;
                 String promotionDetails = editTextPromotionDetail.getText().toString();
+                promotionDetails = promotionDetails.replace(" ", "%20");
                 try
                 {
                     promotionPoints = Integer.parseInt(editTextPromotionPoints.getText().toString());
@@ -178,10 +180,9 @@ public class BusinessDashboard extends AppCompatActivity
                 {
                     int promoID = 0;
                     int businessID = LoginActivity.user.getBusinessID();
-                    String details = editTextPromotionDetail.getText().toString();
                     int clicks = 0;
                     String businessName = "";
-                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, details, clicks, businessName);
+                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, clicks, businessName);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, null);
                 }
                 else
