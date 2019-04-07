@@ -167,9 +167,8 @@ public class DatabaseObj extends AsyncTask {
         params += "VISIT_ID=" + o.getVisitID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "USER_ID=" + o.getUserID() + "&";
-        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime()) + "&";
-        String s = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime());
-        params += "DURATION=" + o.getDuration() + "&";
+        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss")).format(o.getDate().getTime()) + "&";
+        params += "DURATION=" + o.getDuration();
         setMembers(params, f);
         this.execute();
     }
@@ -212,7 +211,6 @@ public class DatabaseObj extends AsyncTask {
         setMembers(params, f);
         this.execute();
     }
-
     public void deletePromotion(int id){
         deletePromotion(id, null);
     }
@@ -221,6 +219,36 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "deletePromotion";
         params = "PROMOTION_ID=" + id;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcAverageDuration(int businessID)
+    {
+        calcAverageDuration(businessID, null);
+    }
+
+    public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageDuration";
+        params = "";
+        params += "BUSINESS_ID" + businessID;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcAverageVisits(int businessID)
+    {
+        calcAverageVisits(businessID, null);
+    }
+
+    public void calcAverageVisits(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageVisits";
+        params = "";
+        params += "BUSINESS_ID" + businessID;
         setMembers(params, f);
         this.execute();
     }

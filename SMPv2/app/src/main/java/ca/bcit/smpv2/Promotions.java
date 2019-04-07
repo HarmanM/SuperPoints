@@ -5,9 +5,9 @@ public class Promotions {
     private int businessID;
     private int minimumPoints;
     private int tierID;
-    private String businessName;
     private String details;
     private int clicks;
+    private String businessName;
 
     public Promotions(int promotionID, int businessID, int minimumPoints, String details, int clicks, String businessName) {
         this.promotionID = promotionID;
