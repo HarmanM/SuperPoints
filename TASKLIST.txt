@@ -1,7 +1,7 @@
 Logic for registering as a business user, currently it does not seem to function properly
 it toasts "Check your credentials" from its post execute: Henry
 
-Logic for detecting a business user on login and direction to BusinessDashboard.java:
+Logic for detecting a business user on login and direction to BusinessDashboard.java: Harman
 
 Change analytics to be part of options menu:
 
@@ -11,4 +11,4 @@ Logic for promotions add edit and delete buttons, should call Database object:
 
 Incrementing points: OLIVER
 
-Creating a business on registration as a business user. Discuss how to handle lat long placement.:
+Creating a business on registration as a business user. Discuss how to handle lat long placement.: Harman
