@@ -39,7 +39,8 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".BusinessDashboard" />
         <activity android:name=".MapsActivity" />
-        <activity android:name=".Analytics"></activity>
+        <activity android:name=".Analytics" />
+        <activity android:name=".BusinessSignup"></activity>
     </application>
 
 </manifest>

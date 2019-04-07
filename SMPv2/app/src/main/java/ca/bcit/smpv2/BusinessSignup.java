@@ -1,0 +1,43 @@
+package ca.bcit.smpv2;
+
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class BusinessSignup extends AppCompatActivity {
+
+    private String username, password, businessName, businessAddress;
+    private EditText businessEditText, addressEditText;
+    private double latitude, longitude;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_business_signup);
+        super.onCreate(savedInstanceState);
+        Intent i = getIntent();
+        username = i.getStringExtra("USERNAME");
+        password = i.getStringExtra("PASSWORD");
+    }
+
+    public void businessRegister(View view) throws IOException {
+        businessEditText = findViewById(R.id.businessNameEditText);
+        businessName = businessEditText.getText().toString();
+        addressEditText = findViewById(R.id.businessAddressEditText);
+        businessAddress = addressEditText.getText().toString();
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = geocoder.getFromLocationName(businessAddress, 1);
+        Address address = addresses.get(0);
+        longitude = address.getLongitude();
+        latitude = address.getLatitude();
+    }
+
+}
