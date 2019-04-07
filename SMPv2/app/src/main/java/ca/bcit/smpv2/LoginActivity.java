@@ -42,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
     public void login(View view) {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
@@ -157,12 +156,12 @@ public class LoginActivity extends AppCompatActivity {
                             i.putExtra("username", username);
                             context.startActivity(i);
                         }
-                     else {
-                        Toast.makeText(context, "Please check your credentials", Toast.LENGTH_SHORT).show();
-                    }
-                }});
+                        else {
+                            Toast.makeText(context, "Please check your credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    }});
                 //TODO: send intent to proper activity
 
-        }}
+            }}
     }
 }

@@ -84,7 +84,7 @@ public class DatabaseObj extends AsyncTask {
     public void getPromotions(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
         objConstructor = Promotions::new;
-        function = "getPromotion";
+        function = "getPromo";
         get = true;
         this.execute();
     }
@@ -111,7 +111,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
-        function = "getUser";
+        function = "setUser";
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";

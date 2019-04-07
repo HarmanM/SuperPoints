@@ -42,12 +42,22 @@ public class BusinessDashboard extends AppCompatActivity
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
+
         ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
         PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
 
-        
-        ListView listView = (ListView) findViewById(R.id.lvPromotions);
+        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
         listView.setAdapter(adapter);
+
+        int businessID = LoginActivity.user.getBusinessID();
+            new DatabaseObj (BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects)-> {
+                for(Object o : objects) {
+                    adapter.add((Promotions) o);
+                }
+                listView.setAdapter(adapter);
+        });
+
 
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
