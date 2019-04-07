@@ -217,7 +217,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
-    //TODO add on click
+    //TODO make this into a class
     // action to open maps activity
     static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
 
@@ -278,12 +278,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //TODO check if this works
     public void generateBusinessesNearby (Location location) {
-        //TODO assign database results into this? or similar container
-        //TODO investigate what accuracy to use
         double lat = location.getLatitude();
-        double lon= location.getLongitude();
+        double lon = location.getLongitude();
 
         new DatabaseObj (MapsActivity.this).getBusinessesNearby("lat=" + lat + "%20" + "long=" + lon
                 , new Consumer<ArrayList<Object>>() {
