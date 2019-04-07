@@ -192,6 +192,21 @@
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
             duration = '$duration', date = '$date' WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
+	  
+	  $pointsResult = mysqli_query($con,"SELECT points FROM superpoints.Points WHERE userID = $userid AND businessID = $businessID", MYSQLI_STORE_RESULT);
+	  
+	  $pointsFunc = function($minutes){
+		  $optimalTime = 20;
+		  $slope = 30;
+		  return pow($minutes - optimalTime, 1 / 3) * $slope;
+	  };
+	  
+	  $points = $pointsFunc($duration) + $pointsFunc(0);
+	  if($pointsResult == false)
+		  $pointsResult = mysqli_query($con,"INSERT INTO superpoints.Points ($businessid, $userid, $points)", MYSQLI_STORE_RESULT);
+	  else 
+		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
+	  
     }
 
     function login() {
