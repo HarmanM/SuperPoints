@@ -403,6 +403,7 @@ function calcAvgVisitsWeek () {
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear); //
     $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $month - 1, $currentYear);
     $currentDay = date('d'); //1-31
+    $businessID = $_GET['BUSINESS_ID'];
 
     $daysFromPrevMonth = 0;
 
@@ -428,6 +429,7 @@ function calcAvgVisitsWeek () {
         OR YEAR(superpoints.Visits.date) = $currentYear
             AND MONTH(superpoints.Visits.date) = $month
             AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
+        AND superPoints.Visits.businessID = $businessID
         ", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
     //$count = $result[0];
@@ -451,6 +453,7 @@ function calcAvgVisitsWeek () {
     $currentDay = date('d'); //1-31
 
     $daysFromPrevMonth = 0;
+    $businessID = $_GET['BUSINESS_ID'];
 
     if($currentDay < 7)
     {
@@ -473,7 +476,8 @@ function calcAvgVisitsWeek () {
                 AND DAY(superpoints.Visits.date) BETWEEN $daysInPreviousMonth - $daysFromPrevMonth AND $daysInPreviousMonth
             OR YEAR(superpoints.Visits.date) = $currentYear
                 AND MONTH(superpoints.Visits.date) = $month
-                AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay", MYSQLI_STORE_RESULT);
+                AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
+                AND superPoints.Visits.businessID = $businessID", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
 
     echo $row[0];

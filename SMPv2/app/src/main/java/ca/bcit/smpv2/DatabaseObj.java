@@ -213,6 +213,36 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void calcAverageDuration(int businessID)
+    {
+        calcAverageDuration(businessID, null);
+    }
+
+    public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageDuration";
+        params = "";
+        params += "BUSINESS_ID" + businessID;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcAverageVisits(int businessID)
+    {
+        calcAverageVisits(businessID, null);
+    }
+
+    public void calcAverageVisits(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageVisits";
+        params = "";
+        params += "BUSINESS_ID" + businessID;
+        setMembers(params, f);
+        this.execute();
+    }
+
     @Override
     protected String doInBackground(Object[] arg0) {
         try {
