@@ -77,8 +77,14 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
+
+        $businessID = $_GET['whereClause'];
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions $where", MYSQLI_STORE_RESULT);
+
+        $result = mysqli_query($con,"SELECT promotionID, businessID, minPoints, details, clicks, businessName
+            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
+            $where", MYSQLI_STORE_RESULT);
+
         $row_count = mysqli_num_rows($result);
 
         if ($row_count <= 1) {
@@ -88,7 +94,11 @@
             $tiersid = $row['minPoints'];
             $details = $row['details'];
             $clicks = $row['clicks'];
-            echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks;
+            $businessName = $row['businessName'];
+
+            if (isset($businessid) && $businessid != "") {
+              echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~s" . $businessName;
+            }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
@@ -96,7 +106,11 @@
                 $tiersid = $row_data['minPoints'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
-                echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~n";
+                $businessName = $row_data['businessName'];
+
+                if (isset($businessid) && $businessid != "") {
+                  echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
+                }
             }
         }
         mysqli_close($con);
@@ -237,10 +251,12 @@
       }
 
       if ($visitid == "") {
+        echo "insert";
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
               (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
-                $duration, convert($date, DATETIME));", MYSQLI_STORE_RESULT);
+                $duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
       } else {
+        echo "update";
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
             duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
