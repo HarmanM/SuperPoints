@@ -31,16 +31,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".BusinessDashboard" />
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".Analytics" />
-        <activity android:name=".BusinessSignup"></activity>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SignupActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".DashboardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BusinessDashboard"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MapsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Analytics"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BusinessSignup"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

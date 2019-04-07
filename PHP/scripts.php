@@ -165,14 +165,14 @@
 			$password = $_GET['PASSWORD'];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
-            echo ($result) ? "true" : "false";
+            echo ($result) ? "true" : "";
         } else {
             $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
             username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
-            echo ($result) ? "true" : "false";
+            echo ($result) ? "true" : "";
         }
     }
-	
+
 	function updatePassword() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -181,10 +181,11 @@
         }
 
         $userid = $_GET['USER_ID'];
+		$newPW = $_GET['NEW_PASSWORD'];
 		
         $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
             password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
-			
+
         echo ($result) ? "true" : "";
 	}
 
@@ -266,14 +267,14 @@
       }
 
       if ($visitid == "") {
-        echo "insert";
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
               (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
                 $duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
+                echo $result ? "true" : "";
       } else {
-        echo "update";
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
             duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
+            echo $result ? "true" : "";
       }
 
 	  $pointsResult = mysqli_query($con,"SELECT points FROM `superpoints`.`Points` WHERE userID = $userid AND businessID = $businessid", MYSQLI_STORE_RESULT);
@@ -435,7 +436,7 @@ function calcAvgVisitsWeek () {
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $currentYear); //
     $daysInPreviousMonth = cal_days_in_month(CAL_GREGORIAN, $month - 1, $currentYear);
     $currentDay = date('d'); //1-31
-    $businessID = $_GET['BUSINESS_ID'];
+    $where = $_GET['whereClause'];
 
     $daysFromPrevMonth = 0;
 
@@ -461,7 +462,7 @@ function calcAvgVisitsWeek () {
         OR YEAR(superpoints.Visits.date) = $currentYear
             AND MONTH(superpoints.Visits.date) = $month
             AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
-        AND superPoints.Visits.businessID = $businessID
+        AND $where
         ", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
     //$count = $result[0];
@@ -485,7 +486,7 @@ function calcAvgVisitsWeek () {
     $currentDay = date('d'); //1-31
 
     $daysFromPrevMonth = 0;
-    $businessID = $_GET['BUSINESS_ID'];
+    $where = $_GET['whereClause'];
 
     if($currentDay < 7)
     {
@@ -509,7 +510,7 @@ function calcAvgVisitsWeek () {
             OR YEAR(superpoints.Visits.date) = $currentYear
                 AND MONTH(superpoints.Visits.date) = $month
                 AND DAY(superpoints.Visits.date) BETWEEN $currentDay - 7 AND $currentDay
-                AND superPoints.Visits.businessID = $businessID", MYSQLI_STORE_RESULT);
+                AND $where", MYSQLI_STORE_RESULT);
     $row = mysqli_fetch_array($result);
 
     echo $row[0];
