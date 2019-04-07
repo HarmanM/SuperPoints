@@ -62,6 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public static final String TAG = MapsActivity.class.getSimpleName();
+    public static int notifSent = 0;
 
     //Notification related variables
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -154,7 +155,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             Log.i(TAG, "Location was found");
             handleNewLocation(location);
-            generateBusinessesNearby(location);
+            if(notifSent == 0)
+                generateBusinessesNearby(location);
         }
         Log.i(TAG, "Location services connected.");
     }
@@ -279,6 +281,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void generateBusinessesNearby (Location location) {
+        notifSent++;
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
