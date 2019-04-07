@@ -27,11 +27,11 @@ public class Analytics extends AppCompatActivity {
         avgVisits = (TextView) findViewById(R.id.avgVisitsResultTextView);
 
         new DatabaseObj(Analytics.this).calcAverageDuration(LoginActivity.user.getBusinessID(), (ArrayList<Object> objects) -> {
-            avgDuration.setText((String) objects.get(0));
+            avgDuration.setText(String.valueOf(objects.get(0)));
         });
 
         new DatabaseObj(Analytics.this).calcAverageVisits(LoginActivity.user.getBusinessID(), (ArrayList<Object> objects) -> {
-            avgVisits.setText((String) objects.get(0));
+            avgVisits.setText(String.valueOf(objects.get(0)));
         });
 
         setSupportActionBar(toolbar);
@@ -46,7 +46,7 @@ public class Analytics extends AppCompatActivity {
 
 
 
-        
+
         return true;
     }
 

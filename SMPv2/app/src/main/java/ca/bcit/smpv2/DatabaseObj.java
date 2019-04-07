@@ -248,6 +248,7 @@ public class DatabaseObj extends AsyncTask {
         function = "calcAverageDuration";
         params = "";
         params += "businessID=" + businessID;
+        objConstructor = Double::new;
         setMembers(params, f);
         this.execute();
     }
@@ -263,6 +264,7 @@ public class DatabaseObj extends AsyncTask {
         function = "calcAverageVisits";
         params = "";
         params += "businessID=" + businessID;
+        objConstructor = Double::new;
         setMembers(params, f);
         this.execute();
     }
