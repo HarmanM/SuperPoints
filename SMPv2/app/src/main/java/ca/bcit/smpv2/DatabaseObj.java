@@ -225,6 +225,17 @@ public class DatabaseObj extends AsyncTask {
         setMembers(params, f);
         this.execute();
     }
+    public void deletePromotion(int id){
+        deletePromotion(id, null);
+    }
+
+    public void deletePromotion(int id, Consumer<ArrayList<Object>> f) {
+        get = false;
+        function = "deletePromotion";
+        params = "PROMOTION_ID=" + id;
+        setMembers(params, f);
+        this.execute();
+    }
 
     public void calcAverageDuration(int businessID)
     {

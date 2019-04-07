@@ -32,6 +32,8 @@ public class BusinessDashboard extends AppCompatActivity
     Button addBtn;
     Button editBtn;
     Button dltBtn;
+    ArrayList<Promotions> usersPromotions;
+    PromotionsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,10 +44,8 @@ public class BusinessDashboard extends AppCompatActivity
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
-
-        ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
-        PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
+        usersPromotions = new ArrayList<Promotions>();
+        adapter = new PromotionsAdapter(this, usersPromotions);
 
         ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
         listView.setAdapter(adapter);
@@ -138,17 +138,23 @@ public class BusinessDashboard extends AppCompatActivity
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
 
+
         buttonDeletePromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO need delete operation in PHP
+                new DatabaseObj(BusinessDashboard.this).deletePromotion(promoToDelete.getPromotionID(), null);
+                usersPromotions.remove(promoToDelete);
                 alertDialog.dismiss();
+                ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                listView.setAdapter(adapter);
             }
         });
         buttonCancelDeletePromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+
             }
         });
     }
@@ -173,7 +179,6 @@ public class BusinessDashboard extends AppCompatActivity
             public void onClick(View v) {
                 int promotionPoints = defaultPromotionPoints;
                 String promotionDetails = editTextPromotionDetail.getText().toString();
-                promotionDetails = promotionDetails.replace(" ", "%20");
                 try
                 {
                     promotionPoints = Integer.parseInt(editTextPromotionPoints.getText().toString());
@@ -194,12 +199,17 @@ public class BusinessDashboard extends AppCompatActivity
                     String businessName = "";
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, clicks, businessName);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, null);
+                    usersPromotions.add(promo);
+                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                    listView.setAdapter(adapter);
                 }
                 else
                 {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setMinimumPoints(promotionPoints);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, null);
+                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                    listView.setAdapter(adapter);
                 }
                 alertDialog.dismiss();
             }
