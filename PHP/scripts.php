@@ -117,13 +117,13 @@
             $userid = $row['userID'];
             $businessid = $row['businessID'];
             $points = $row['points'];
-            echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $points;
+            echo $userid . "~s" . $businessid . "~s" . $points;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
 				$userid = $row['userID'];
 				$businessid = $row['businessID'];
 				$points = $row['points'];
-				echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $points . "~n";
+				echo $userid . "~s" . $businessid . "~s" . $points . "~n";
             }
         }
         mysqli_close($con);
@@ -181,12 +181,10 @@
       }
 
       if ($businessid == "") {
-        echo "insert";
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Businesses`
               (businessName, latitude, longitude, region) VALUES ('$businessname',
                 '$latitude', '$longitude', '$region');", MYSQLI_STORE_RESULT);
       } else {
-        echo "update";
           $result = mysqli_query($con, "UPDATE `superpoints`.`Businesses` SET businessName = '$businessname',
             latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
       }
@@ -239,7 +237,7 @@
       }
 
       if ($visitid == "") {
-          $result = mysqli_query($con,"INSERT INTO`superpoints`.`Visits`
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
               (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
                 $duration, convert($date, DATETIME));", MYSQLI_STORE_RESULT);
       } else {
@@ -247,12 +245,12 @@
             duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
 
-	  $pointsResult = mysqli_query($con,"SELECT points FROM superpoints.Points WHERE userID = $userid AND businessID = $businessID", MYSQLI_STORE_RESULT);
+	  $pointsResult = mysqli_query($con,"SELECT points FROM `superpoints`.`Points` WHERE userID = $userid AND businessID = $businessid", MYSQLI_STORE_RESULT);
 
 	  $pointsFunc = function($minutes){
 		  $optimalTime = 20;
 		  $slope = 30;
-		  return pow($minutes - optimalTime, 1 / 3) * $slope;
+		  return pow($minutes - $optimalTime, 1 / 3) * $slope;
 	  };
 
 	  $points = $pointsFunc($duration) + $pointsFunc(0);
@@ -385,7 +383,7 @@
 
                     if (isset($businessid) && $businessid != "") {
 
-                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region;
+                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region . "~n";
                   }
                 }
             }
