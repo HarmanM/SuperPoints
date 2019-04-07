@@ -22,7 +22,7 @@
             if ($businessid != "") {
               echo $userid . " " . $businessid . " " . $userName . " " . $settings;
             } else {
-              echo $userid . " " . $userName . " " . $settings;
+              echo $userid . " " . "-1" . " " . $userName . " " . $settings;
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
@@ -30,8 +30,11 @@
                 $businessid = $row_data['businessID'];
                 $username = $row_data['userName'];
                 $settings = $row_data['settings'];
-                echo $userid . " " . $businessid . " " . $username . " " . $settings;
-                echo "\n";
+                if ($businessid != "") {
+                  echo $userid . " " . $businessid . " " . $userName . " " . $settings . "~n";
+                } else {
+                  echo $userid . " " . "-1" . " " . $userName . " " . $settings . "~n";
+                }
             }
         }
         mysqli_close($con);
@@ -43,7 +46,7 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Visits $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
 
@@ -62,8 +65,7 @@
                 $businessid = $row_data['businessID'];
                 $duration = $row_data['duration'];
                 $date = $row_data['date'];
-                echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date;
-                echo "\n";
+                echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date . "~n";
             }
         }
         mysqli_close($con);
@@ -75,7 +77,7 @@
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
         $result = mysqli_query($con,"SELECT * FROM superpoints.Promotions $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
 
@@ -83,7 +85,7 @@
             $row = mysqli_fetch_array($result);
             $visitid = $row['promotionID'];
             $businessid = $row['businessID'];
-            $tiersid = $row['tierID'];
+            $tiersid = $row['minPoints'];
             $details = $row['details'];
             $clicks = $row['clicks'];
             echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks;
@@ -91,24 +93,23 @@
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
                 $businessid = $row_data['businessID'];
-                $tiersid = $row_data['tierID'];
+                $tiersid = $row_data['minPoints'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
-                echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks;
-                echo "\n";
+                echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks . "~n";
             }
         }
         mysqli_close($con);
     }
-	
+
 	function getPoints() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
-        $result = mysqli_query($con,"SELECT * FROM superpoints.POINTS $where", MYSQLI_STORE_RESULT);
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Points $where", MYSQLI_STORE_RESULT);
         $row_count = mysqli_num_rows($result);
 
         if ($row_count <= 1) {
@@ -122,8 +123,7 @@
 				$userid = $row['userID'];
 				$businessid = $row['businessID'];
 				$points = $row['points'];
-				echo $visitid . " " . $userid . " " . $businessid . " " . $points
-                echo "\n";
+				echo $visitid . " " . $userid . " " . $businessid . " " . $points . "~n";
             }
         }
         mysqli_close($con);
@@ -172,15 +172,21 @@
       $longitude = $_GET['LONGITUDE'];
       $region = $_GET['REGION'];
 
-      if ($businessid == 0) {
+      if ($businessid == 0 || !isset($businessid)) {
         $businessid = "";
       }
 
+      if ($region == 0 || !isset($region)) {
+        $region = "null";
+      }
+
       if ($businessid == "") {
+        echo "insert";
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Businesses`
-              (`businessID`,`businessName`,`latitude`, 'longitude') VALUES ('$businessid', '$businessname',
+              (businessName, latitude, longitude, region) VALUES ('$businessname',
                 '$latitude', '$longitude', '$region');", MYSQLI_STORE_RESULT);
       } else {
+        echo "update";
           $result = mysqli_query($con, "UPDATE `superpoints`.`Businesses` SET businessName = '$businessname',
             latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
       }
@@ -195,7 +201,7 @@
 
       $promotionid = $_GET['PROMOTION_ID'];
       $businessid = $_GET['BUSINESS_ID'];
-      $tierid = $_GET['TIER_ID'];
+      $tierid = $_GET['MIN_POINTS'];
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
 
@@ -205,11 +211,13 @@
 
       if ($promotionid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
-              (`businessID`,`tierID`,`details`, 'clicks') VALUES ('$businessid', '$tierid',
+              (businessID, minPoints, details, clicks) VALUES ('$businessid', '$tierid',
                 '$details', '$clicks');", MYSQLI_STORE_RESULT);
+          echo $result ? "true" ? "";
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
-            tierid = '$tierid', details = '$details', clicks = $clicks WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            minPoints = '$tierid', details = '$details', clicks = $clicks WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            echo $result ? "true" ? "";
       }
     }
 
@@ -238,21 +246,21 @@
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
             duration = '$duration', date = '$date' WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
-	  
+
 	  $pointsResult = mysqli_query($con,"SELECT points FROM superpoints.Points WHERE userID = $userid AND businessID = $businessID", MYSQLI_STORE_RESULT);
-	  
+
 	  $pointsFunc = function($minutes){
 		  $optimalTime = 20;
 		  $slope = 30;
 		  return pow($minutes - optimalTime, 1 / 3) * $slope;
 	  };
-	  
+
 	  $points = $pointsFunc($duration) + $pointsFunc(0);
 	  if($pointsResult == false)
 		  $pointsResult = mysqli_query($con,"INSERT INTO superpoints.Points ($businessid, $userid, $points)", MYSQLI_STORE_RESULT);
-	  else 
+	  else
 		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
-	  
+
     }
 
     function login() {
@@ -290,22 +298,21 @@
         // Becomes WHERE userid = userid
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
         //$userID = $_GET['uid'];
-        $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, tierID, details, clicks, businessName
+        $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, minPoints, details, clicks, businessName
             FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON
             superpoints.Promotions.businessID = superpoints.Businesses.businessID
             INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
             WHERE (SELECT points FROM superpoints.Points $where AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
-				(SELECT minPoints FROM superpoints.Tiers WHERE tierID = superpoints.Promotions.tierID);", MYSQLI_STORE_RESULT);
+				minPoints;", MYSQLI_STORE_RESULT);
 
         while($row_data = mysqli_fetch_array($result)) {
             $promoid = $row_data['promotionID'];
             $businessid = $row_data['businessID'];
-            $tierid = $row_data['tierID'];
+            $tierid = $row_data['minPoints'];
             $details = $row_data['details'];
             $clicks = $row_data['clicks'];
             $businessName = $row_data['businessName'];
-            echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
-            echo "\n";
+            echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName . "~n";
         }
         mysqli_close($con);
     }
@@ -371,31 +378,11 @@
                     $latitude = $row_data['latitude'];
                     $longitude = $row_data['longitude'];
                     $region = $row_data['region'];
-                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region;
-                    echo "\n";
+                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region . "~n";
                 }
             }
 
         mysqli_close($con);
-    }
-
-    function getTier() {
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-
-        $tierid = $_GET['tid'];
-        $result = mysqli_query($con,"SELECT * FROM superpoints.Users where
-        userName='$username' and password='$password'", MYSQLI_STORE_RESULT);
-        $row = mysqli_fetch_array($result);
-        $userid = $row[0];
-        $businessid = $row[1];
-        $userName = $row[3];
-        $settings = $row[4];
-
-        echo $userid . " " . $businessid . " " . $userName . " " . $settings;
     }
 
 function calcAvgVisitsWeek () {
@@ -487,6 +474,20 @@ function calcAvgVisitsWeek () {
     mysqli_close($con);
     }
 
+    function deletePromotion() {
+          $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+          if (mysqli_connect_errno($con)) {
+              echo "Failed to connect to database: " . mysqli_connect_error();
+          }
+
+          $promotionid = $_GET['PROMOTION_ID'];
+
+          $result = mysqli_query($con,"DELETE FROM `superpoints`.`Promotions`
+                                    WHERE promotionID = $promotionid);", MYSQLI_STORE_RESULT);
+
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "getUser":
@@ -504,16 +505,16 @@ function calcAvgVisitsWeek () {
 		case "getPoints":
 			getPoints();
 			break;
-        case "user":
+        case "setUser":
             handleUser();
             break;
-        case "visit":
+        case "setVisit":
             handleVisits();
             break;
-        case "promotion":
+        case "setPromotion":
             handlePromotions();
             break;
-        case "business":
+        case "setBusiness":
             handleBusiness();
             break;
         case "promoClick":
