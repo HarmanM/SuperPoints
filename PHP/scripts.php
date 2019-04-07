@@ -162,7 +162,7 @@
         }
 
         if ($userid == "") {
-        $password = $_GET['PASSWORD'];
+			$password = $_GET['PASSWORD'];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
             echo ($result) ? "true" : "false";
@@ -170,6 +170,26 @@
             $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
             username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
             echo ($result) ? "true" : "false";
+        }
+    }
+	
+	function updatePassword() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $userid = $_GET['USER_ID'];
+        $oldPW = $_GET['OLD_PASSWORD'];
+        $newPW = $_GET['NEW_PASSWORD'];
+		
+		$curPW = mysqli_query($con,"SELECT password FROM superpoints.Users WHERE userID = $userid", MYSQLI_STORE_RESULT);
+
+        if ($curPW == oldPW) {
+            $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
+            password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            echo ($result) ? "true" : "";
         }
     }
 
