@@ -12,7 +12,7 @@ public class Points {
     }
 
     public Points(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.userID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.points = Integer.parseInt(result[2]);

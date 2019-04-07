@@ -20,7 +20,7 @@ public class Promotions {
 
     public Promotions(String sqlResult) {
         //TODO delimiter needs to change
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.minimumPoints = Integer.parseInt(result[2]);

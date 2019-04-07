@@ -19,7 +19,7 @@ public class User {
     // First value is the userID, second value is the username, third value is the integer representing the setting
     // No other values are sent
     public User(String sqlResult) {
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.userID = Integer.parseInt(result[0]);
         this.username = result[2];
         this.setting = Integer.parseInt(result[3]);

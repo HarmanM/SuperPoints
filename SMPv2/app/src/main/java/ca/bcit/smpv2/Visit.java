@@ -29,7 +29,7 @@ public class Visit {
     }
 
     public Visit(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.visitID = Integer.parseInt(result[0]);
         this.userID = Integer.parseInt(result[1]);
         this.businessID = Integer.parseInt(result[2]);

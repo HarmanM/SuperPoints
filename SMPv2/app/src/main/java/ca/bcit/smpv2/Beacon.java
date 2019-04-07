@@ -16,7 +16,7 @@ public class Beacon {
     }
 
     public Beacon(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.beaconID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.major = Integer.parseInt(result[2]);

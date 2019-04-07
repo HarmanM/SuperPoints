@@ -10,7 +10,7 @@ public class Tiers {
     }
 
     public Tiers(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.tierID = Integer.parseInt(result[0]);
         this.minPoints = Integer.parseInt(result[1]);
     }

@@ -11,7 +11,7 @@ public class PreferredBusiness {
     }
 
     public PreferredBusiness(String sqlResult){
-        String[] result = sqlResult.split(" ");
+        String[] result = sqlResult.split("~s");
         this.userID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
     }
