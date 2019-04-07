@@ -169,7 +169,7 @@ public class DatabaseObj extends AsyncTask {
         params += "USER_ID=" + o.getUserID() + "&";
         params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime()) + "&";
         String s = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(o.getDate().getTime());
-        params += "DURATION=" + o.getDuration() + "&";
+        params += "DURATION=" + o.getDuration();
         setMembers(params, f);
         this.execute();
     }
