@@ -181,6 +181,7 @@
         }
 
         $userid = $_GET['USER_ID'];
+		$newPW = $_GET['NEW_PASSWORD'];
 		
         $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
             password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
