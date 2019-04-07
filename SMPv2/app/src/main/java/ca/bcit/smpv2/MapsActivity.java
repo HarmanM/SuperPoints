@@ -257,7 +257,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        finish();
         switch (item.getItemId()) {
             case R.id.home:
                 //Intent h = new Intent(getBaseContext(), MapsActivity.class);

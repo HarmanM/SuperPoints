@@ -7,8 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class Analytics extends AppCompatActivity {
+
+    TextView avgVisits;
+    TextView avgDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +23,17 @@ public class Analytics extends AppCompatActivity {
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        avgDuration = (TextView) findViewById(R.id.avgDurationResultTextView);
+        avgVisits = (TextView) findViewById(R.id.avgVisitsResultTextView);
+
+        new DatabaseObj(Analytics.this).calcAverageDuration(LoginActivity.user.getBusinessID(), (ArrayList<Object> objects) -> {
+            avgDuration.setText((String) objects.get(0));
+        });
+
+        new DatabaseObj(Analytics.this).calcAverageVisits(LoginActivity.user.getBusinessID(), (ArrayList<Object> objects) -> {
+            avgVisits.setText((String) objects.get(0));
+        });
+
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
     }
@@ -29,6 +46,7 @@ public class Analytics extends AppCompatActivity {
 
 
 
+        
         return true;
     }
 
