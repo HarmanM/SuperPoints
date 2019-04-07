@@ -247,7 +247,7 @@ public class DatabaseObj extends AsyncTask {
         get = true;
         function = "calcAverageDuration";
         params = "";
-        params += "BUSINESS_ID" + businessID;
+        params += "businessID=" + businessID;
         setMembers(params, f);
         this.execute();
     }
@@ -262,7 +262,7 @@ public class DatabaseObj extends AsyncTask {
         get = true;
         function = "calcAverageVisits";
         params = "";
-        params += "BUSINESS_ID" + businessID;
+        params += "businessID=" + businessID;
         setMembers(params, f);
         this.execute();
     }
