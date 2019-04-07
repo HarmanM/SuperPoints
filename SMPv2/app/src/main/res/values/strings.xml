@@ -5,4 +5,11 @@
     <string name="channel_description">Notif Desc</string>
     <string name="action_settings">Settings</string>
     <string name="dashboard_title">Promotions</string>
+
+
+
+    <string name="add_promotion_name">What is the name of the promotion?</string>
+    <string name="add_promotion_tier">What tier of customer should it be offered to?</string>
+    <string name="add_promotion_details">What should we say about your promotion?</string>
+    <string name="add_promotion_submit">All Done!</string>
 </resources>

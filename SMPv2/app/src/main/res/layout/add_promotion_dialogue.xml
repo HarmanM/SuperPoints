@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/editTextPromotionName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/add_promotion_name" />
+
+    <TextView
+        android:id="@+id/textViewPromotionTier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_promotion_tier">
+    </TextView>
+
+    <NumberPicker
+        android:id="@+id/numberPickerPromotionTier"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content">
+    </NumberPicker>
+
+    <EditText
+        android:id="@+id/editTextPromotionDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/add_promotion_details" />
+
+    <Button
+        android:id="@+id/buttonAddPromotion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_promotion_submit" />
+
+</LinearLayout>
