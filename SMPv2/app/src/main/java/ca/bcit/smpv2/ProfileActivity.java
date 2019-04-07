@@ -46,8 +46,8 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(k);
                 return true;
             case R.id.profile:
-                Intent j = new Intent(getBaseContext(), ProfileActivity.class);
-                startActivity(j);
+                //Intent j = new Intent(getBaseContext(), ProfileActivity.class);
+                //startActivity(j);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
