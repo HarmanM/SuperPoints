@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class DatabaseObj extends AsyncTask {
 
@@ -35,6 +36,7 @@ public class DatabaseObj extends AsyncTask {
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
         if(whereClause != "")
             this.params = whereClause;
+        this.params = this.params.replace(" ", "%20");
         onCompleteFunction = f;
     }
 
@@ -97,7 +99,7 @@ public class DatabaseObj extends AsyncTask {
     public void getPoints(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
         objConstructor = Points::new;
-        function = "getUserBusinessTier";
+        function = "getPoints";
         get = true;
         this.execute();
     }
@@ -165,6 +167,7 @@ public class DatabaseObj extends AsyncTask {
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "DATE=" + o.getDate() + "&";
+        String s = o.getDate().toString();
         params += "DURATION=" + o.getDuration() + "&";
         setMembers(params, f);
         this.execute();
@@ -234,8 +237,9 @@ public class DatabaseObj extends AsyncTask {
 
             while ((line = in.readLine()) != null) {
                 sb.append(line);
-                break;
+                Log.i("DBLINE", line);
             }
+            Log.i("DBLINE", String.valueOf(line == null));
 
             in.close();
             return sb.toString();
@@ -253,7 +257,7 @@ public class DatabaseObj extends AsyncTask {
             if(onCompleteFunction != null) {
                 ArrayList<Object> res = new ArrayList<Object>();
                 if (objConstructor != null) {
-                    String resArr[] = strObject.split("\n");
+                    String resArr[] = strObject.split(Pattern.quote("~n"));
                     for(String sObj : resArr) {
                         Log.i("SOBJ", sObj);
                         res.add(objConstructor.apply(sObj));
