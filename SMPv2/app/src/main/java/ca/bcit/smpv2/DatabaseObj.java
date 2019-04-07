@@ -247,7 +247,7 @@ public class DatabaseObj extends AsyncTask {
     @Override
     protected void onPostExecute(Object obj) {
         String strObject = (String) obj;
-        if (!strObject.isEmpty()) {
+        if (!strObject.trim().isEmpty()) {
             Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
             if(onCompleteFunction != null) {
