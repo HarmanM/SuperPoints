@@ -31,7 +31,7 @@
                 $username = $row_data['userName'];
                 $settings = $row_data['settings'];
                 echo $userid . " " . $businessid . " " . $username . " " . $settings;
-                echo "<br>";
+                echo "\n";
             }
         }
         mysqli_close($con);
@@ -63,7 +63,7 @@
                 $duration = $row_data['duration'];
                 $date = $row_data['date'];
                 echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date;
-                echo "<br>";
+                echo "\n";
             }
         }
         mysqli_close($con);
@@ -95,7 +95,7 @@
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
                 echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks;
-                echo "<br>";
+                echo "\n";
             }
         }
         mysqli_close($con);
@@ -115,13 +115,20 @@
         $username = $_GET['USERNAME'];
         $setting = $_GET['SETTING'];
 
+        if ($businessid = 0 && $userid) {
+            $businessid = "";
+            $userid = "";
+        }
+
         if ($userid == "") {
         $password = $_GET['PASSWORD'];
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
+            echo ($result) ? "true" : "false";
         } else {
             $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
-              username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            echo ($result) ? "true" : "false";
         }
     }
 
@@ -137,6 +144,10 @@
       $latitude = $_GET['LATITUDE'];
       $longitude = $_GET['LONGITUDE'];
       $region = $_GET['REGION'];
+
+      if ($businessid == 0) {
+        $businessid = "";
+      }
 
       if ($businessid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Businesses`
@@ -161,6 +172,10 @@
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
 
+      if ($promotionid = 0) {
+        $promotionid = "";
+      }
+
       if ($promotionid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
               (`businessID`,`tierID`,`details`, 'clicks') VALUES ('$businessid', '$tierid',
@@ -183,6 +198,10 @@
       $businessid = $_GET['BUSINESS_ID'];
       $duration = $_GET['DURATION'];
       $date = $_GET['DATE'];
+
+      if ($visitid == 0) {
+        $visitid = "";
+      }
 
       if ($visitid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
@@ -234,22 +253,6 @@
         mysqli_close($con);
     }
 
-    function updateSettings() {
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-
-        $userID = $_GET['uid'];
-        $setting = $_GET['setting'];
-        $result = mysqli_query($con,"UPDATE `superpoints`.`Users` SET `settings` = '$setting'
-            WHERE (`userID` = '$userID');", MYSQLI_STORE_RESULT);
-        echo $result ? 'true' : 'false';
-
-        mysqli_close($con);
-    }
-
     function getApplicablePromotions() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -275,7 +278,7 @@
             $clicks = $row_data['clicks'];
             $businessName = $row_data['businessName'];
             echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName;
-            echo "<br>";
+            echo "\n";
         }
         mysqli_close($con);
     }
@@ -474,14 +477,20 @@ function calcAvgVisitsWeek () {
         case "user":
             handleUser();
             break;
+        case "visit":
+            handleVisits();
+            break;
+        case "promotion":
+            handlePromotions();
+            break;
+        case "business":
+            handleBusiness();
+            break;
         case "promoClick":
             incrementClick();
             break;
         case "getApplicablePromos":
             getApplicablePromotions();
-            break;
-        case "settings":
-            updateSettings();
             break;
         case "getBusinesses":
             selectBusiness();
