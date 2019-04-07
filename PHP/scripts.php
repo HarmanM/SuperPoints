@@ -181,17 +181,12 @@
         }
 
         $userid = $_GET['USER_ID'];
-        $oldPW = $_GET['OLD_PASSWORD'];
-        $newPW = $_GET['NEW_PASSWORD'];
 		
-		$curPW = mysqli_query($con,"SELECT password FROM superpoints.Users WHERE userID = $userid", MYSQLI_STORE_RESULT);
-
-        if ($curPW == oldPW) {
-            $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
+        $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
             password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
-            echo ($result) ? "true" : "";
-        }
-    }
+			
+        echo ($result) ? "true" : "";
+	}
 
     function handleBusiness() {
       $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
