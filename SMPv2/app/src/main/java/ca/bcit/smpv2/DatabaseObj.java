@@ -128,7 +128,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void updatePassword(int userID, String newPW, Consumer<ArrayList<Object>> f){
         get = false;
-        function = "setUser";
+        function = "updatePassword";
         params = "";
         params += "USER_ID=" + userID + "&";
         params += "NEW_PASSWORD=" + newPW;
