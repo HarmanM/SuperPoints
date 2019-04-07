@@ -122,6 +122,20 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void updatePassword(int userID, String oldPW, String newPW){
+        updatePassword(userID, oldPW, newPW, null);
+    }
+
+    public void updatePassword(int userID, String oldPW, String newPW, Consumer<ArrayList<Object>> f){get = false;
+        function = "setUser";
+        params = "";
+        params += "USER_ID=" + userID + "&";
+        params += "OLD_PASSWORD=" + oldPW + "&";
+        params += "NEW_PASSWORD=" + newPW;
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void setBusiness(Business o){
         setBusiness(o, null);
     }
