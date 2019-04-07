@@ -100,7 +100,34 @@
         }
         mysqli_close($con);
     }
+	
+	function getPoints() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        $where = isset($_GET['whereClause']) ? "WHERE" . $_GET['whereClause'] : '';
+        $result = mysqli_query($con,"SELECT * FROM superpoints.POINTS $where", MYSQLI_STORE_RESULT);
+        $row_count = mysqli_num_rows($result);
+
+        if ($row_count <= 1) {
+            $row = mysqli_fetch_array($result);
+            $userid = $row['userID'];
+            $businessid = $row['businessID'];
+            $points = $row['points'];
+            echo $visitid . " " . $userid . " " . $businessid . " " . $points;
+        } else {
+            while($row_data = mysqli_fetch_array($result)) {
+				$userid = $row['userID'];
+				$businessid = $row['businessID'];
+				$points = $row['points'];
+				echo $visitid . " " . $userid . " " . $businessid . " " . $points
+                echo "\n";
+            }
+        }
+        mysqli_close($con);
+    }
 
     // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
@@ -204,7 +231,7 @@
       }
 
       if ($visitid == "") {
-          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
+          $result = mysqli_query($con,"INSERT INTO`superpoints`.`Visits`
               (`userID`,`businessID`,`duration`, 'date') VALUES ('$userid', '$businessid',
                 '$duration', '$date');", MYSQLI_STORE_RESULT);
       } else {
@@ -474,6 +501,9 @@ function calcAvgVisitsWeek () {
         case "getPromo":
             getPromotion();
             break;
+		case "getPoints":
+			getPoints();
+			break;
         case "user":
             handleUser();
             break;
