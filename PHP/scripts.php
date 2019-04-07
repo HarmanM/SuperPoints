@@ -20,9 +20,9 @@
             $userName = $row['userName'];
             $settings = $row['settings'];
             if ($businessid != "") {
-              echo $userid . " " . $businessid . " " . $userName . " " . $settings;
+              echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
             } else {
-              echo $userid . " " . "-1" . " " . $userName . " " . $settings;
+              echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings;
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
@@ -31,9 +31,9 @@
                 $username = $row_data['userName'];
                 $settings = $row_data['settings'];
                 if ($businessid != "") {
-                  echo $userid . " " . $businessid . " " . $userName . " " . $settings . "~n";
+                  echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings . "~n";
                 } else {
-                  echo $userid . " " . "-1" . " " . $userName . " " . $settings . "~n";
+                  echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings . "~n";
                 }
             }
         }
@@ -57,7 +57,7 @@
             $businessid = $row['businessID'];
             $duration = $row['duration'];
             $date = $row['date'];
-            echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date;
+            echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $duration . "~s" . $date;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['visitID'];
@@ -65,7 +65,7 @@
                 $businessid = $row_data['businessID'];
                 $duration = $row_data['duration'];
                 $date = $row_data['date'];
-                echo $visitid . " " . $userid . " " . $businessid . " " . $duration . " " . $date . "~n";
+                echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $duration . "~s" . $date . "~n";
             }
         }
         mysqli_close($con);
@@ -88,7 +88,7 @@
             $tiersid = $row['minPoints'];
             $details = $row['details'];
             $clicks = $row['clicks'];
-            echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks;
+            echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
@@ -96,7 +96,7 @@
                 $tiersid = $row_data['minPoints'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
-                echo $visitid . " " . $businessid . " " . $tiersid . " " . $details . " " . $clicks . "~n";
+                echo $visitid . "~s" . $businessid . "~s" . $tiersid . "~s" . $details . "~s" . $clicks . "~n";
             }
         }
         mysqli_close($con);
@@ -117,13 +117,13 @@
             $userid = $row['userID'];
             $businessid = $row['businessID'];
             $points = $row['points'];
-            echo $visitid . " " . $userid . " " . $businessid . " " . $points;
+            echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $points;
         } else {
             while($row_data = mysqli_fetch_array($result)) {
 				$userid = $row['userID'];
 				$businessid = $row['businessID'];
 				$points = $row['points'];
-				echo $visitid . " " . $userid . " " . $businessid . " " . $points . "~n";
+				echo $visitid . "~s" . $userid . "~s" . $businessid . "~s" . $points . "~n";
             }
         }
         mysqli_close($con);
@@ -213,11 +213,11 @@
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
               (businessID, minPoints, details, clicks) VALUES ('$businessid', '$tierid',
                 '$details', '$clicks');", MYSQLI_STORE_RESULT);
-          echo $result ? "true" ? "";
+          echo $result ? "true" : "";
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
             minPoints = '$tierid', details = '$details', clicks = $clicks WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
-            echo $result ? "true" ? "";
+            echo $result ? "true" : "";
       }
     }
 
@@ -240,11 +240,11 @@
 
       if ($visitid == "") {
           $result = mysqli_query($con,"INSERT INTO`superpoints`.`Visits`
-              (`userID`,`businessID`,`duration`, 'date') VALUES ('$userid', '$businessid',
-                '$duration', '$date');", MYSQLI_STORE_RESULT);
+              (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
+                $duration, convert($date, DATETIME));", MYSQLI_STORE_RESULT);
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
-            duration = '$duration', date = '$date' WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
+            duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
       }
 
 	  $pointsResult = mysqli_query($con,"SELECT points FROM superpoints.Points WHERE userID = $userid AND businessID = $businessID", MYSQLI_STORE_RESULT);
@@ -281,9 +281,9 @@
         $settings = $row[4];
 
         if ($businessid != "") {
-          echo $userid . " " . $businessid . " " . $userName . " " . $settings;
+          echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
         } else {
-          echo $userid . " " . $userName . " " . $settings;
+          echo $userid . "~s" . $userName . "~s" . $settings;
         }
         mysqli_close($con);
     }
@@ -312,7 +312,7 @@
             $details = $row_data['details'];
             $clicks = $row_data['clicks'];
             $businessName = $row_data['businessName'];
-            echo $promoid . " " . $businessid . " " . $tierid . " " . $details . " " . $clicks . " " . $businessName . "~n";
+            echo $promoid . "~s" . $businessid . "~s" . $tierid . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
         }
         mysqli_close($con);
     }
@@ -370,7 +370,11 @@
                     $latitude = $row['latitude'];
                     $longitude = $row['longitude'];
                     $region = $row['region'];
-                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region;
+
+                    if (isset($businessid) && $businessid != "") {
+
+                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region;
+                  }
             } else {
                 while($row_data = mysqli_fetch_array($result)) {
                     $businessid = $row_data['businessID'];
@@ -378,7 +382,11 @@
                     $latitude = $row_data['latitude'];
                     $longitude = $row_data['longitude'];
                     $region = $row_data['region'];
-                    echo $businessid . " " . $businessname . " " . $latitude . " " . $longitude . " " . $region . "~n";
+
+                    if (isset($businessid) && $businessid != "") {
+
+                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region;
+                  }
                 }
             }
 
@@ -484,7 +492,7 @@ function calcAvgVisitsWeek () {
           $promotionid = $_GET['PROMOTION_ID'];
 
           $result = mysqli_query($con,"DELETE FROM `superpoints`.`Promotions`
-                                    WHERE promotionID = $promotionid);", MYSQLI_STORE_RESULT);
+                                    WHERE promotionID = $promotionid;", MYSQLI_STORE_RESULT);
 
     }
 
@@ -502,9 +510,9 @@ function calcAvgVisitsWeek () {
         case "getPromo":
             getPromotion();
             break;
-		case "getPoints":
-			getPoints();
-			break;
+		    case "getPoints":
+			     getPoints();
+			     break;
         case "setUser":
             handleUser();
             break;
@@ -531,6 +539,9 @@ function calcAvgVisitsWeek () {
             break;
         case "calcAverageDuration":
             calcAvgDurationPerVisitWeek();
+            break;
+        case "deletePromotion":
+            deletePromotion();
             break;
     }
 
