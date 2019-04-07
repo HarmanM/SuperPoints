@@ -21,10 +21,15 @@ public class User {
     public User(String sqlResult) {
         String[] result = sqlResult.split(" ");
         this.userID = Integer.parseInt(result[0]);
-        this.businessID = Integer.parseInt(result[1]);
         this.username = result[2];
         this.setting = Integer.parseInt(result[3]);
 
+        if(result[1].equalsIgnoreCase("NULL")) {
+            this.businessID = -1;
+        }
+        else {
+            this.businessID = Integer.parseInt(result[1]);
+        }
     }
 
     public int getUserID() {

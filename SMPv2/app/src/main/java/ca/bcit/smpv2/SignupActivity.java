@@ -27,6 +27,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText usernameField, passwordField, passwordConfirmField;
     private RadioButton businessRB;
+    private RadioButton userRB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class SignupActivity extends AppCompatActivity {
         passwordField = (EditText) findViewById(R.id.passwordEditText);
         passwordConfirmField = (EditText) findViewById(R.id.confirmEditText);
         businessRB = findViewById(R.id.businessRB);
+        userRB = findViewById(R.id.userRB);
+        userRB.setChecked(true);
 
     }
 
@@ -50,6 +53,7 @@ public class SignupActivity extends AppCompatActivity {
                 Intent i = new Intent(this, BusinessSignup.class);
                 i.putExtra("USERNAME", username);
                 i.putExtra("PASSWORD", password);
+                startActivity(i);
             }
             else {
                 new RegisterTask(this, 0).execute(username, password);

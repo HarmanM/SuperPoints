@@ -3,12 +3,15 @@ package ca.bcit.smpv2;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +41,27 @@ public class BusinessSignup extends AppCompatActivity {
         Address address = addresses.get(0);
         longitude = address.getLongitude();
         latitude = address.getLatitude();
+
+        Business b = new Business(0, businessName, latitude, longitude, "");
+        User u = new User(0, 0, password, username, 3);
+
+        new DatabaseObj (BusinessSignup.this).setBusiness(b, new Consumer<ArrayList<Object>>() {
+            @Override
+            public void accept(ArrayList<Object> objects) {
+                String result = (String) objects.get(0);
+                Log.i("666BID", result);
+            }
+        });
+
+        new DatabaseObj (BusinessSignup.this).setUser(u, new Consumer<ArrayList<Object>>() {
+            @Override
+            public void accept(ArrayList<Object> objects) {
+                String result = (String) objects.get(0);
+                Log.i("2222UID", result);
+            }
+        });
     }
+
+
 
 }

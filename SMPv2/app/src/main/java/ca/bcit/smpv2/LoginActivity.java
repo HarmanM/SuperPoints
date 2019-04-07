@@ -146,15 +146,23 @@ public class LoginActivity extends AppCompatActivity {
                     public void accept(ArrayList<Object> objects) {
                         user = (User) objects.get(0);
                         Log.i("2222UID", Integer.toString(user.getUserID()));
+
+                        if (user.getBusinessID() != -1) {
+                            Intent i = new Intent(context, BusinessDashboard.class);
+                            i.putExtra("username", username);
+                            context.startActivity(i);
+
+                        } else if (user.getBusinessID() == -1){
+                            Intent i = new Intent(context, MapsActivity.class);
+                            i.putExtra("username", username);
+                            context.startActivity(i);
+                        }
+                     else {
+                        Toast.makeText(context, "Please check your credentials", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }});
                 //TODO: send intent to proper activity
-                Intent i = new Intent(context, MapsActivity.class);
-                i.putExtra("username", username);
-                context.startActivity(i);
-            } else {
-                Toast.makeText(context, "Please check your credentials", Toast.LENGTH_SHORT).show();
-            }
-        }
+
+        }}
     }
 }

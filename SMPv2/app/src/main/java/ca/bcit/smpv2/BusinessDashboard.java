@@ -49,7 +49,7 @@ public class BusinessDashboard extends AppCompatActivity
         listView.setAdapter(adapter);
 
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
+        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
         listView.setOnItemClickListener((parent, view, position, id) ->  {
                 selectedPromotion = usersPromotions.get(position);
@@ -195,3 +195,4 @@ public class BusinessDashboard extends AppCompatActivity
         });
     }
 }
+
