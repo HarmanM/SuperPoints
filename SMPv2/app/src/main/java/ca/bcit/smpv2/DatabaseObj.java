@@ -108,7 +108,7 @@ public class DatabaseObj extends AsyncTask {
 
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
-        function = "setUser";
+        function = "user";
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -221,6 +221,7 @@ public class DatabaseObj extends AsyncTask {
                 link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
                         + "&" + params;
             }
+            Log.i("LINK::" , link);
             URL url = new URL(link);
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();

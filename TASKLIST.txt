@@ -1,0 +1,13 @@
+Logic for registering as a business user, currently it does not seem to function properly
+it toasts "Check your credentials" from its post execute:
+
+Logic for detecting a business user on login and direction to BusinessDashboard.java:
+
+Change analytics to be part of options menu:
+
+Make analytics pop up properly, Henry has said the php script returns correct values:
+
+Logic for promotions add edit and delete buttons, should call Database object:
+
+Incrementing points: OLIVER
+

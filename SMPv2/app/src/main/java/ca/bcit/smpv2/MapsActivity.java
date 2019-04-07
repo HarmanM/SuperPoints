@@ -217,7 +217,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
-    //TODO add on click action to open maps activity
+    //TODO add on click
+    // action to open maps activity
     static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
