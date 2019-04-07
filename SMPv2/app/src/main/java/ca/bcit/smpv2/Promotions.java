@@ -32,7 +32,7 @@ public class Promotions {
     public int getPromotionID() {
         return promotionID;
     }
-
+    
     public void setPromotionID(int promotionID) {
         this.promotionID = promotionID;
     }
