@@ -64,7 +64,7 @@ public class UserPointsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() != R.id.profile)
+        if(item.getItemId() != R.id.viewPoints)
             finish();
         switch (item.getItemId()) {
             case R.id.home:
@@ -72,8 +72,8 @@ public class UserPointsActivity extends AppCompatActivity {
                 //startActivity(h);
                 return true;
             case R.id.viewPoints:
-                Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
-                startActivity(j);
+                //Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
+                //startActivity(j);
                 return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
@@ -84,8 +84,8 @@ public class UserPointsActivity extends AppCompatActivity {
                 startActivity(k);
                 return true;
             case R.id.profile:
-                //Intent j = new Intent(getBaseContext(), ProfileActivity.class);
-                //startActivity(j);
+                Intent j = new Intent(getBaseContext(), ProfileActivity.class);
+                startActivity(j);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

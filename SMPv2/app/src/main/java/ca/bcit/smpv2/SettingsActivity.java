@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() != R.id.profile)
+        if(item.getItemId() != R.id.settings)
             finish();
         switch (item.getItemId()) {
             case R.id.home:

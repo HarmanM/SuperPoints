@@ -206,7 +206,9 @@ public class BusinessDashboard extends AppCompatActivity
                     int clicks = 0;
                     String businessName = "";
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, clicks, businessName);
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, null);
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects)->{
+                        promo.setPromotionID((Integer)objects.get(0));
+                    });
                     usersPromotions.add(promo);
                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                     listView.setAdapter(adapter);
@@ -215,7 +217,7 @@ public class BusinessDashboard extends AppCompatActivity
                 {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setMinimumPoints(promotionPoints);
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, null);
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo);
                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                     listView.setAdapter(adapter);
                 }
