@@ -9,7 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -72,6 +75,19 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    public void updateSettings(View view) {
+        EditText pw = findViewById(R.id.passwordEditText);
+        EditText cpw = findViewById(R.id.confirmEditText);
+        if(pw.getText().toString().compareTo(cpw.getText().toString()) == 0 && pw.getText().toString().trim() != ""){
+            LoginActivity.user.setPassword(pw.getText().toString());
+            new DatabaseObj (SettingsActivity.this)
+                    .updatePassword(LoginActivity.user.getUserID(), pw.getText().toString());
+        }else{
+            Toast.makeText(this, "Ensure the two passwords match and are not empty", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
     // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,8 +111,8 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.settings:
-                Intent k = new Intent(getBaseContext(), SettingsActivity.class);
-                startActivity(k);
+                //Intent k = new Intent(getBaseContext(), SettingsActivity.class);
+                //startActivity(k);
                 return true;
             case R.id.profile:
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);

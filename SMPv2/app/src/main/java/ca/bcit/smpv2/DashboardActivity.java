@@ -59,8 +59,8 @@ public class DashboardActivity extends AppCompatActivity {
                 //startActivity(h);
                 return true;
             case R.id.dashboard:
-                Intent i = new Intent(getBaseContext(), DashboardActivity.class);
-                startActivity(i);
+                //Intent i = new Intent(getBaseContext(), DashboardActivity.class);
+                //startActivity(i);
                 return true;
             case R.id.settings:
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);

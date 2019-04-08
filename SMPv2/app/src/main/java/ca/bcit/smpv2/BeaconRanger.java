@@ -34,6 +34,7 @@ public class BeaconRanger implements BeaconConsumer {
     public ArrayList<Boolean> connected = new ArrayList<>();
     public ArrayList<Long> time = new ArrayList<>();
     private boolean inStore = false;
+    private Business currentBusinessConnection;
 
     public BeaconRanger(Context c) {
         context = c;
@@ -77,9 +78,13 @@ public class BeaconRanger implements BeaconConsumer {
                 Calendar cal = Calendar.getInstance();
                 boolean foundB = false;
                 for(Beacon beacon : beacons) {
-                    if (beacon.getIdentifier(0).toString().compareToIgnoreCase(region.getUniqueId()) == 0) {
-                        foundB = true;
-                    }
+                    for (Business bus : MapsActivity.businessesNearby)
+                        if ((currentBusinessConnection == null || beacon.getIdentifier(0).toString().compareToIgnoreCase(currentBusinessConnection.getRegion()) == 0                      )
+                            && beacon.getIdentifier(0).toString().compareToIgnoreCase(bus.getRegion()) == 0) {
+                            foundB = true;
+                            currentBusinessConnection = bus;
+                        }
+
                 }
 
                 if(foundB){
@@ -105,11 +110,11 @@ public class BeaconRanger implements BeaconConsumer {
                     }
                 }
                 if(!wasInStore && inStore) {
-                    Toast.makeText(context, "Entered store [" + region.getUniqueId() + "}", Toast.LENGTH_LONG).show();
-                    visit = new Visit(0, 4968, Calendar.getInstance());
+                    Toast.makeText(context, "Entered store " + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
+                    visit = new Visit(LoginActivity.user.getUserID(), currentBusinessConnection.getBusinessID(), Calendar.getInstance());
                 }
                 else if(wasInStore && !inStore) {
-                    Toast.makeText(context, "Exited store [" + region.getUniqueId() + "}", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Exited store" + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
                     visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
                     Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
                             + "\nBusiness: " + visit.getBusinessID()
@@ -119,12 +124,17 @@ public class BeaconRanger implements BeaconConsumer {
                                     + ":" + String.format("%02d", visit.getDuration() % 3600 / 60)
                                     + ":" + String.format("%02d", visit.getDuration() % 60),
                             Toast.LENGTH_LONG).show();
-                    MapsActivity.showNotification("Store Visit",
-                            "You visited [" + region.getUniqueId() + "] for "
-                                + ":" + String.format("%02d", visit.getDuration() % 3600 / 60),
-                            PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
-                            context);
                     new DatabaseObj(context).setVisit(visit);
+
+                    new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
+                            + " AND businessID=" + currentBusinessConnection.getBusinessID(),
+                            (ArrayList<Object> objects)-> {
+                                MapsActivity.showNotification("Store Visit",
+                                        "You have " + ((Points)objects.get(0)).getPoints() + " points, see available promotions!",
+                                        PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
+                                        context);
+                            });
+                    currentBusinessConnection = null;
                 }
             }
         });
@@ -150,6 +160,7 @@ public class BeaconRanger implements BeaconConsumer {
 
         try {
             beaconManager.startRangingBeaconsInRegion(new Region("F901FB7F-D7D2-4812-8A2B-6D0C7DF23C6E", null, null, null));
+            beaconManager.startRangingBeaconsInRegion(new Region("", null, null, null));
             beaconManager.startMonitoringBeaconsInRegion(new Region("F901FB7F-D7D2-4812-8A2B-6D0C7DF23C6E", null, null, null));
             //beaconManager.startMonitoringBeaconsInRegion(new Region("f7826da6-4fa2-4e98-8024-bc5b71e0893e", null, null, null));
         } catch (RemoteException e) {    }
