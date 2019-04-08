@@ -45,7 +45,5 @@ public class UserPointsActivity extends AppCompatActivity {
             });
 
         });
-
-        // Construct the data source, maybe construct arraylist beforehand
     }
 }
