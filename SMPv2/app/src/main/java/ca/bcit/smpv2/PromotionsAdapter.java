@@ -27,9 +27,11 @@ public class PromotionsAdapter extends ArrayAdapter<Promotions> {
         // Lookup view for data population
         TextView promotionBusinessName = (TextView) convertView.findViewById(R.id.promotionBusinessName);
         TextView promotionDetails = (TextView) convertView.findViewById(R.id.promotionDetails);
+        TextView promotionMinimumPoints = (TextView) convertView.findViewById(R.id.promotionMinimumPoints);
         // Populate the data into the template view using the data object
         promotionBusinessName.setText(promotion.getBusinessName());
         promotionDetails.setText(promotion.getDetails());
+        promotionMinimumPoints.setText(String.valueOf(promotion.getMinimumPoints()));
         // Return the completed view to render on screen
         return convertView;
     }

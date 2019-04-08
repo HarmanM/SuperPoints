@@ -266,6 +266,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
                 startActivity(i);
                 return true;
+
             case R.id.settings:
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(k);
@@ -273,6 +274,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.profile:
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(j);
+                return true;
+            case R.id.viewPoints:
+                Intent l = new Intent(getBaseContext(), UserPointsActivity.class);
+                startActivity(l);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

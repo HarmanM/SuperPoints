@@ -67,7 +67,11 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(k);
                 return true;
             case R.id.profile:
-                Intent j = new Intent(getBaseContext(), ProfileActivity.class);
+                Intent l = new Intent(getBaseContext(), ProfileActivity.class);
+                startActivity(l);
+                return true;
+            case R.id.viewPoints:
+                Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
                 startActivity(j);
                 return true;
             default:

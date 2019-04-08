@@ -5,6 +5,9 @@
     <item android:title="Dashboard"
         android:id="@+id/dashboard"
         />
+    <item android:title="View Points"
+        android:id="@+id/viewPoints"
+        />
     <item android:title="Profile"
         android:id="@+id/profile"
         />
