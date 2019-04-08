@@ -69,9 +69,7 @@ public class DatabaseObj extends AsyncTask {
         setMembers(whereClause, f);
         objConstructor = Business::new;
         function = "getBusiness";
-
-
-         = true;
+        get = true;
         this.execute();
     }
 
