@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class UserPointsActivity extends AppCompatActivity {
 
     ArrayList<Pair<Business, Points>> userPoints = new ArrayList<>();
-    ListView listView = (ListView) findViewById(R.id.lvPromotions);
+    ListView listView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class UserPointsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
+        listView = (ListView) findViewById(R.id.lvUserPoints);
 
         final PointsAdapter adapter = new PointsAdapter(this, userPoints);
         listView.setAdapter(adapter);
@@ -33,7 +34,7 @@ public class UserPointsActivity extends AppCompatActivity {
         ArrayList<Points> points = new ArrayList<>();
         ArrayList<Business> businesses = new ArrayList<>();
         new DatabaseObj(this).getPoints("userID=" + LoginActivity.user.getUserID(), (ArrayList<Object> objects)->{
-            String whereClause = "businessID IN (";
+            String whereClause = "businessID IN(";
             for(int i = 0; i < objects.size(); ++i) {
                 points.add((Points) objects.get(i));
                 whereClause += ((Points)objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
