@@ -1,10 +1,13 @@
 package ca.bcit.smpv2;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -27,5 +30,44 @@ public class UserPointsActivity extends AppCompatActivity {
         final PointsAdapter adapter = new PointsAdapter(this, userPoints);
 
         ListView listView = (ListView) findViewById(R.id.lvPromotions);
+    }
+
+    // Menu icons are inflated just as they were with actionbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() != R.id.profile)
+            finish();
+        switch (item.getItemId()) {
+            case R.id.home:
+                //Intent h = new Intent(getBaseContext(), MapsActivity.class);
+                //startActivity(h);
+                return true;
+            case R.id.viewPoints:
+                Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
+                startActivity(j);
+                return true;
+            case R.id.dashboard:
+                Intent i = new Intent(getBaseContext(), DashboardActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.settings:
+                Intent k = new Intent(getBaseContext(), SettingsActivity.class);
+                startActivity(k);
+                return true;
+            case R.id.profile:
+                //Intent j = new Intent(getBaseContext(), ProfileActivity.class);
+                //startActivity(j);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
