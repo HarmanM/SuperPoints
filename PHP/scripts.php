@@ -19,10 +19,14 @@
             $businessid = $row['businessID'];
             $userName = $row['userName'];
             $settings = $row['settings'];
-            if ($businessid != "") {
-              echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
+            if ($businessid != "" ) {
+              if (isset($userName) && $userName != "") {
+                echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
+              }
             } else {
+              if (isset($userName) && $userName != "") {
               echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings;
+            }
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
@@ -31,9 +35,13 @@
                 $username = $row_data['userName'];
                 $settings = $row_data['settings'];
                 if ($businessid != "") {
+                  if (isset($username) && $username != "") {
                   echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings . "~n";
+                }
                 } else {
+                  if (isset($username) && $username != "") {
                   echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings . "~n";
+                }
                 }
             }
         }
@@ -181,10 +189,10 @@
         }
 
         $userid = $_GET['USER_ID'];
-		$newPW = $_GET['NEW_PASSWORD'];
-		
+		    $newPW = $_GET['NEW_PASSWORD'];
+
         $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
-            password = $newPW WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            password = '$newPW' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "true" : "";
 	}
@@ -312,9 +320,13 @@
         $settings = $row[4];
 
         if ($businessid != "") {
-          echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
+          if (isset($userName) && $userName != "") {
+            echo $userid . "~s" . $businessid . "~s" . $username . "~s" . $settings;
+          }
         } else {
-          echo $userid . "~s" . $userName . "~s" . $settings;
+          if (isset($userName) && $userName != "") {
+            echo $userid . "~s" . $username . "~s" . $settings;
+          }
         }
         mysqli_close($con);
     }
@@ -529,6 +541,7 @@ function calcAvgVisitsWeek () {
           $result = mysqli_query($con,"DELETE FROM `superpoints`.`Promotions`
                                     WHERE promotionID = $promotionid;", MYSQLI_STORE_RESULT);
 
+          echo ($result) ? "true" : "";
     }
 
     $func = $_GET['function'];
@@ -577,6 +590,9 @@ function calcAvgVisitsWeek () {
             break;
         case "deletePromotion":
             deletePromotion();
+            break;
+        case "updatePassword":
+            updatePassword();
             break;
     }
 

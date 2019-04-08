@@ -108,9 +108,9 @@ public class BusinessDashboard extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.dashboard:
-                Intent i = new Intent(getBaseContext(), BusinessDashboard.class);
-                startActivity(i);
-                return true;
+//                Intent i = new Intent(getBaseContext(), BusinessDashboard.class);
+//                startActivity(i);
+//                return true;
             case R.id.analytics:
                 Intent j = new Intent(getBaseContext(), Analytics.class);
                 startActivity(j);
@@ -167,6 +167,12 @@ public class BusinessDashboard extends AppCompatActivity
         final EditText editTextPromotionPoints = dialogView.findViewById(R.id.editTextPromotionPoints);
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
+
+        if(updatedPromo != null)
+        {
+            editTextPromotionDetail.setText(updatedPromo.getDetails());
+            editTextPromotionPoints.setText(Integer.toString(updatedPromo.getMinimumPoints()));
+        }
 
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
