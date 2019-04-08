@@ -83,8 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        finish();
+        if(item.getItemId() != R.id.profile)
+            finish();
         switch (item.getItemId()) {
             case R.id.home:
                 //Intent h = new Intent(getBaseContext(), MapsActivity.class);

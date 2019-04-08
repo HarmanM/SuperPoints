@@ -168,6 +168,12 @@ public class BusinessDashboard extends AppCompatActivity
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
 
+        if(updatedPromo != null)
+        {
+            editTextPromotionDetail.setText(updatedPromo.getDetails());
+            editTextPromotionPoints.setText(Integer.toString(updatedPromo.getMinimumPoints()));
+        }
+
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
 
