@@ -391,12 +391,13 @@
 		  return (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
 	  };
 
+    $row_count = mysqli_num_rows($pointsResult);
 	  $points = $pointsFunc($duration) + abs($pointsFunc(0));
-	  if($pointsResult == false)
-		  $pointsResult = mysqli_query($con,"INSERT INTO superpoints.Points ($businessid, $userid, $points)", MYSQLI_STORE_RESULT);
-	  else
-		  $pointsResult = mysqli_query($con,"UPDATE superpoints.Points SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
-
+	  if($row_count == 0) {
+		  $pointsResult = mysqli_query($con,"INSERT INTO `superpoints`.`Points` (`businessID`, `userID`, `points`) VALUES ($businessid, $userid, $points);", MYSQLI_STORE_RESULT);
+	  } else{
+		  $pointsResult = mysqli_query($con,"UPDATE `superpoints`.`Points` SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
+}
     }
 
     function login() {
