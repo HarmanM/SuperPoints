@@ -118,6 +118,10 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(j);
                 return true;
+            case R.id.viewPoints:
+                Intent l = new Intent(getBaseContext(), UserPointsActivity.class);
+                startActivity(l);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

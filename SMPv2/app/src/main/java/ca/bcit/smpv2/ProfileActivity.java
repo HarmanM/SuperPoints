@@ -37,6 +37,10 @@ public class ProfileActivity extends AppCompatActivity {
                 //Intent h = new Intent(getBaseContext(), MapsActivity.class);
                 //startActivity(h);
                 return true;
+            case R.id.viewPoints:
+                Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
+                startActivity(j);
+                return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
                 startActivity(i);
