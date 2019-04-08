@@ -304,7 +304,7 @@ public class DatabaseObj extends AsyncTask {
     protected void onPostExecute(Object obj) {
         String strObject = (String) obj;
         if (!strObject.trim().isEmpty()) {
-            Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
             if(onCompleteFunction != null) {
                 ArrayList<Object> res = new ArrayList<Object>();
@@ -318,7 +318,7 @@ public class DatabaseObj extends AsyncTask {
                 onCompleteFunction.accept(res);
             }
         } else {
-            Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
     }
 }

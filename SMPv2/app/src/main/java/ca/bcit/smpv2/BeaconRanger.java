@@ -35,6 +35,7 @@ public class BeaconRanger implements BeaconConsumer {
     public ArrayList<Long> time = new ArrayList<>();
     private boolean inStore = false;
     private Business currentBusinessConnection;
+    private int businessIDHolder;
 
     public BeaconRanger(Context c) {
         context = c;
@@ -116,24 +117,28 @@ public class BeaconRanger implements BeaconConsumer {
                 else if(wasInStore && !inStore) {
                     Toast.makeText(context, "Exited store" + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
                     visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
-                    Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
+                    /*Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
                             + "\nBusiness: " + visit.getBusinessID()
                             + "\nStart: " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(visit.getDate().getTime())
                             + "\nDuration: "
                                     + String.format("%02d", visit.getDuration() / 3600)
                                     + ":" + String.format("%02d", visit.getDuration() % 3600 / 60)
                                     + ":" + String.format("%02d", visit.getDuration() % 60),
-                            Toast.LENGTH_LONG).show();
-                    new DatabaseObj(context).setVisit(visit);
+                            Toast.LENGTH_LONG).show();*/
+                    businessIDHolder = currentBusinessConnection.getBusinessID();
+                    new DatabaseObj(context).setVisit(visit, (ArrayList<Object> objects)->{
+                        new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
+                                        + " AND businessID=" + businessIDHolder,
+                                (ArrayList<Object> pointsObj)-> {
+                                    MapsActivity.showNotification("Store Visit",
+                                            "You have " + ((Points)pointsObj.get(0)).getPoints() + " points, see available promotions!",
+                                            PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
+                                            context);
+                                });
+                    });
 
-                    new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
-                            + " AND businessID=" + currentBusinessConnection.getBusinessID(),
-                            (ArrayList<Object> objects)-> {
-                                MapsActivity.showNotification("Store Visit",
-                                        "You have " + ((Points)objects.get(0)).getPoints() + " points, see available promotions!",
-                                        PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
-                                        context);
-                            });
+
+
                     currentBusinessConnection = null;
                 }
             }
