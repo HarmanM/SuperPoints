@@ -34,19 +34,21 @@ public class UserPointsActivity extends AppCompatActivity {
         ArrayList<Points> points = new ArrayList<>();
         ArrayList<Business> businesses = new ArrayList<>();
         new DatabaseObj(this).getPoints("userID=" + LoginActivity.user.getUserID(), (ArrayList<Object> objects)->{
-            String whereClause = "businessID IN(";
-            for(int i = 0; i < objects.size(); ++i) {
-                points.add((Points) objects.get(i));
-                whereClause += ((Points)objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
-            }
-            whereClause += ")";
-            new DatabaseObj(this).getBusinesses(whereClause, (ArrayList<Object> busObjects)->{
-                for(int i = 0; i < busObjects.size(); ++i) {
-                    businesses.add((Business) busObjects.get(i));
-                    userPoints.add(new Pair<>((Business) busObjects.get(i), points.get(i)));
+            if(objects.size() > 0) {
+                String whereClause = "businessID IN(";
+                for (int i = 0; i < objects.size(); ++i) {
+                    points.add((Points) objects.get(i));
+                    whereClause += ((Points) objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
                 }
-                listView.setAdapter(new PointsAdapter(this, userPoints));
-            });
+                whereClause += ")";
+                new DatabaseObj(this).getBusinesses(whereClause, (ArrayList<Object> busObjects) -> {
+                    for (int i = 0; i < busObjects.size(); ++i) {
+                        businesses.add((Business) busObjects.get(i));
+                        userPoints.add(new Pair<>((Business) busObjects.get(i), points.get(i)));
+                    }
+                    listView.setAdapter(new PointsAdapter(this, userPoints));
+                });
+            }
 
         });
     }
