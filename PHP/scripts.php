@@ -145,7 +145,14 @@
 				$userid = $row['userID'];
 				$businessid = $row['businessID'];
 				$points = $row['points'];
-				echo $userid . "~s" . $businessid . "~s" . $points . "~n";
+                if(isset(($userid)) && isset($businessid) && isset($points))
+                {
+                    echo $userid . "~s" . $businessid . "~s" . $points . "~n";
+                }
+                else
+                {
+                    echo "";
+                }
             }
         }
         mysqli_close($con);
