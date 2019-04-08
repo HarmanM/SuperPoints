@@ -106,6 +106,8 @@ public class BusinessDashboard extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        if(item.getItemId() != R.id.dashboard)
+            finish();
         switch (item.getItemId()) {
             case R.id.dashboard:
 //                Intent i = new Intent(getBaseContext(), BusinessDashboard.class);
