@@ -69,7 +69,9 @@ public class DatabaseObj extends AsyncTask {
         setMembers(whereClause, f);
         objConstructor = Business::new;
         function = "getBusiness";
-        get = true;
+
+
+         = true;
         this.execute();
     }
 
@@ -112,6 +114,7 @@ public class DatabaseObj extends AsyncTask {
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUser";
+        objConstructor = Integer::new;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -143,6 +146,7 @@ public class DatabaseObj extends AsyncTask {
     public void setBusiness(Business o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setBusiness";
+        objConstructor = Integer::new;
         params = "";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
@@ -159,6 +163,7 @@ public class DatabaseObj extends AsyncTask {
     public void setPromotion(Promotions o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setPromotion";
+        objConstructor = Integer::new;
         params = "";
         params += "PROMOTION_ID=" + o.getPromotionID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -177,6 +182,7 @@ public class DatabaseObj extends AsyncTask {
     public void setVisit(Visit o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setVisit";
+        objConstructor = Integer::new;
         params = "";
         params += "VISIT_ID=" + o.getVisitID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -207,6 +213,7 @@ public class DatabaseObj extends AsyncTask {
     public void setPoints(Points o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUserBusinessTier";
+        objConstructor = Integer::new;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -215,16 +222,6 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
-    public void setSettings(User o, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "settings";
-        params = "";
-        params += "USER_ID" + o.getUserID();
-        params += "SETTING" + o.getSetting();
-        setMembers(params, f);
-        this.execute();
-    }
     public void deletePromotion(int id){
         deletePromotion(id, null);
     }
