@@ -139,7 +139,14 @@
             $userid = $row['userID'];
             $businessid = $row['businessID'];
             $points = $row['points'];
-            echo $userid . "~s" . $businessid . "~s" . $points;
+            if(isset($userid) && isset($businessid) && isset($points))
+            {
+                echo $userid . "~s" . $businessid . "~s" . $points . "~n";
+            }
+            else
+            {
+                echo "";
+            }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
 				$userid = $row_data['userID'];
@@ -317,7 +324,7 @@
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
 
-      if ($promotionid = 0) {
+      if ($promotionid == 0) {
         $promotionid = "";
       }
 
