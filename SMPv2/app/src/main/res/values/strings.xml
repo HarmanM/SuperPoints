@@ -7,7 +7,6 @@
     <string name="dashboard_title">Promotions</string>
 
 
-
     <string name="add_promotion_points">How many points does this promotion need to be redeemed? (default 0)</string>
     <string name="add_promotion_details">What should we say about your promotion?</string>
     <string name="add_promotion_submit">All Done!</string>
