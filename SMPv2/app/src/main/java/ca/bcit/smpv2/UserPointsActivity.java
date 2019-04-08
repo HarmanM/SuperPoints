@@ -13,7 +13,6 @@ public class UserPointsActivity extends AppCompatActivity {
 
     ArrayList<Pair<Business, Points>> userPoints;
 
-}
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,4 +27,5 @@ public class UserPointsActivity extends AppCompatActivity {
         final PointsAdapter adapter = new PointsAdapter(this, userPoints);
 
         ListView listView = (ListView) findViewById(R.id.lvPromotions);
+    }
 }
