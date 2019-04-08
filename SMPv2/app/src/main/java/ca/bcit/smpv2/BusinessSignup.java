@@ -43,21 +43,20 @@ public class BusinessSignup extends AppCompatActivity {
         latitude = address.getLatitude();
 
         Business b = new Business(0, businessName, latitude, longitude, "");
-        User u = new User(0, 0, password, username, 3);
 
         new DatabaseObj (BusinessSignup.this).setBusiness(b, new Consumer<ArrayList<Object>>() {
             @Override
             public void accept(ArrayList<Object> objects) {
-                String result = (String) objects.get(0);
-                Log.i("666BID", result);
-            }
-        });
 
-        new DatabaseObj (BusinessSignup.this).setUser(u, new Consumer<ArrayList<Object>>() {
-            @Override
-            public void accept(ArrayList<Object> objects) {
-                String result = (String) objects.get(0);
-                Log.i("2222UID", result);
+                User u = new User((Integer) objects.get(0), b.getBusinessID(), password, username, 3);
+
+                new DatabaseObj (BusinessSignup.this).setUser(u, new Consumer<ArrayList<Object>>() {
+                    @Override
+                    public void accept(ArrayList<Object> objects) {
+                        Intent i = new Intent(BusinessSignup.this, LoginActivity.class);
+                        startActivity(i);
+                    }
+                });
             }
         });
     }
