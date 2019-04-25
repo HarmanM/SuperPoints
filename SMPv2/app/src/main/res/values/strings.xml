@@ -14,4 +14,7 @@
     <string name="delete_promotion_title">Are you sure?</string>
     <string name="delete_promotion_submit">Yes</string>
     <string name="delete_promotion_cancel">No</string>
+
+    <string name="super_slide_title">Super</string>
+    <string name="points_slide_title">Points</string>
 </resources>

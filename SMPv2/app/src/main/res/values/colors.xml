@@ -6,5 +6,7 @@
     <color name="colorBG">#1F0746</color>
     <color name="white">#ffffff</color>
     <color name="buttonColor">#2EDAEF</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
 
 </resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WelcomeActivity">
+
+    <TextView
+        android:id="@+id/super_slide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/super_slide_title"
+        android:textFontWeight="400"
+        android:textSize="100sp"
+        android:textColor="@color/red" />
+
+    <TextView
+        android:id="@+id/points_slide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/points_slide_title"
+        android:textFontWeight="400"
+        android:textSize="100sp"
+        android:textColor="@color/blue" />
+
+    <TextView
+        android:id="@+id/super_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/blue" />
+
+    <TextView
+        android:id="@+id/points_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/red" />
+
+
+
+</android.support.constraint.ConstraintLayout>

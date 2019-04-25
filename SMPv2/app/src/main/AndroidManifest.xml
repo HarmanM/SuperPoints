@@ -61,7 +61,8 @@
         <activity
             android:name=".BusinessSignup"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserPointsActivity"></activity>
+        <activity android:name=".UserPointsActivity" />
+        <activity android:name=".WelcomeActivity"></activity>
     </application>
 
 </manifest>
