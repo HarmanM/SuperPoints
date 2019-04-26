@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -169,6 +171,7 @@ public class BusinessDashboard extends AppCompatActivity
         final EditText editTextPromotionPoints = dialogView.findViewById(R.id.editTextPromotionPoints);
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
+        ImageView promoImageView = dialogView.findViewById(R.id.promoImageView);
 
         if(updatedPromo != null)
         {

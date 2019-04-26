@@ -1,14 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/editTextSmallDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="What is a short description about your promotion?" />
 
     <EditText
         android:id="@+id/editTextPromotionDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/add_promotion_details" />
+        android:hint="Detailed description of your promotion (OPTIONAL)" />
 
     <EditText
         android:id="@+id/editTextPromotionPoints"
@@ -16,6 +25,15 @@
         android:layout_height = "wrap_content"
         android:hint="@string/add_promotion_points">
     </EditText>
+
+    <ImageView
+        android:id="@+id/promoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:onClick="uploadImage"
+        android:src="@drawable/insert_image_here_"
+
+        />
 
     <Button
         android:id="@+id/buttonAddPromotion"
