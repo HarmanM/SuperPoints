@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 
 import android.os.Build;
@@ -49,10 +51,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
@@ -72,7 +77,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private float defaultZoom = 10.0f;
+    private float defaultZoom = 16.0f;
     private int locationRequestInterval = 15; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100; //???? why is it a random int, reason its not private?
 
@@ -212,6 +217,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public boolean onMarkerClick(final Marker marker) {
+        marker.showInfoWindow();
         return true;
     }
 
@@ -306,19 +312,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    //TODO check if this works
     public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby) {
+        String BusinessName;
+        String BusinessAddress;
         double BusinessLatitude;
         double BusinessLongitude;
-        for(int i = 0; i < BusinessesNearby.size(); i++)
-        {
+        Marker marker;
+        MarkerOptions options;
+        Geocoder geocoder;
+        List<Address> addresses;
+
+        for (int i = 0; i < BusinessesNearby.size(); i++) {
             BusinessLatitude = BusinessesNearby.get(i).getLatitude();
             BusinessLongitude = BusinessesNearby.get(i).getLongitude();
+            BusinessName = BusinessesNearby.get(i).getBusinessName();
+            BusinessAddress = "";
             LatLng latLng = new LatLng(BusinessLatitude, BusinessLongitude);
-            MarkerOptions options = new MarkerOptions()
+
+            options = new MarkerOptions()
                     .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            mMap.addMarker(options);
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .title(BusinessName);
+
+            geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(BusinessLatitude, BusinessLongitude, 1);
+                if (addresses.size() > 0 && addresses != null) {
+                    String SubThoroughFare = addresses.get(0).getSubThoroughfare();
+                    String ThoroughFare = addresses.get(0).getThoroughfare();
+                    BusinessAddress += ((SubThoroughFare == null) ? "" : SubThoroughFare + ", ");
+                    BusinessAddress = ((ThoroughFare == null) ? BusinessAddress : BusinessAddress + ThoroughFare);
+                    options.snippet(BusinessAddress);
+                }
+            } catch (IOException e) {
+                Log.e("EXCEPTION: GEOCODER MAPSACTIVITY GENERATEBUSINESS MARKERS", e.toString());
+            }
+
+            marker = mMap.addMarker(options);
+            marker.setVisible(true);
         }
     }
 }
