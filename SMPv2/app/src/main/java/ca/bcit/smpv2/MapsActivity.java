@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -18,18 +16,18 @@ import android.location.Location;
 
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SeekBar;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,16 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,6 +72,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     static final ArrayList<Business> businessesNearby = new ArrayList<>();
 
+    FloatingActionButton preferBusinessButton;
+
     BeaconRanger br;
 
     @Override
@@ -91,6 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
 
         br = new BeaconRanger(this);
+        preferBusinessButton = findViewById(R.id.prefer_business_button);
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -214,11 +206,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             generateBusinessMarkers(businessesNearby);
         }
         Log.i(TAG, "LOCATION CHANGED.");
-    }
-
-    public boolean onMarkerClick(final Marker marker) {
-        marker.showInfoWindow();
-        return true;
     }
 
     @Override
@@ -351,5 +338,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker = mMap.addMarker(options);
             marker.setVisible(true);
         }
+    }
+
+    public boolean onMarkerClick(final Marker marker) {
+        marker.showInfoWindow();
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        preferBusinessButton.setVisibility(View.VISIBLE);
+        preferBusinessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        return true;
     }
 }
