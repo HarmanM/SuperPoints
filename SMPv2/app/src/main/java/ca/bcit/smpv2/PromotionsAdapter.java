@@ -31,7 +31,7 @@ public class PromotionsAdapter extends ArrayAdapter<Promotions> {
         // Populate the data into the template view using the data object
         promotionBusinessName.setText(promotion.getBusinessName());
         promotionDetails.setText(promotion.getDetails());
-        promotionMinimumPoints.setText(String.valueOf(promotion.getMinimumPoints().getMinPoints()));
+        promotionMinimumPoints.setText(String.valueOf(promotion.getMinTier().getName()));
         // Return the completed view to render on screen
         return convertView;
     }

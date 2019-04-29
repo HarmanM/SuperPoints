@@ -46,11 +46,11 @@ public class Promotions {
         this.businessID = businessID;
     }
 
-    public PointTiers getMinimumPoints() {
+    public PointTiers getMinTier() {
         return minTier;
     }
 
-    public void setMinimumPoints(PointTiers minTier) {
+    public void setMinTier(PointTiers minTier) {
         this.minTier = minTier;
     }
 

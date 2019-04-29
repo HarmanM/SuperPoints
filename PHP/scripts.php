@@ -369,7 +369,7 @@
 
       $promotionid = $_GET['PROMOTION_ID'];
       $businessid = $_GET['BUSINESS_ID'];
-      $tierid = $_GET['MIN_POINTS'];
+      $tierid = $_GET['MIN_TIER'];
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
 
