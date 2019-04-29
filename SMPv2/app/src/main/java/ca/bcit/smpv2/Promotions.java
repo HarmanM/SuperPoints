@@ -1,32 +1,33 @@
 package ca.bcit.smpv2;
 
+import android.graphics.Point;
+
 public class Promotions {
     private int promotionID;
     private int businessID;
-    private int minimumPoints;
+    private PointTiers minTier;
     private int tierID;
     private String details;
     private int clicks;
     private String businessName;
 
-    public Promotions(int promotionID, int businessID, int minimumPoints, String details, int clicks, String businessName) {
+    public Promotions(int promotionID, int businessID, PointTiers minTier, String details, int clicks, String businessName) {
         this.promotionID = promotionID;
         this.businessID = businessID;
-        this.minimumPoints = minimumPoints;
+        this.minTier = minTier;
         this.details = details;
         this.clicks = clicks;
         this.businessName = businessName;
     }
 
     public Promotions(String sqlResult) {
-        //TODO delimiter needs to change
         String[] result = sqlResult.split("~s");
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
-        this.minimumPoints = Integer.parseInt(result[2]);
-        this.details = result[3];
-        this.clicks = Integer.parseInt(result[4]);
-        this.businessName = result[5];
+        this.minTier = new PointTiers(result[2] + "~s" + result[3] + "~s" + result[4]);
+        this.details = result[5];
+        this.clicks = Integer.parseInt(result[6]);
+        this.businessName = result[7];
     }
 
     public int getPromotionID() {
@@ -45,12 +46,12 @@ public class Promotions {
         this.businessID = businessID;
     }
 
-    public int getMinimumPoints() {
-        return minimumPoints;
+    public PointTiers getMinimumPoints() {
+        return minTier;
     }
 
-    public void setMinimumPoints(int minimumPoints) {
-        this.minimumPoints = minimumPoints;
+    public void setMinimumPoints(PointTiers minTier) {
+        this.minTier = minTier;
     }
 
     public int getTierID() {return tierID;}

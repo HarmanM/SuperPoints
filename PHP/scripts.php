@@ -89,8 +89,10 @@
         $businessID = $_GET['whereClause'];
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
-        $result = mysqli_query($con,"SELECT promotionID, businessID, minPoints, details, clicks, businessName
-            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
+        $result = mysqli_query($con,"SELECT promotionID, businessID, pt.*, details, clicks, businessName
+            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p 
+			INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
+			INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
             $where", MYSQLI_STORE_RESULT);
 
         $row_count = mysqli_num_rows($result);
@@ -99,25 +101,29 @@
             $row = mysqli_fetch_array($result);
             $visitid = $row['promotionID'];
             $businessid = $row['businessID'];
+            $tierID = $row['tierID'];
             $minPoints = $row['minPoints'];
+            $name = $row['name'];
             $details = $row['details'];
             $clicks = $row['clicks'];
             $businessName = $row['businessName'];
 
             if (isset($businessid) && $businessid != "") {
-              echo $visitid . "~s" . $businessid . "~s" . $minPoints . "~s" . $details . "~s" . $clicks . "~s" . $businessName;
+              echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName;
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
                 $businessid = $row_data['businessID'];
-                $minPoints = $row_data['minPoints'];
+				$tierID = $row_data['tierID'];
+				$minPoints = $row_data['minPoints'];
+				$name = $row_data['name'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
                 $businessName = $row_data['businessName'];
 
                 if (isset($businessid) && $businessid != "") {
-                  echo $visitid . "~s" . $businessid . "~s" . $minPoints . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
+                  echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
                 }
             }
         }
