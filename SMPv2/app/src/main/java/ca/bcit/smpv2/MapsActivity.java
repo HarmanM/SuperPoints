@@ -45,8 +45,12 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
@@ -72,7 +76,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     static final ArrayList<Business> businessesNearby = new ArrayList<>();
 
+    //Preferred business variables
     FloatingActionButton preferBusinessButton;
+    Map<String, Integer> markerBusinessIDs;
 
     BeaconRanger br;
 
@@ -83,6 +89,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         br = new BeaconRanger(this);
         preferBusinessButton = findViewById(R.id.prefer_business_button);
+        markerBusinessIDs = new HashMap<String, Integer>();
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -300,6 +307,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby) {
+        int BusinessID;
         String BusinessName;
         String BusinessAddress;
         double BusinessLatitude;
@@ -308,8 +316,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions options;
         Geocoder geocoder;
         List<Address> addresses;
+        //TODO Businesses nearby needs to tell me if its preferred
 
         for (int i = 0; i < BusinessesNearby.size(); i++) {
+            BusinessID = BusinessesNearby.get(i).getBusinessID();
             BusinessLatitude = BusinessesNearby.get(i).getLatitude();
             BusinessLongitude = BusinessesNearby.get(i).getLongitude();
             BusinessName = BusinessesNearby.get(i).getBusinessName();
@@ -336,6 +346,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             marker = mMap.addMarker(options);
+            markerBusinessIDs.put(marker.getId(), BusinessID);
             marker.setVisible(true);
         }
     }
@@ -344,10 +355,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.showInfoWindow();
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         preferBusinessButton.setVisibility(View.VISIBLE);
+        //TODO what about when they unset it
         preferBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Marker newMarker = marker;
+                marker.remove();
+                newMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
+                //new DatabaseObj (MapsActivity.this).setPreferredBusiness(new PreferredBusiness(LoginActivity.user.getUserID(), markerBusinessIDs.get(marker.getId())));
             }
         });
         return true;
