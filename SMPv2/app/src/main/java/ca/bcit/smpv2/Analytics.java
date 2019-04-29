@@ -65,6 +65,10 @@ public class Analytics extends AppCompatActivity {
 //                Intent j = new Intent(getBaseContext(), Analytics.class);
 //                startActivity(j);
 //                return true;
+            case R.id.settings:
+                Intent j = new Intent(getBaseContext(), BusinessSettingsActivity.class);
+                startActivity(j);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

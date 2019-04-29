@@ -119,6 +119,10 @@ public class BusinessDashboard extends AppCompatActivity
                 Intent j = new Intent(getBaseContext(), Analytics.class);
                 startActivity(j);
                 return true;
+            case R.id.settings:
+                Intent i = new Intent(getBaseContext(), BusinessSettingsActivity.class);
+                startActivity(i);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

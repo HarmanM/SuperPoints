@@ -32,7 +32,7 @@ public class PointsAdapter extends ArrayAdapter<Pair<Business, Points>> {
         // Lookup view for data population
         TextView promotionBusinessName = (TextView) convertView.findViewById(R.id.promotionBusinessName);
         // Populate the data into the template view using the data object
-        promotionBusinessName.setText(userPoints.first.getBusinessName() + ": " + userPoints.second.getPoints() + " points");
+        promotionBusinessName.setText(userPoints.first.getBusinessName() + ": " + userPoints.second.getTier() + " Tier");
         // Return the completed view to render on screen
         return convertView;
     }

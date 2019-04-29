@@ -91,8 +91,8 @@ public class DatabaseObj extends AsyncTask {
 
     public void getTiers(String whereClause, Consumer<ArrayList<Object>> f){
         setMembers(whereClause, f);
-        objConstructor = Tiers::new;
-        function = "getTier";
+        objConstructor = PointTiers::new;
+        function = "getTiers";
         get = true;
         this.execute();
     }
@@ -191,19 +191,6 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
-    public void setTier(Tiers o){
-        setTier(o, null);
-    }
-
-    public void setTier(Tiers o, Consumer<ArrayList<Object>> f){
-        get = false;
-        function = "setTier";
-        params = "";
-        params += "TIER_ID=" + o.getTierID() + "&";
-        params += "MIN_POINTS=" + o.getMinPoints() + "&";
-        setMembers(params, f);
-        this.execute();
-    }
     public void setPoints(Points o){
         setPoints(o, null);
     }
