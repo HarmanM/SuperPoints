@@ -38,6 +38,7 @@ public class BusinessSignup extends AppCompatActivity {
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocationName(businessAddress, 1);
+        //TODO null check on return
         Address address = addresses.get(0);
         longitude = address.getLongitude();
         latitude = address.getLatitude();
