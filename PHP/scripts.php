@@ -140,7 +140,7 @@
             $businessid = $row['businessID'];
             $points = $row['points'];
 			$tier = $row['tier'];
-            if(isset($userid) && isset($businessid) && isset($points) && isset(tier))
+            if(isset($userid) && isset($businessid) && isset($points) && isset($tier))
             {
                 echo $userid . "~s" . $businessid . "~s" . $points . "~s" . $tier . "~n";
             }
@@ -153,7 +153,7 @@
 				$userid = $row_data['userID'];
 				$businessid = $row_data['businessID'];
 				$points = $row_data['points'];
-			$tier = $row['tier'];
+			$tier = $row_data['tier'];
                 if(isset($userid) && isset($businessid) && isset($points) && isset($tier))
                 {
                     echo $userid . "~s" . $businessid . "~s" . $points . "~s" . $tier . "~n";
@@ -166,7 +166,7 @@
         }
         mysqli_close($con);
     }
-	
+
 	function getTiers() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -341,7 +341,7 @@
                 '$latitude', '$longitude', '$region');", MYSQLI_STORE_RESULT);
             $result = $result ? "true" : "";
 
-            if ($result = "true") {
+            if ($result == "true") {
               $result2 = mysqli_query($con, "SELECT businessID FROM `superpoints`.`Businesses` ORDER BY businessID DESC LIMIT 1");
               $row = mysqli_fetch_array($result2);
               echo $row[0];
@@ -415,7 +415,7 @@
 
                 $result = $result ? "true" : "";
 
-                if ($result = "true") {
+                if ($result == "true") {
                   $result2 = mysqli_query($con, "SELECT visitID FROM `superpoints`.`Visits` ORDER BY visitID DESC LIMIT 1");
                   $row = mysqli_fetch_array($result2);
                   echo $row[0];
