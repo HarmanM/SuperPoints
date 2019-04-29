@@ -261,11 +261,11 @@
         $username = $_GET['USERNAME'];
         $setting = $_GET['SETTING'];
 
-        if ($businessid == 0) {
+        if ($businessid == -1) {
             $businessid = "";
         }
 
-        if ($userid == 0) {
+        if ($userid == -1) {
           $userid = "";
         }
 
@@ -328,7 +328,7 @@
       $latitude = $_GET['LATITUDE'];
       $longitude = $_GET['LONGITUDE'];
 
-      if ($businessid == 0 || !isset($businessid)) {
+      if ($businessid == -1 || !isset($businessid)) {
         $businessid = "";
       }
 
@@ -367,7 +367,7 @@
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
 
-      if ($promotionid == 0) {
+      if ($promotionid == -1) {
         $promotionid = "";
       }
 
@@ -404,7 +404,7 @@
       $duration = $_GET['DURATION'];
       $date = $_GET['DATE'];
 
-      if ($visitid == 0) {
+      if ($visitid == -1) {
         $visitid = "";
       }
 
