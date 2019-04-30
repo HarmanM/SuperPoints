@@ -331,11 +331,11 @@ public class DatabaseObj extends AsyncTask {
     @Override
     protected void onPostExecute(Object obj) {
         String strObject = (String) obj;
+        ArrayList<Object> res = new ArrayList<Object>();
         if (!strObject.trim().isEmpty()) {
             //Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
             if(onCompleteFunction != null) {
-                ArrayList<Object> res = new ArrayList<Object>();
                 if (objConstructor != null) {
                     String resArr[] = strObject.split(Pattern.quote("~n"));
                     for(String sObj : resArr) {
@@ -343,10 +343,10 @@ public class DatabaseObj extends AsyncTask {
                         res.add(objConstructor.apply(sObj));
                     }
                 }
-                onCompleteFunction.accept(res);
             }
         } else {
             //Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
+        onCompleteFunction.accept(res);
     }
 }
