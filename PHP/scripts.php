@@ -702,7 +702,7 @@ function calcAvgVisitsWeek () {
       $businessid = $_GET['BUSINESS_ID'];
 
       $result = mysqli_query($con,"INSERT INTO `superpoints`.`PreferredBusinesses`
-          (userID, businessID) VALUES ('$userid', '$businessid');", MYSQLI_STORE_RESULT);
+          (userID, businessID) VALUES ($userid, $businessid);", MYSQLI_STORE_RESULT);
 
       echo ($result) ? "true" : "";
 
@@ -781,7 +781,11 @@ function calcAvgVisitsWeek () {
         case "updatePassword":
             updatePassword();
             break;
+        case "setPreferredBusiness":
+            handlePreferredBusinesses();
+            break;
+        case "deletePreferredBusiness":
+            deletePreferredBusiness();
+            break;
     }
-
-
 ?>
