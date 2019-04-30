@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class DatabaseObj extends AsyncTask {
 
     private Context context;
-    private String params;
+    private String params = "";
     private String function;
     private Consumer<ArrayList<Object>> onCompleteFunction;
     private Function<String, Object> objConstructor;
@@ -35,9 +35,10 @@ public class DatabaseObj extends AsyncTask {
     }
 
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
-        if(whereClause != "")
+        if(whereClause != "") {
             this.params = whereClause;
-        this.params = this.params.replace(" ", "%20");
+            this.params = this.params.replace(" ", "%20");
+        }
         onCompleteFunction = f;
     }
 
@@ -273,10 +274,10 @@ public class DatabaseObj extends AsyncTask {
             // if its a get from database
             if(get) {
                  link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
-                        + "&whereClause=" + params;
+                        + ((!params.isEmpty()) ? "&whereClause=" + params : "");
             } else{
                 link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
-                        + "&" + params;
+                        + ((!params.isEmpty()) ? "&" + params : "");
             }
             Log.i("LINK::" , link);
             URL url = new URL(link);
