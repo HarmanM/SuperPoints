@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        String username = usernameField.getText().toString();
+        String username = usernameField.getText().toString().trim();
         String password = passwordField.getText().toString();
         new SigninTask(this, 0).execute(username, password);
     }
