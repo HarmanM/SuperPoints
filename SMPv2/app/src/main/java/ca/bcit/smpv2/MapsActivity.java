@@ -354,6 +354,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public Map<Integer, Boolean> generatePreferredBusinesses(ArrayList<Business> businessesNearby, ArrayList<PreferredBusiness> preferredBusinesses)
+    {
+        Map<Integer, Boolean> preferredBusinessesNearby = new HashMap<>();
+
+        for(int i = 0; i < businessesNearby.size(); ++i)
+        {
+            boolean found = false;
+            for(int k = 0; k < preferredBusinesses.size(); ++k)
+            {
+                if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
+                {
+                    preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), true);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+                preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), false);
+        }
+        return preferredBusinessesNearby;
+    }
+
+
     public boolean onMarkerClick(final Marker marker) {
         LatLng oldMarkerLatLng = marker.getPosition();
         Boolean preferred = markerExtras.get(oldMarkerLatLng).isPreferred();
@@ -378,25 +401,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
                     preferBusinessButton.setImageResource(R.drawable.unprefer_business);
                     new DatabaseObj(MapsActivity.this).setPreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
-
-                    }
-);
+                        BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
+                        updated.setPreferred(!preferred);
+                        Marker newMarker = mMap.addMarker(oldMarkerOptions);
+                        updated.setMarker(newMarker);
+                        markerExtras.put(oldMarkerLatLng, updated);
+                        newMarker.showInfoWindow();
+                    });
                 }
                 else
                 {
                     oldMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     preferBusinessButton.setImageResource(R.drawable.prefer_business_icon);
                     new DatabaseObj(MapsActivity.this).deletePreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
-
+                        BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
+                        updated.setPreferred(!preferred);
+                        Marker newMarker = mMap.addMarker(oldMarkerOptions);
+                        updated.setMarker(newMarker);
+                        markerExtras.put(oldMarkerLatLng, updated);
+                        newMarker.showInfoWindow();
                     });
                 }
-                //TODO should this be in lambda
-                BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
-                updated.setPreferred(!preferred);
-                Marker newMarker = mMap.addMarker(oldMarkerOptions);
-                updated.setMarker(newMarker);
-                markerExtras.put(oldMarkerLatLng, updated);
-                newMarker.showInfoWindow();
             }
         });
         return true;
