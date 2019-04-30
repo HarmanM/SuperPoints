@@ -90,7 +90,7 @@
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
         $result = mysqli_query($con,"SELECT promotionID, businessID, pt.*, details, clicks, businessName
-            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p 
+            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p
 			INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
 			INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
             $where", MYSQLI_STORE_RESULT);
@@ -190,7 +190,7 @@
             $name = $row['name'];
             if(isset($tierID) && isset($minPoints) && isset($name))
             {
-                echo $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $tier . "~n";
+                echo $tierID . "~s" . $minPoints . "~s" . $name . "~n";
             }
             else
             {
@@ -203,7 +203,7 @@
 				$name = $row_data['name'];
                 if(isset($tierID) && isset($minPoints) && isset($name))
                 {
-                    echo $tierID . "~s" . $name . "~s" . $name . "~n";
+                    echo $tierID . "~s" . $minPoints . "~s" . $name . "~n";
                 }
                 else
                 {
@@ -380,7 +380,7 @@
 
       if ($promotionid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
-              (businessID, minPoints, details, clicks) VALUES ('$businessid', '$tierid',
+              (businessID, minTierID, details, clicks) VALUES ('$businessid', '$tierid',
                 '$details', '$clicks');", MYSQLI_STORE_RESULT);
 
           $result = $result ? "true" : "";
@@ -704,9 +704,8 @@ function calcAvgVisitsWeek () {
       $result = mysqli_query($con,"INSERT INTO `superpoints`.`PreferredBusinesses`
           (userID, businessID) VALUES ('$userid', '$businessid');", MYSQLI_STORE_RESULT);
 
-      $result = $result ? "true" : "";
+      echo ($result) ? "true" : "";
 
-      echo $result;
     }
 
 
@@ -781,12 +780,6 @@ function calcAvgVisitsWeek () {
             break;
         case "updatePassword":
             updatePassword();
-            break;
-        case "deletePreferredBusiness":
-            deleteBusiness();
-            break;
-        case "setPreferredBusiness":
-            handlePreferredBusiness();
             break;
     }
 
