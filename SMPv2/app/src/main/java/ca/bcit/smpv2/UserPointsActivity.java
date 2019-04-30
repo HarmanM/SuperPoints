@@ -11,12 +11,14 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class UserPointsActivity extends AppCompatActivity {
 
     ArrayList<Pair<Business, Points>> userPoints = new ArrayList<>();
     ListView listView;
-
+    public static ArrayList<PointTiers> tiers = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,31 +27,34 @@ public class UserPointsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
-
         listView = (ListView) findViewById(R.id.lvUserPoints);
 
-        final PointsAdapter adapter = new PointsAdapter(this, userPoints);
-        listView.setAdapter(adapter);
+        new DatabaseObj(this).getTiers("", (ArrayList<Object> tierObjects) ->{
+            tiers.clear();
+            for(Object o : tierObjects)
+                tiers.add((PointTiers)o);
+            Collections.sort(tiers, Comparator.comparingInt(PointTiers::getMinPoints));
 
-        ArrayList<Points> points = new ArrayList<>();
-        ArrayList<Business> businesses = new ArrayList<>();
-        new DatabaseObj(this).getPoints("userID=" + LoginActivity.user.getUserID(), (ArrayList<Object> objects)->{
-            if(objects.size() > 0) {
-                String whereClause = "businessID IN(";
-                for (int i = 0; i < objects.size(); ++i) {
-                    points.add((Points) objects.get(i));
-                    whereClause += ((Points) objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
-                }
-                whereClause += ")";
-                new DatabaseObj(this).getBusinesses(whereClause, (ArrayList<Object> busObjects) -> {
-                    for (int i = 0; i < busObjects.size(); ++i) {
-                        businesses.add((Business) busObjects.get(i));
-                        userPoints.add(new Pair<>((Business) busObjects.get(i), points.get(i)));
+            ArrayList<Points> points = new ArrayList<>();
+            ArrayList<Business> businesses = new ArrayList<>();
+            new DatabaseObj(this).getPoints("userID=" + LoginActivity.user.getUserID(), (ArrayList<Object> objects)->{
+                if(objects.size() > 0) {
+                    String whereClause = "businessID IN(";
+                    for (int i = 0; i < objects.size(); ++i) {
+                        points.add((Points) objects.get(i));
+                        whereClause += ((Points) objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
                     }
-                    listView.setAdapter(new PointsAdapter(this, userPoints));
-                });
-            }
+                    whereClause += ")";
+                    new DatabaseObj(this).getBusinesses(whereClause, (ArrayList<Object> busObjects) -> {
+                        for (int i = 0; i < busObjects.size(); ++i) {
+                            businesses.add((Business) busObjects.get(i));
+                            userPoints.add(new Pair<>((Business) busObjects.get(i), points.get(i)));
+                        }
+                        listView.setAdapter(new PointsAdapter(this, userPoints));
+                    });
+                }
 
+            });
         });
     }
 

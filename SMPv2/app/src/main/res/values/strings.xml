@@ -18,4 +18,7 @@
     <string name="super_slide_title">Super</string>
     <string name="points_slide_title">Points</string>
     <string name="title_activity_business_settings">BusinessSettingsActivity</string>
+
+    <string name="minimum_tier_for_promo">Minimum Tier:</string>
+
 </resources>

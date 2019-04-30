@@ -1,12 +1,9 @@
 package ca.bcit.smpv2;
 
-import android.graphics.Point;
-
 public class Promotions {
     private int promotionID;
     private int businessID;
     private PointTiers minTier;
-    private int tierID;
     private String details;
     private int clicks;
     private String businessName;
@@ -53,8 +50,6 @@ public class Promotions {
     public void setMinTier(PointTiers minTier) {
         this.minTier = minTier;
     }
-
-    public int getTierID() {return tierID;}
 
     public String getDetails() {
         return details;
