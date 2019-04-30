@@ -583,6 +583,49 @@
         mysqli_close($con);
     }
 
+    function selectPreferredBusinesses() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $where = $_GET['whereClause'];
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Businesses $where", MYSQLI_STORE_RESULT);
+
+            $row_count = mysqli_num_rows($result);
+
+            if ($row_count <= 1) {
+                $row = mysqli_fetch_array($result);
+                    $businessid = $row['businessID'];
+                    $businessname = $row['businessName'];
+                    $latitude = $row['latitude'];
+                    $longitude = $row['longitude'];
+                    $region = $row['region'];
+
+                    if (isset($businessid) && $businessid != "") {
+
+                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region;
+                  }
+            } else {
+                while($row_data = mysqli_fetch_array($result)) {
+                    $businessid = $row_data['businessID'];
+                    $businessname = $row_data['businessName'];
+                    $latitude = $row_data['latitude'];
+                    $longitude = $row_data['longitude'];
+                    $region = $row_data['region'];
+
+                    if (isset($businessid) && $businessid != "") {
+
+                    echo $businessid . "~s" . $businessname . "~s" . $latitude . "~s" . $longitude . "~s" . $region . "~n";
+                  }
+                }
+            }
+
+        mysqli_close($con);
+    }
+
 function calcAvgVisitsWeek () {
 	$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -786,6 +829,9 @@ function calcAvgVisitsWeek () {
             break;
         case "deletePreferredBusiness":
             deletePreferredBusiness();
+            break;
+        case "getPreferredBusinesses":
+            selectPreferredBusinesses();
             break;
     }
 ?>
