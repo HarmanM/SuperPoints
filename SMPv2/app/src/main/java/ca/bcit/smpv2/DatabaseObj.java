@@ -38,6 +38,8 @@ public class DatabaseObj extends AsyncTask {
         if(whereClause != "") {
             this.params = whereClause;
             this.params = this.params.replace(" ", "%20");
+            this.params = this.params.replace("(", "%28");
+            this.params = this.params.replace(")", "%29");
         }
         onCompleteFunction = f;
     }
@@ -78,6 +80,14 @@ public class DatabaseObj extends AsyncTask {
         setMembers(whereClause, f);
         objConstructor = Business::new;
         function = "nearbyBusinesses";
+        get = true;
+        this.execute();
+    }
+
+    public void getPreferredBusinesses(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Business::new;
+        function = "getPreferredBusinesses";
         get = true;
         this.execute();
     }
@@ -321,11 +331,11 @@ public class DatabaseObj extends AsyncTask {
     @Override
     protected void onPostExecute(Object obj) {
         String strObject = (String) obj;
+        ArrayList<Object> res = new ArrayList<Object>();
         if (!strObject.trim().isEmpty()) {
             //Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
             if(onCompleteFunction != null) {
-                ArrayList<Object> res = new ArrayList<Object>();
                 if (objConstructor != null) {
                     String resArr[] = strObject.split(Pattern.quote("~n"));
                     for(String sObj : resArr) {
@@ -333,10 +343,10 @@ public class DatabaseObj extends AsyncTask {
                         res.add(objConstructor.apply(sObj));
                     }
                 }
-                onCompleteFunction.accept(res);
             }
         } else {
             //Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
+        onCompleteFunction.accept(res);
     }
 }
