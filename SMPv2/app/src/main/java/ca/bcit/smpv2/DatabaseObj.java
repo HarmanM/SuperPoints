@@ -170,6 +170,21 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void deletePreferredBusiness(PreferredBusiness o)
+    {
+        deletePreferredBusiness(o, null);
+    }
+
+    public void deletePreferredBusiness(PreferredBusiness o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "deletePreferredBusiness";
+        params = "";
+        params += "USER_ID=" + o.getUserID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID();
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void setPromotion(Promotions o){
         setPromotion(o, null);
     }

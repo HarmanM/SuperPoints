@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Preferred business variables
     FloatingActionButton preferBusinessButton;
-    Map<String, Integer> markerBusinessIDs;
+    Map<LatLng, BusinessMapMarker> markerExtras;
 
     BeaconRanger br;
 
@@ -89,7 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         br = new BeaconRanger(this);
         preferBusinessButton = findViewById(R.id.prefer_business_button);
-        markerBusinessIDs = new HashMap<String, Integer>();
+        markerExtras = new HashMap<>();
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -202,16 +203,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
         //TODO check if this works
         if(!businessesNearby.isEmpty())
         {
             Intent intent = new Intent(this, MapsActivity.class);
             String title = "SuperPoints are up for grabs near you!";
             String message = "Check it out!";
-
+            mMap.clear();
+            //TODO redraw person
             generateBusinessMarkers(businessesNearby);
         }
+        handleNewLocation(location);
         Log.i(TAG, "LOCATION CHANGED.");
     }
 
@@ -346,23 +348,80 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             marker = mMap.addMarker(options);
-            markerBusinessIDs.put(marker.getId(), BusinessID);
+            //TODO preferred query to check if preferred
+            markerExtras.put(latLng, new BusinessMapMarker(BusinessesNearby.get(i), marker, options, false));
             marker.setVisible(true);
         }
     }
 
+    public Map<Integer, Boolean> generatePreferredBusinesses(ArrayList<Business> businessesNearby, ArrayList<PreferredBusiness> preferredBusinesses)
+    {
+        Map<Integer, Boolean> preferredBusinessesNearby = new HashMap<>();
+
+        for(int i = 0; i < businessesNearby.size(); ++i)
+        {
+            boolean found = false;
+            for(int k = 0; k < preferredBusinesses.size(); ++k)
+            {
+                if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
+                {
+                    preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), true);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+                preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), false);
+        }
+        return preferredBusinessesNearby;
+    }
+
+
     public boolean onMarkerClick(final Marker marker) {
+        LatLng oldMarkerLatLng = marker.getPosition();
+        Boolean preferred = markerExtras.get(oldMarkerLatLng).isPreferred();
+
         marker.showInfoWindow();
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        if(preferred)
+            preferBusinessButton.setImageResource(R.drawable.unprefer_business);
+
         preferBusinessButton.setVisibility(View.VISIBLE);
-        //TODO what about when they unset it
         preferBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Marker newMarker = marker;
-                marker.remove();
-                newMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
-                //new DatabaseObj (MapsActivity.this).setPreferredBusiness(new PreferredBusiness(LoginActivity.user.getUserID(), markerBusinessIDs.get(marker.getId())));
+                LatLng oldMarkerLatLng = marker.getPosition();
+                Boolean preferred = markerExtras.get(oldMarkerLatLng).isPreferred();
+                Marker oldMarker = markerExtras.get(oldMarkerLatLng).getMarker();
+                MarkerOptions oldMarkerOptions = markerExtras.get(oldMarkerLatLng).getOptions();
+                PreferredBusiness prefBusiness = new PreferredBusiness(LoginActivity.user.getUserID(), markerExtras.get(oldMarkerLatLng).getBusiness().getBusinessID());
+
+                oldMarker.remove();
+                if(!preferred)
+                {
+                    oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
+                    preferBusinessButton.setImageResource(R.drawable.unprefer_business);
+                    new DatabaseObj(MapsActivity.this).setPreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
+                        BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
+                        updated.setPreferred(!preferred);
+                        Marker newMarker = mMap.addMarker(oldMarkerOptions);
+                        updated.setMarker(newMarker);
+                        markerExtras.put(oldMarkerLatLng, updated);
+                        newMarker.showInfoWindow();
+                    });
+                }
+                else
+                {
+                    oldMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    preferBusinessButton.setImageResource(R.drawable.prefer_business_icon);
+                    new DatabaseObj(MapsActivity.this).deletePreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
+                        BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
+                        updated.setPreferred(!preferred);
+                        Marker newMarker = mMap.addMarker(oldMarkerOptions);
+                        updated.setMarker(newMarker);
+                        markerExtras.put(oldMarkerLatLng, updated);
+                        newMarker.showInfoWindow();
+                    });
+                }
             }
         });
         return true;

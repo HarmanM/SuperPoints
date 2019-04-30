@@ -90,7 +90,7 @@
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
         $result = mysqli_query($con,"SELECT promotionID, businessID, pt.*, details, clicks, businessName
-            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p 
+            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p
 			INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
 			INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
             $where", MYSQLI_STORE_RESULT);
@@ -190,7 +190,7 @@
             $name = $row['name'];
             if(isset($tierID) && isset($minPoints) && isset($name))
             {
-                echo $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $tier . "~n";
+                echo $tierID . "~s" . $minPoints . "~s" . $name . "~n";
             }
             else
             {
@@ -203,7 +203,7 @@
 				$name = $row_data['name'];
                 if(isset($tierID) && isset($minPoints) && isset($name))
                 {
-                    echo $tierID . "~s" . $name . "~s" . $name . "~n";
+                    echo $tierID . "~s" . $minPoints . "~s" . $name . "~n";
                 }
                 else
                 {
@@ -380,7 +380,7 @@
 
       if ($promotionid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
-              (businessID, minPoints, details, clicks) VALUES ('$businessid', '$tierid',
+              (businessID, minTierID, details, clicks) VALUES ('$businessid', '$tierid',
                 '$details', '$clicks');", MYSQLI_STORE_RESULT);
 
           $result = $result ? "true" : "";
@@ -691,6 +691,40 @@ function calcAvgVisitsWeek () {
           echo ($result) ? "true" : "";
     }
 
+    function handlePreferredBusinesses() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $userid = $_GET['USER_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+
+      $result = mysqli_query($con,"INSERT INTO `superpoints`.`PreferredBusinesses`
+          (userID, businessID) VALUES ($userid, $businessid);", MYSQLI_STORE_RESULT);
+
+      echo ($result) ? "true" : "";
+
+    }
+
+
+    function deletePreferredBusiness() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $userid = $_GET['USER_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+
+      $result = mysqli_query($con,"DELETE FROM `superpoints`.`PreferredBusinesses`
+                                WHERE userID = $userid AND businessID = $businessid;", MYSQLI_STORE_RESULT);
+
+      echo ($result) ? "true" : "";
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "getUser":
@@ -747,7 +781,11 @@ function calcAvgVisitsWeek () {
         case "updatePassword":
             updatePassword();
             break;
+        case "setPreferredBusiness":
+            handlePreferredBusinesses();
+            break;
+        case "deletePreferredBusiness":
+            deletePreferredBusiness();
+            break;
     }
-
-
 ?>
