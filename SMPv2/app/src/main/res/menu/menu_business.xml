@@ -7,4 +7,7 @@
     <item
         android:id="@+id/analytics"
         android:title="Analytics" />
+    <item
+        android:id="@+id/settings"
+        android:title="Settings" />
 </menu>

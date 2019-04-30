@@ -4,6 +4,7 @@ public class Points {
     private int userID;
     private int businessID;
     private int points;
+    private String tier;
 
     public Points(int userID, int businessID, int points){
         this.userID = userID;
@@ -16,6 +17,7 @@ public class Points {
         this.userID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.points = Integer.parseInt(result[2]);
+        this.tier = result[3];
     }
 
     public int getUserID() {
@@ -40,5 +42,9 @@ public class Points {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getTier() {
+        return tier;
     }
 }

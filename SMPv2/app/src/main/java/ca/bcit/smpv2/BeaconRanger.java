@@ -115,29 +115,22 @@ public class BeaconRanger implements BeaconConsumer {
                     visit = new Visit(LoginActivity.user.getUserID(), currentBusinessConnection.getBusinessID(), Calendar.getInstance());
                 }
                 else if(wasInStore && !inStore) {
-                    Toast.makeText(context, "Exited store" + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
                     visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
-                    /*Toast.makeText(context, "Visit Created\nUser: " + visit.getUserID()
-                            + "\nBusiness: " + visit.getBusinessID()
-                            + "\nStart: " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(visit.getDate().getTime())
-                            + "\nDuration: "
-                                    + String.format("%02d", visit.getDuration() / 3600)
-                                    + ":" + String.format("%02d", visit.getDuration() % 3600 / 60)
-                                    + ":" + String.format("%02d", visit.getDuration() % 60),
-                            Toast.LENGTH_LONG).show();*/
                     businessIDHolder = currentBusinessConnection.getBusinessID();
-                    new DatabaseObj(context).setVisit(visit, (ArrayList<Object> objects)->{
-                        new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
-                                        + " AND businessID=" + businessIDHolder,
-                                (ArrayList<Object> pointsObj)-> {
-                                    MapsActivity.showNotification("Store Visit",
-                                            "You have " + ((Points)pointsObj.get(0)).getPoints() + " points, see available promotions!",
-                                            PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
-                                            context);
-                                });
-                    });
 
-
+                    if(visit.getDuration() > 120) {
+                        Toast.makeText(context, "Exited store" + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
+                        new DatabaseObj(context).setVisit(visit, (ArrayList<Object> objects) -> {
+                            new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
+                                            + " AND businessID=" + businessIDHolder,
+                                    (ArrayList<Object> pointsObj) -> {
+                                        MapsActivity.showNotification("Store Visit",
+                                                "You have " + ((Points) pointsObj.get(0)).getPoints() + " points, see available promotions!",
+                                                PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
+                                                context);
+                                    });
+                        });
+                    }
 
                     currentBusinessConnection = null;
                 }

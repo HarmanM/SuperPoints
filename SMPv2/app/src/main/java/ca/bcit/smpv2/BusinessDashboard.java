@@ -119,6 +119,10 @@ public class BusinessDashboard extends AppCompatActivity
                 Intent j = new Intent(getBaseContext(), Analytics.class);
                 startActivity(j);
                 return true;
+            case R.id.settings:
+                Intent i = new Intent(getBaseContext(), BusinessSettingsActivity.class);
+                startActivity(i);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -176,7 +180,7 @@ public class BusinessDashboard extends AppCompatActivity
         if(updatedPromo != null)
         {
             editTextPromotionDetail.setText(updatedPromo.getDetails());
-            editTextPromotionPoints.setText(Integer.toString(updatedPromo.getMinimumPoints()));
+            editTextPromotionPoints.setText(updatedPromo.getMinTier().getName() + " (" + Integer.toString(updatedPromo.getMinTier().getMinPoints()) + ")");
         }
 
         dialogBuilder.setView(dialogView);
@@ -208,7 +212,7 @@ public class BusinessDashboard extends AppCompatActivity
                     int businessID = LoginActivity.user.getBusinessID();
                     int clicks = 0;
                     String businessName = "";
-                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, clicks, businessName);
+                    Promotions promo = new Promotions(promoID, businessID, new PointTiers(0, 0, ""), promotionDetails, clicks, businessName);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects)->{
                         promo.setPromotionID((Integer)objects.get(0));
                     });
@@ -219,7 +223,7 @@ public class BusinessDashboard extends AppCompatActivity
                 else
                 {
                     updatedPromo.setDetails(promotionDetails);
-                    updatedPromo.setMinimumPoints(promotionPoints);
+                    updatedPromo.setMinTier(updatedPromo.getMinTier());
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo);
                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                     listView.setAdapter(adapter);

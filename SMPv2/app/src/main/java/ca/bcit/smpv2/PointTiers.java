@@ -1,18 +1,22 @@
 package ca.bcit.smpv2;
 
-public class Tiers {
+public class PointTiers {
+
     private int tierID;
     private int minPoints;
+    private String name;
 
-    public Tiers(int tierID, int minPoints){
+    public PointTiers(int tierID, int minPoints, String name) {
         this.tierID = tierID;
         this.minPoints = minPoints;
+        this.name = name;
     }
 
-    public Tiers(String sqlResult){
+    public PointTiers(String sqlResult){
         String[] result = sqlResult.split("~s");
         this.tierID = Integer.parseInt(result[0]);
         this.minPoints = Integer.parseInt(result[1]);
+        this.name = result[2];
     }
 
     public int getTierID() {
@@ -29,5 +33,13 @@ public class Tiers {
 
     public void setMinPoints(int minPoints) {
         this.minPoints = minPoints;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
