@@ -211,7 +211,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String message = "Check it out!";
             mMap.clear();
             //TODO redraw person
-            generateBusinessMarkers(businessesNearby);
+            generatePreferredBusinesses(businessesNearby, LoginActivity.user.getUserID());
         }
         handleNewLocation(location);
         Log.i(TAG, "LOCATION CHANGED.");
@@ -302,13 +302,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     PendingIntent pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
 
                     showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, MapsActivity.this);
-                    generateBusinessMarkers(businessesNearby);
+                    generatePreferredBusinesses(businessesNearby, LoginActivity.user.getUserID());
                     onLocationChanged(location);
                 }
         });
     }
 
-    public void generateBusinessMarkers(ArrayList<Business> BusinessesNearby) {
+    public void generateBusinessMarkers(Map<Business, Boolean> preferredBusinessesNearby) {
         int BusinessID;
         String BusinessName;
         String BusinessAddress;
@@ -318,19 +318,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions options;
         Geocoder geocoder;
         List<Address> addresses;
-        //TODO Businesses nearby needs to tell me if its preferred
-
-        for (int i = 0; i < BusinessesNearby.size(); i++) {
-            BusinessID = BusinessesNearby.get(i).getBusinessID();
-            BusinessLatitude = BusinessesNearby.get(i).getLatitude();
-            BusinessLongitude = BusinessesNearby.get(i).getLongitude();
-            BusinessName = BusinessesNearby.get(i).getBusinessName();
+        for (Map.Entry<Business, Boolean> pair : preferredBusinessesNearby.entrySet()) {
+            BusinessID = pair.getKey().getBusinessID();
+            BusinessLatitude = pair.getKey().getLatitude();
+            BusinessLongitude = pair.getKey().getLongitude();
+            BusinessName = pair.getKey().getBusinessName();
             BusinessAddress = "";
             LatLng latLng = new LatLng(BusinessLatitude, BusinessLongitude);
 
             options = new MarkerOptions()
                     .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized) : BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .title(BusinessName);
 
             geocoder = new Geocoder(this, Locale.getDefault());
@@ -348,15 +346,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             marker = mMap.addMarker(options);
-            //TODO preferred query to check if preferred
-            markerExtras.put(latLng, new BusinessMapMarker(BusinessesNearby.get(i), marker, options, false));
+            markerExtras.put(latLng, new BusinessMapMarker(pair.getKey(), marker, options, pair.getValue()));
             marker.setVisible(true);
         }
     }
 
-    public Map<Integer, Boolean> generatePreferredBusinesses(ArrayList<Business> businessesNearby, ArrayList<PreferredBusiness> preferredBusinesses)
+    public Map<Business, Boolean> generateNearbyPreferredBusinesses(ArrayList<Business> businessesNearby, ArrayList<Business> preferredBusinesses)
     {
-        Map<Integer, Boolean> preferredBusinessesNearby = new HashMap<>();
+        Map<Business, Boolean> preferredBusinessesNearby = new HashMap<>();
 
         for(int i = 0; i < businessesNearby.size(); ++i)
         {
@@ -365,15 +362,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             {
                 if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
                 {
-                    preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), true);
+                    preferredBusinessesNearby.put(businessesNearby.get(i), true);
                     found = true;
                     break;
                 }
             }
             if(!found)
-                preferredBusinessesNearby.put(businessesNearby.get(i).getBusinessID(), false);
+                preferredBusinessesNearby.put(businessesNearby.get(i), false);
         }
         return preferredBusinessesNearby;
+    }
+
+    void generatePreferredBusinesses (ArrayList<Business> businessesNearby, int userID)
+    {
+        ArrayList<Business> preferredBusinesses = new ArrayList<>();
+
+        new DatabaseObj(MapsActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + userID + " )",(ArrayList<Object> objects)->{
+            for(Object o: objects)
+                preferredBusinesses.add((Business) o);
+            Map<Business, Boolean> preferredBusinessesNearby = generateNearbyPreferredBusinesses(businessesNearby, preferredBusinesses);
+            generateBusinessMarkers(preferredBusinessesNearby);
+        });
     }
 
 

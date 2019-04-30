@@ -38,6 +38,8 @@ public class DatabaseObj extends AsyncTask {
         if(whereClause != "")
             this.params = whereClause;
         this.params = this.params.replace(" ", "%20");
+        this.params = this.params.replace("(", "%28");
+        this.params = this.params.replace(")", "%29");
         onCompleteFunction = f;
     }
 
@@ -77,6 +79,14 @@ public class DatabaseObj extends AsyncTask {
         setMembers(whereClause, f);
         objConstructor = Business::new;
         function = "nearbyBusinesses";
+        get = true;
+        this.execute();
+    }
+
+    public void getPreferredBusinesses(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Business::new;
+        function = "getPreferredBusinesses";
         get = true;
         this.execute();
     }
