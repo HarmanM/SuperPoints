@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.amazonaws.mobile.client.AWSMobileClient;
+
 public class LandingActivity extends AppCompatActivity {
 
     @Override
@@ -13,6 +15,7 @@ public class LandingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landing);
         //Intent i = new Intent(getBaseContext(), MainActivity.class);
         //startActivity(i);
+        AWSMobileClient.getInstance().initialize(this).execute();
     }
 
     public void onclickSignUp(View v) {

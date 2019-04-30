@@ -1,9 +1,17 @@
 package ca.bcit.smpv2;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
@@ -15,20 +23,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-public class BusinessDashboard extends AppCompatActivity
-{
-
+public class BusinessDashboard extends AppCompatActivity {
+    public static Business business;
     int defaultPromotionPoints = 0;
     Promotions selectedPromotion;
     Button addBtn;
@@ -36,61 +55,68 @@ public class BusinessDashboard extends AppCompatActivity
     Button dltBtn;
     ArrayList<Promotions> usersPromotions;
     PromotionsAdapter adapter;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    ImageView promoImageView;
+    Uri selectedImage;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_dashboard);
 
-        // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
+            business = (Business) businessObj.get(0);
 
-        usersPromotions = new ArrayList<Promotions>();
-        adapter = new PromotionsAdapter(this, usersPromotions);
+            setContentView(R.layout.activity_business_dashboard);
 
-        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-        listView.setAdapter(adapter);
+            // Find the toolbar view inside the activity layout
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        int businessID = LoginActivity.user.getBusinessID();
-            new DatabaseObj (BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects)-> {
-                for(Object o : objects) {
+            usersPromotions = new ArrayList<Promotions>();
+            adapter = new PromotionsAdapter(this, usersPromotions);
+
+            ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+            listView.setAdapter(adapter);
+
+            int businessID = LoginActivity.user.getBusinessID();
+            new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
+                for (Object o : objects) {
                     adapter.add((Promotions) o);
                 }
                 listView.setAdapter(adapter);
-        });
+            });
 
 
-        setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
+            setSupportActionBar(toolbar);
+            toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-        listView.setOnItemClickListener((parent, view, position, id) ->  {
+            listView.setOnItemClickListener((parent, view, position, id) -> {
                 selectedPromotion = usersPromotions.get(position);
-        });
+            });
 
-        addBtn = findViewById(R.id.addBtn);
-        editBtn =  findViewById(R.id.editBtn);
-        dltBtn = findViewById(R.id.deleteBtn);
+            addBtn = findViewById(R.id.addBtn);
+            editBtn = findViewById(R.id.editBtn);
+            dltBtn = findViewById(R.id.deleteBtn);
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddDialog();
-            }
-        });
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAddDialog();
+                }
+            });
 
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showUpdateDialog(selectedPromotion);
-            }
-        });
+            editBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showUpdateDialog(selectedPromotion);
+                }
+            });
 
-        dltBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeleteDialog(selectedPromotion);
-            }
+            dltBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDeleteDialog(selectedPromotion);
+                }
+            });
         });
 
 
@@ -108,7 +134,7 @@ public class BusinessDashboard extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        if(item.getItemId() != R.id.dashboard)
+        if (item.getItemId() != R.id.dashboard)
             finish();
         switch (item.getItemId()) {
             case R.id.dashboard:
@@ -167,66 +193,95 @@ public class BusinessDashboard extends AppCompatActivity
         });
     }
 
+    public void uploadImage(View v) {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            selectedImage = data.getData();
+            promoImageView.setImageURI(selectedImage);
+
+        }
+    }
+
+
     private void showUpdateDialog(Promotions updatedPromo) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
 
         final View dialogView = inflater.inflate(R.layout.add_promotion_dialogue, null);
-        final EditText editTextPromotionPoints = dialogView.findViewById(R.id.editTextPromotionPoints);
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
-        ImageView promoImageView = dialogView.findViewById(R.id.promoImageView);
-
-        if(updatedPromo != null)
-        {
-            editTextPromotionDetail.setText(updatedPromo.getDetails());
-            editTextPromotionPoints.setText(updatedPromo.getMinTier().getName() + " (" + Integer.toString(updatedPromo.getMinTier().getMinPoints()) + ")");
-        }
+        promoImageView = dialogView.findViewById(R.id.promoImageView);
+        Spinner spinner = (Spinner) dialogView.findViewById(R.id.minTier);
 
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
 
         final AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+
+        new DatabaseObj(this).getTiers("", (ArrayList<Object> objects) -> {
+            Collections.sort((ArrayList<PointTiers>) (ArrayList<?>) objects, Comparator.comparingInt(PointTiers::getMinPoints));
+            final List<PointTiers> tiers = new ArrayList<>();
+            for (Object o : objects)
+                tiers.add((PointTiers) o);
+
+            final ArrayAdapter<PointTiers> spinnerArrayAdapter = new ArrayAdapter<>(
+                    this, R.layout.spinner_item, tiers);
+
+            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+            spinner.setAdapter(spinnerArrayAdapter);
+
+            if (updatedPromo != null) {
+                editTextPromotionDetail.setText(updatedPromo.getDetails());
+
+                for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
+                    if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
+                        spinner.setSelection(i);
+            }
+
+            alertDialog.show();
+        });
+
 
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int promotionPoints = defaultPromotionPoints;
+                PointTiers promotionPoints = (PointTiers) spinner.getSelectedItem();
                 String promotionDetails = editTextPromotionDetail.getText().toString();
-                try
-                {
-                    promotionPoints = Integer.parseInt(editTextPromotionPoints.getText().toString());
-                }
-                catch (Exception e)
-                {
-                    Toast.makeText(BusinessDashboard.this, "Please enter a number for the minimum amounts of points.", Toast.LENGTH_SHORT).show();
-                }
                 if (TextUtils.isEmpty(promotionDetails)) {
                     editTextPromotionDetail.setError("Your customer should know what it is you are offering!");
                 }
 
-                if(updatedPromo == null)
-                {
-                    int promoID = 0;
+                if (updatedPromo == null) {
+                    int promoID = -1;
                     int businessID = LoginActivity.user.getBusinessID();
-                    int clicks = 0;
-                    String businessName = "";
-                    Promotions promo = new Promotions(promoID, businessID, new PointTiers(0, 0, ""), promotionDetails, clicks, businessName);
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects)->{
-                        promo.setPromotionID((Integer)objects.get(0));
+                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName());
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
+                        promo.setPromotionID((int) objects.get(0));
+
+
+                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext());
+                        usersPromotions.add(promo);
+                        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                        listView.setAdapter(adapter);
                     });
-                    usersPromotions.add(promo);
-                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                    listView.setAdapter(adapter);
-                }
-                else
-                {
+                } else {
                     updatedPromo.setDetails(promotionDetails);
-                    updatedPromo.setMinTier(updatedPromo.getMinTier());
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo);
-                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                    listView.setAdapter(adapter);
+                    updatedPromo.setMinTier(promotionPoints);
+                    ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
+                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
+                        /*updatedPromo.setPromotionID((int) objects.get(0));
+                        usersPromotions.add(updatedPromo);*/
+                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
+                        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                        listView.setAdapter(adapter);
+                    });
+
                 }
                 alertDialog.dismiss();
             }
