@@ -369,18 +369,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng oldMarkerLatLng = marker.getPosition();
                 Boolean preferred = markerExtras.get(oldMarkerLatLng).isPreferred();
                 Marker oldMarker = markerExtras.get(oldMarkerLatLng).getMarker();
-                oldMarker.remove();
                 MarkerOptions oldMarkerOptions = markerExtras.get(oldMarkerLatLng).getOptions();
+                PreferredBusiness prefBusiness = new PreferredBusiness(LoginActivity.user.getUserID(), markerExtras.get(oldMarkerLatLng).getBusiness().getBusinessID());
+
+                oldMarker.remove();
                 if(!preferred)
                 {
                     oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
                     preferBusinessButton.setImageResource(R.drawable.unprefer_business);
+                    new DatabaseObj(MapsActivity.this).setPreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
+
+                    }
+);
                 }
                 else
                 {
                     oldMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     preferBusinessButton.setImageResource(R.drawable.prefer_business_icon);
+                    new DatabaseObj(MapsActivity.this).deletePreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
+
+                    });
                 }
+                //TODO should this be in lambda
                 BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
                 updated.setPreferred(!preferred);
                 Marker newMarker = mMap.addMarker(oldMarkerOptions);

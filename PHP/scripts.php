@@ -691,6 +691,41 @@ function calcAvgVisitsWeek () {
           echo ($result) ? "true" : "";
     }
 
+    function handlePreferredBusinesses() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $userid = $_GET['USER_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+
+      $result = mysqli_query($con,"INSERT INTO `superpoints`.`PreferredBusinesses`
+          (userID, businessID) VALUES ('$userid', '$businessid');", MYSQLI_STORE_RESULT);
+
+      $result = $result ? "true" : "";
+
+      echo $result;
+    }
+
+
+    function deletePreferredBusiness() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $userid = $_GET['USER_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+
+      $result = mysqli_query($con,"DELETE FROM `superpoints`.`PreferredBusinesses`
+                                WHERE userID = $userid AND businessID = $businessid;", MYSQLI_STORE_RESULT);
+
+      echo ($result) ? "true" : "";
+    }
+
     $func = $_GET['function'];
     switch ($func) {
         case "getUser":
@@ -746,6 +781,12 @@ function calcAvgVisitsWeek () {
             break;
         case "updatePassword":
             updatePassword();
+            break;
+        case "deletePreferredBusiness":
+            deleteBusiness();
+            break;
+        case "setPreferredBusiness":
+            handlePreferredBusiness();
             break;
     }
 
