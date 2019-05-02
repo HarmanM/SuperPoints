@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         String username = usernameField.getText().toString().trim();
         String password = passwordField.getText().toString();
+        usernameField.setText("");
+        passwordField.setText("");
         new SigninTask(this, 0).execute(username, password);
     }
 
@@ -163,5 +165,10 @@ public class LoginActivity extends AppCompatActivity {
                 //TODO: send intent to proper activity
 
             }}
+    }
+
+    static public void logout(){
+        user = null;
+
     }
 }

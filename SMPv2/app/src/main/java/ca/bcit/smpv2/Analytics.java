@@ -103,6 +103,9 @@ public class Analytics extends AppCompatActivity {
                 Intent j = new Intent(getBaseContext(), BusinessSettingsActivity.class);
                 startActivity(j);
                 return true;
+            case R.id.logOut:
+                LoginActivity.logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

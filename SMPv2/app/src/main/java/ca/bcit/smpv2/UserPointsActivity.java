@@ -92,6 +92,12 @@ public class UserPointsActivity extends AppCompatActivity {
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(j);
                 return true;
+            case R.id.logOut:
+                Intent m = new Intent(this, MapsActivity.class);
+                m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(m);
+                LoginActivity.logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
