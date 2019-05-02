@@ -24,11 +24,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,12 +44,10 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
@@ -72,10 +68,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private float defaultZoom = 16.0f;
-    private int locationRequestInterval = 15; //in seconds, how often maps will update
-    int MY_PERMISSION_ACCESS_FINE_LOCATION = 100; //???? why is it a random int, reason its not private?
+    private int locationRequestInterval = 1500; //in seconds, how often maps will update
+    int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
 
-    static final ArrayList<Business> businessesNearby = new ArrayList<>();
+    static ArrayList<Business> businessesNearby = new ArrayList<>();
+    static ArrayList<Business> oldBusinessesNearby = new ArrayList<>();
 
     //Preferred business variables
     FloatingActionButton preferBusinessButton;
@@ -145,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        mMap.clear();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -161,7 +159,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.i(TAG, "Location was found");
             handleNewLocation(location);
             if(notifSent == 0)
+            {
                 generateBusinessesNearby(location);
+                genPrefBusinesses(LoginActivity.user.getUserID());
+            }
         }
         Log.i(TAG, "Location services connected.");
     }
@@ -202,22 +203,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        //TODO check if this works
-        if(!businessesNearby.isEmpty())
-        {
-            Intent intent = new Intent(this, MapsActivity.class);
-            String title = "SuperPoints are up for grabs near you!";
-            String message = "Check it out!";
-            mMap.clear();
-            //TODO redraw person
-            generatePreferredBusinesses(businessesNearby, LoginActivity.user.getUserID());
-        }
-        handleNewLocation(location);
-        Log.i(TAG, "LOCATION CHANGED.");
-    }
-
-    @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
@@ -249,7 +234,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -261,14 +245,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:
-                //Intent h = new Intent(getBaseContext(), MapsActivity.class);
-                //startActivity(h);
                 return true;
             case R.id.dashboard:
                 Intent i = new Intent(getBaseContext(), DashboardActivity.class);
                 startActivity(i);
                 return true;
-
             case R.id.settings:
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(k);
@@ -286,8 +267,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        //TODO check if this works
+        oldBusinessesNearby = businessesNearby;
+        generateBusinessesNearby(location);
+        if(compareOldNearbyWithNewNearby(oldBusinessesNearby, businessesNearby))
+        {
+            Intent intent;
+            PendingIntent pendingIntent;
+
+
+            mMap.clear();
+            notifSent++;
+            intent = new Intent(MapsActivity.this, MapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
+            showNotification(getString(R.string.title_activity_maps), getString(R.string.notif_business_nearby), pendingIntent, MapsActivity.this);
+            //Start chain of calls to generate markers
+            genPrefBusinesses(LoginActivity.user.getUserID());
+        }
+        handleNewLocation(location);
+        Log.i(TAG, "LOCATION CHANGED.");
+    }
+
     public void generateBusinessesNearby (Location location) {
-        notifSent++;
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
@@ -295,21 +299,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 , (ArrayList<Object> objects)->{
                 for(Object o: objects)
                     businessesNearby.add((Business) o);
-                if(!businessesNearby.isEmpty())
-                {
-                    Intent intent = new Intent(MapsActivity.this, MapsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
-
-                    showNotification("SuperPoints", "SuperPoints are up for grabs near you!", pendingIntent, MapsActivity.this);
-                    generatePreferredBusinesses(businessesNearby, LoginActivity.user.getUserID());
-                    onLocationChanged(location);
-                }
         });
     }
 
-    public void generateBusinessMarkers(Map<Business, Boolean> preferredBusinessesNearby) {
-        int BusinessID;
+    void genPrefBusinesses(int userID)
+    {
+        ArrayList<Business> preferredBusinesses = new ArrayList<>();
+
+        new DatabaseObj(MapsActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + userID + " )",(ArrayList<Object> objects)->{
+            for(Object o: objects)
+                preferredBusinesses.add((Business) o);
+            Map<Business, Boolean> preferredBusinessesNearby = genPrefAndUnprefBusinesses(businessesNearby, preferredBusinesses);
+            generateBusinessMarkers(preferredBusinessesNearby);
+        });
+    }
+
+
+    public Map<Business, Boolean> genPrefAndUnprefBusinesses(ArrayList<Business> businessesNearby, ArrayList<Business> preferredBusinesses)
+    {
+        Map<Business, Boolean> allBusinessesNearby = new HashMap<>();
+
+        for(int i = 0; i < businessesNearby.size(); ++i)
+        {
+            boolean found = false;
+            for(int k = 0; k < preferredBusinesses.size(); ++k)
+            {
+                if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
+                {
+                    allBusinessesNearby.put(businessesNearby.get(i), true);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+                allBusinessesNearby.put(businessesNearby.get(i), false);
+        }
+        return allBusinessesNearby;
+    }
+
+    public void generateBusinessMarkers(Map<Business, Boolean> prefAndUnpreBusinessesNearby) {
         String BusinessName;
         String BusinessAddress;
         double BusinessLatitude;
@@ -318,8 +346,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions options;
         Geocoder geocoder;
         List<Address> addresses;
-        for (Map.Entry<Business, Boolean> pair : preferredBusinessesNearby.entrySet()) {
-            BusinessID = pair.getKey().getBusinessID();
+
+
+        for (Map.Entry<Business, Boolean> pair : prefAndUnpreBusinessesNearby.entrySet()) {
             BusinessLatitude = pair.getKey().getLatitude();
             BusinessLongitude = pair.getKey().getLongitude();
             BusinessName = pair.getKey().getBusinessName();
@@ -328,7 +357,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             options = new MarkerOptions()
                     .position(latLng)
-                    .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized) : BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized) : BitmapDescriptorFactory.fromResource(R.drawable.shop_resized))
                     .title(BusinessName);
 
             geocoder = new Geocoder(this, Locale.getDefault());
@@ -351,38 +380,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public Map<Business, Boolean> generateNearbyPreferredBusinesses(ArrayList<Business> businessesNearby, ArrayList<Business> preferredBusinesses)
-    {
-        Map<Business, Boolean> preferredBusinessesNearby = new HashMap<>();
 
-        for(int i = 0; i < businessesNearby.size(); ++i)
+    public boolean compareOldNearbyWithNewNearby (ArrayList<Business> oldBusinessesNearby, ArrayList<Business> businessesNearby)
+    {
+        if(oldBusinessesNearby.size() != businessesNearby.size())
+            return true;
+        for(int i = 0; i < oldBusinessesNearby.size(); ++i)
         {
-            boolean found = false;
-            for(int k = 0; k < preferredBusinesses.size(); ++k)
-            {
-                if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
-                {
-                    preferredBusinessesNearby.put(businessesNearby.get(i), true);
-                    found = true;
-                    break;
-                }
-            }
-            if(!found)
-                preferredBusinessesNearby.put(businessesNearby.get(i), false);
+            if (oldBusinessesNearby.get(i).getBusinessID() != businessesNearby.get(i).getBusinessID())
+                return true;
         }
-        return preferredBusinessesNearby;
-    }
-
-    void generatePreferredBusinesses (ArrayList<Business> businessesNearby, int userID)
-    {
-        ArrayList<Business> preferredBusinesses = new ArrayList<>();
-
-        new DatabaseObj(MapsActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + userID + " )",(ArrayList<Object> objects)->{
-            for(Object o: objects)
-                preferredBusinesses.add((Business) o);
-            Map<Business, Boolean> preferredBusinessesNearby = generateNearbyPreferredBusinesses(businessesNearby, preferredBusinesses);
-            generateBusinessMarkers(preferredBusinessesNearby);
-        });
+        return false;
     }
 
 
@@ -420,7 +428,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 else
                 {
-                    oldMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.shop_resized));
                     preferBusinessButton.setImageResource(R.drawable.prefer_business_icon);
                     new DatabaseObj(MapsActivity.this).deletePreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
                         BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
