@@ -718,6 +718,95 @@ function calcAvgVisitsWeek () {
     echo $row[0];
     mysqli_close($con);
     }
+	
+	function calcMonthlyVisits(){
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $business = $_GET['businessID'];
+        $result = mysqli_query($con,"
+			SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan 
+			FROM Visits 
+			WHERE BusinessID = $business 
+				AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12 
+			GROUP BY timeSpan
+			", MYSQLI_STORE_RESULT);
+		
+		
+		while($row_data = mysqli_fetch_array($result)) {
+            $timeSpan = $row_data['timeSpan'];
+            $numVisits = $row_data['numVisits'];
+            if (isset($businessid) && $businessid != "") 
+				echo $timeSpan . "~s" . $numVisits . "~n";
+        }
+	}
+	
+	function calcNewOldUsers(){
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $business = $_GET['businessID'];
+        $result = mysqli_query($con,"
+			SELECT COUNT(userID) AS numUsers, 'old' as newOld
+			FROM (
+				SELECT DISTINCT userID
+				FROM Visits 
+				WHERE userID IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+					AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+					AND businessID = $business) oldUser
+			UNION
+			SELECT COUNT(userID), 'new'
+			FROM (
+				SELECT DISTINCT userID
+				FROM Visits 
+				WHERE userID NOT IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+					AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+					AND businessID = $business) newUsers
+			", MYSQLI_STORE_RESULT);
+		
+		
+		while($row_data = mysqli_fetch_array($result)) {
+            $numUsers = $row_data['numUsers'];
+            $newOld = $row_data['newOld'];
+            if (isset($businessid) && $businessid != "") 
+				echo $newOld . "~s" . $numUsers . "~n";
+        }
+	}
+	
+	function calcVisitorsPerTier(){
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+
+        $business = $_GET['businessID'];
+        $result = mysqli_query($con,"
+			SELECT COUNT(tierID) AS numVisits, tierID
+			FROM (
+				SELECT v.userID, v.businessID, (SELECT tierID FROM PointTiers WHERE minPoints < p.points ORDER BY minPoints DESC LIMIT 1) AS tierID
+				FROM Visits v 
+					JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
+				WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+					AND v.businessID = $business
+				GROUP BY v.userID, v.businessID) t
+			GROUP BY tierID
+			", MYSQLI_STORE_RESULT);
+		
+		
+		while($row_data = mysqli_fetch_array($result)) {
+            $numVisits = $row_data['numVisits'];
+            $tierID = $row_data['tierID'];
+            if (isset($businessid) && $businessid != "") 
+				echo $numVisits . "~s" . $tierID . "~n";
+        }
+	}
 
     function deletePromotion() {
           $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -817,6 +906,15 @@ function calcAvgVisitsWeek () {
             break;
         case "calcAverageDuration":
             calcAvgDurationPerVisitWeek();
+            break;
+        case "calcMonthlyVisits":
+            calcMonthlyVisits();
+            break;
+        case "calcNewOldUsers":
+            calcNewOldUsers();
+            break;
+        case "calcVisitorsPerTier":
+            calcVisitorsPerTier();
             break;
         case "deletePromotion":
             deletePromotion();
