@@ -58,4 +58,11 @@
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/piechart"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+    </com.github.mikephil.charting.charts.PieChart>
+
 </android.support.constraint.ConstraintLayout>
