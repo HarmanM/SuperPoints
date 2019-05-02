@@ -122,6 +122,12 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent l = new Intent(getBaseContext(), UserPointsActivity.class);
                 startActivity(l);
                 return true;
+            case R.id.logOut:
+                Intent m = new Intent(this, MapsActivity.class);
+                m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(m);
+                LoginActivity.logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

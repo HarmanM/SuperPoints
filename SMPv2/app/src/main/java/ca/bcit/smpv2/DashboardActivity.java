@@ -57,6 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.home:
                 //Intent h = new Intent(getBaseContext(), MapsActivity.class);
                 //startActivity(h);
+
                 return true;
             case R.id.dashboard:
                 //Intent i = new Intent(getBaseContext(), DashboardActivity.class);
@@ -73,6 +74,12 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.viewPoints:
                 Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
                 startActivity(j);
+                return true;
+            case R.id.logOut:
+                Intent m = new Intent(this, MapsActivity.class);
+                m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(m);
+                LoginActivity.logout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
