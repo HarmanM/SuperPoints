@@ -107,9 +107,10 @@
             $details = $row['details'];
             $clicks = $row['clicks'];
             $businessName = $row['businessName'];
+            $shortDescription = $row['shortDescription'];
 
             if (isset($businessid) && $businessid != "") {
-              echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName;
+              echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription;
             }
         } else {
             while($row_data = mysqli_fetch_array($result)) {
@@ -121,9 +122,10 @@
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
                 $businessName = $row_data['businessName'];
+                $shortDescription = $row['shortDescription'];
 
                 if (isset($businessid) && $businessid != "") {
-                  echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
+                  echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
                 }
             }
         }
@@ -372,6 +374,7 @@
       $tierid = $_GET['MIN_TIER'];
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
+      //$shortDescription = $_GET['SHORT_DESCRIPTION'];
 
       if ($promotionid == -1) {
         $promotionid = "";
@@ -488,21 +491,29 @@
         // Becomes WHERE userid = userid
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
         //$userID = $_GET['uid'];
-        $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, minPoints, details, clicks, businessName
+        $result = mysqli_query($con,"SELECT DISTINCT promotionID, superpoints.Promotions.businessID, superpoints.PointTiers.tierID, superpoints.PointTiers.minPoints, superpoints.PointTiers.name, details, clicks, businessName, shortDescription
             FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON
-            superpoints.Promotions.businessID = superpoints.Businesses.businessID
+				superpoints.Promotions.businessID = superpoints.Businesses.businessID
             INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
+            INNER JOIN superpoints.PointTiers ON superpoints.Promotions.minTierID = superpoints.PointTiers.tierID
             WHERE (SELECT points FROM superpoints.Points $where AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
-				minPoints;", MYSQLI_STORE_RESULT);
+				(SELECT minPoints FROM superpoints.PointTiers WHERE superpoints.Promotions.minTierID = superpoints.PointTiers.tierID);", MYSQLI_STORE_RESULT);
 
         while($row_data = mysqli_fetch_array($result)) {
-            $promoid = $row_data['promotionID'];
-            $businessid = $row_data['businessID'];
-            $tierid = $row_data['minPoints'];
-            $details = $row_data['details'];
-            $clicks = $row_data['clicks'];
-            $businessName = $row_data['businessName'];
-            echo $promoid . "~s" . $businessid . "~s" . $tierid . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~n";
+            $row = mysqli_fetch_array($result);
+            $visitid = $row['promotionID'];
+            $businessid = $row['businessID'];
+            $tierID = $row['tierID'];
+            $minPoints = $row['minPoints'];
+            $name = $row['name'];
+            $details = $row['details'];
+            $clicks = $row['clicks'];
+            $businessName = $row['businessName'];
+            $shortDescription = $row['shortDescription'];
+
+            if (isset($businessid) && $businessid != "") {
+              echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
+            }
         }
         mysqli_close($con);
     }
@@ -718,95 +729,6 @@ function calcAvgVisitsWeek () {
     echo $row[0];
     mysqli_close($con);
     }
-	
-	function calcMonthlyVisits(){
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-
-        $business = $_GET['businessID'];
-        $result = mysqli_query($con,"
-			SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan 
-			FROM Visits 
-			WHERE BusinessID = $business 
-				AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12 
-			GROUP BY timeSpan
-			", MYSQLI_STORE_RESULT);
-		
-		
-		while($row_data = mysqli_fetch_array($result)) {
-            $timeSpan = $row_data['timeSpan'];
-            $numVisits = $row_data['numVisits'];
-            if (isset($businessid) && $businessid != "") 
-				echo $timeSpan . "~s" . $numVisits . "~n";
-        }
-	}
-	
-	function calcNewOldUsers(){
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-
-        $business = $_GET['businessID'];
-        $result = mysqli_query($con,"
-			SELECT COUNT(userID) AS numUsers, 'old' as newOld
-			FROM (
-				SELECT DISTINCT userID
-				FROM Visits 
-				WHERE userID IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
-					AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-					AND businessID = $business) oldUser
-			UNION
-			SELECT COUNT(userID), 'new'
-			FROM (
-				SELECT DISTINCT userID
-				FROM Visits 
-				WHERE userID NOT IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
-					AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-					AND businessID = $business) newUsers
-			", MYSQLI_STORE_RESULT);
-		
-		
-		while($row_data = mysqli_fetch_array($result)) {
-            $numUsers = $row_data['numUsers'];
-            $newOld = $row_data['newOld'];
-            if (isset($businessid) && $businessid != "") 
-				echo $newOld . "~s" . $numUsers . "~n";
-        }
-	}
-	
-	function calcVisitorsPerTier(){
-        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
-
-        if (mysqli_connect_errno($con)) {
-            echo "Failed to connect to database: " . mysqli_connect_error();
-        }
-
-        $business = $_GET['businessID'];
-        $result = mysqli_query($con,"
-			SELECT COUNT(tierID) AS numVisits, tierID
-			FROM (
-				SELECT v.userID, v.businessID, (SELECT tierID FROM PointTiers WHERE minPoints < p.points ORDER BY minPoints DESC LIMIT 1) AS tierID
-				FROM Visits v 
-					JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
-				WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-					AND v.businessID = $business
-				GROUP BY v.userID, v.businessID) t
-			GROUP BY tierID
-			", MYSQLI_STORE_RESULT);
-		
-		
-		while($row_data = mysqli_fetch_array($result)) {
-            $numVisits = $row_data['numVisits'];
-            $tierID = $row_data['tierID'];
-            if (isset($businessid) && $businessid != "") 
-				echo $numVisits . "~s" . $tierID . "~n";
-        }
-	}
 
     function deletePromotion() {
           $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -856,6 +778,95 @@ function calcAvgVisitsWeek () {
 
       echo ($result) ? "true" : "";
     }
+
+    function calcMonthlyVisits(){
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $business = $_GET['businessID'];
+      $result = mysqli_query($con,"
+    SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
+    FROM Visits
+    WHERE BusinessID = $business
+      AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
+    GROUP BY timeSpan
+    ", MYSQLI_STORE_RESULT);
+
+
+  while($row_data = mysqli_fetch_array($result)) {
+          $timeSpan = $row_data['timeSpan'];
+          $numVisits = $row_data['numVisits'];
+          if (isset($businessid) && $businessid != "")
+      echo $timeSpan . "~s" . $numVisits . "~n";
+      }
+}
+
+function calcNewOldUsers(){
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $business = $_GET['businessID'];
+      $result = mysqli_query($con,"
+    SELECT COUNT(userID) AS numUsers, 'old' as newOld
+    FROM (
+      SELECT DISTINCT userID
+      FROM Visits
+      WHERE userID IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+        AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+        AND businessID = $business) oldUser
+    UNION
+    SELECT COUNT(userID), 'new'
+    FROM (
+      SELECT DISTINCT userID
+      FROM Visits
+      WHERE userID NOT IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+        AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+        AND businessID = $business) newUsers
+    ", MYSQLI_STORE_RESULT);
+
+
+  while($row_data = mysqli_fetch_array($result)) {
+          $numUsers = $row_data['numUsers'];
+          $newOld = $row_data['newOld'];
+          if (isset($businessid) && $businessid != "")
+      echo $newOld . "~s" . $numUsers . "~n";
+      }
+}
+
+function calcVisitorsPerTier(){
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $business = $_GET['businessID'];
+      $result = mysqli_query($con,"
+    SELECT COUNT(tierID) AS numVisits, tierID
+    FROM (
+      SELECT v.userID, v.businessID, (SELECT tierID FROM PointTiers WHERE minPoints < p.points ORDER BY minPoints DESC LIMIT 1) AS tierID
+      FROM Visits v
+        JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
+      WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
+        AND v.businessID = $business
+      GROUP BY v.userID, v.businessID) t
+    GROUP BY tierID
+    ", MYSQLI_STORE_RESULT);
+
+
+  while($row_data = mysqli_fetch_array($result)) {
+          $numVisits = $row_data['numVisits'];
+          $tierID = $row_data['tierID'];
+          if (isset($businessid) && $businessid != "")
+      echo $numVisits . "~s" . $tierID . "~n";
+      }
+}
 
     $func = $_GET['function'];
     switch ($func) {
