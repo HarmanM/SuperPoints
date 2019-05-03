@@ -59,7 +59,7 @@ public class SignupActivity extends AppCompatActivity {
                 startActivity(i);
             }
             else {
-                User u = new User(-1, 0, password, username);
+                User u = new User(-1, -1, password, username);
 
 
                 new DatabaseObj (SignupActivity.this).setUser(u, new Consumer<ArrayList<Object>>() {

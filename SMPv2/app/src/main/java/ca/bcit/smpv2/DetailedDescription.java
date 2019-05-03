@@ -30,7 +30,6 @@ public class DetailedDescription extends AppCompatActivity {
         detailedDescription = findViewById(R.id.promotionDetailedDescription);
         promoImage = findViewById(R.id.imageView);
 
-
         promoTitle.setText(title);
         detailedDescription.setText(details);
         Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"

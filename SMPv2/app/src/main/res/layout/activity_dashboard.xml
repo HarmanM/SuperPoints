@@ -13,13 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:text="@string/dashboard_title">
-    </TextView>
+        android:queryHint="Search..."
+        android:iconifiedByDefault="false">
+
+    </SearchView>
 
 
     <ListView

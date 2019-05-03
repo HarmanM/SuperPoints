@@ -19,25 +19,32 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    SearchView searchView;
     ListView listView;
+    PromotionsAdapter newAdapter;
     ImageView promoImage;
     TextView promoTitle;
     TextView promoDetails;
     private ArrayList<Promotions> usersPromotions;
+    private ArrayList<Promotions> newusersPromotions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        searchView = findViewById(R.id.searchView);
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById
                 (R.id.toolbar);
@@ -75,11 +82,29 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                String userInput = s.toLowerCase();
+                newusersPromotions = new ArrayList<>();
+                for (int i = 0; i < usersPromotions.size(); i++) {
+                    Promotions p = usersPromotions.get(i);
+                    if (p.getBusinessName().toLowerCase().contains(userInput.trim())) {
+                        newusersPromotions.add(p);
+                    }
+                }
+                newAdapter = new PromotionsAdapter(DashboardActivity.this, newusersPromotions);
+                listView.setAdapter(newAdapter);
+                return true;
+            }
+        });
+
     }
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -76,6 +77,7 @@ public class BusinessDashboard extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        promoImageView = findViewById(R.id.promoImageView);
         super.onCreate(savedInstanceState);
         checkPermission();
         new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
@@ -292,14 +294,16 @@ public class BusinessDashboard extends AppCompatActivity {
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
                 Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
                         + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
+                promoImageView.setImageBitmap(null);
                 for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
                     if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
                         spinner.setSelection(i);
             }
 
-            for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
-                if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
-                    spinner.setSelection(i);
+            alertDialog.show();
+            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            listView.refreshDrawableState();
         }
 
         alertDialog.show();
@@ -329,7 +333,6 @@ public class BusinessDashboard extends AppCompatActivity {
 
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext());
                         usersPromotions.add(promo);
-                        usersPromotions.add(promo);
                         ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
@@ -350,12 +353,24 @@ public class BusinessDashboard extends AppCompatActivity {
                 }
                 listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                listView.refreshDrawableState();
+                countDownTime.start();
                 alertDialog.dismiss();
             }
         });
     }
+
+    CountDownTimer countDownTime = new CountDownTimer(1700,850) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void onFinish() {
+            // TODO Auto-generated method stub
+            adapter.notifyDataSetChanged();
+        }
+    };
 
     private class Delete extends AsyncTask<String, Void, Boolean> {
         @Override
