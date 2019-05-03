@@ -105,16 +105,6 @@ public class BusinessDashboard extends AppCompatActivity {
 
             listView.refreshDrawableState();
 
-
-                int businessID = LoginActivity.user.getBusinessID();
-                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
-                    for (Object o : objects) {
-                        adapter.add((Promotions) o);
-                    }
-                    listView.setAdapter(adapter);
-                });
-
-
                 setSupportActionBar(toolbar);
                 toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
