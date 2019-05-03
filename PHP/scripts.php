@@ -491,6 +491,7 @@
       $settingid = $_GET['SETTING_ID'];
       $value = $_GET['VALUE'];
 
+
       if ($businessid == -1 || !isset($businessid)) {
         $businessid = "";
       }
@@ -507,7 +508,7 @@
               echo $row[0];
             }
       } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`BusinessSettings` SET value = $value WHERE (businessID = $businessid AND settingID = $settingid)", MYSQLI_STORE_RESULT);
+          $result = mysqli_query($con, "UPDATE `superpoints`.`BusinessSettings` SET value = '$value' WHERE (businessID = '$businessid' AND settingID = '$settingid')", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
       }
@@ -540,7 +541,7 @@
               echo $row[0];
             }
       } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`UserSettings` SET value = $value WHERE (userID = $userid AND settingID = $settingid)", MYSQLI_STORE_RESULT);
+          $result = mysqli_query($con, "UPDATE `superpoints`.`UserSettings` SET value = '$value' WHERE (userID = '$userid' AND settingID = '$settingid')", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$userid" : "";
       }
@@ -974,7 +975,7 @@ function calcAvgVisitsWeek () {
       $result = mysqli_query($con,"
     SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
     FROM Visits
-    WHERE BusinessID = $businessid
+    WHERE BusinessID = '$businessid'
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
     GROUP BY timeSpan
     ", MYSQLI_STORE_RESULT);
@@ -996,20 +997,21 @@ function calcNewOldUsers(){
       }
 
       $businessid = $_GET['businessID'];
+      
       $result = mysqli_query($con,"
     SELECT COUNT(userID) AS numUsers, 'old' as newOld
     FROM (
       SELECT DISTINCT userID
-      FROM Visits
-      WHERE userID IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+      FROM superpoints.Visits
+      WHERE userID IN (SELECT userID FROM superpoints.Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
         AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
         AND businessID = $businessid) oldUser
     UNION
     SELECT COUNT(userID), 'new'
     FROM (
       SELECT DISTINCT userID
-      FROM Visits
-      WHERE userID NOT IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
+      FROM superpoints.Visits
+      WHERE userID NOT IN (SELECT userID FROM superpoints.Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
         AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
         AND businessID = $businessid) newUsers
     ", MYSQLI_STORE_RESULT);
@@ -1038,7 +1040,7 @@ function calcVisitorsPerTier(){
       FROM Visits v
         JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
       WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-        AND v.businessID = $businessid
+        AND v.businessID = '$businessid'
       GROUP BY v.userID, v.businessID) t
     GROUP BY tierID
     ", MYSQLI_STORE_RESULT);
@@ -1096,10 +1098,10 @@ function calcVisitorsPerTier(){
         case "setBusiness":
             handleBusiness();
             break;
-        case "setBusinessSettings":
+        case "setBusinessSetting":
             handleBusinessSettings();
             break;
-        case "setUserSettings":
+        case "setUserSetting":
             handleUserSettings();
             break;
         case "promoClick":
