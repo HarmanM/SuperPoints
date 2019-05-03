@@ -635,8 +635,9 @@
 
 		$row_count = mysqli_num_rows($pointsResult);
 		
-		$pointAccumulationSetting = mysqli_query($con,"SELECT value FROM `superpoints`.`BusinessSetting` WHERE  businessID = $businessid AND settingID = 0", MYSQLI_STORE_RESULT);
-		$setting = mysqli_fetch_array($pointAccumulationSetting);
+		$pointAccumulationSetting = mysqli_query($con,"SELECT * FROM `superpoints`.`BusinessSetting` WHERE  businessID = $businessid AND settingID = 0", MYSQLI_STORE_RESULT);
+		$row = mysqli_fetch_array($pointAccumulationSetting);
+		$setting = $row['value']
 		if($setting == "duration")
 			$points = $pointsFunc($duration) + abs($pointsFunc(0));
 		else
