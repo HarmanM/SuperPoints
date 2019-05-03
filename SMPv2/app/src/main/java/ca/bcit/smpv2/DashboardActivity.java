@@ -1,6 +1,11 @@
 package ca.bcit.smpv2;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
@@ -9,36 +14,70 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    ListView listView;
+    ImageView promoImage;
+    TextView promoTitle;
+    TextView promoDetails;
+    private ArrayList<Promotions> usersPromotions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById
+                (R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
         // Construct the data source, maybe construct arraylist beforehand
-        ArrayList<Promotions> usersPromotions = new ArrayList<Promotions>();
+        usersPromotions = new ArrayList<Promotions>();
         final PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
-
-        ListView listView = (ListView) findViewById(R.id.lvPromotions);
-
+        listView = (ListView) findViewById(R.id.lvPromotions);
         new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> objects)-> {
                 for(Object o : objects) {
                     adapter.add((Promotions) o);
                 }
                 listView.setAdapter(adapter);
         });
+
+        listView.refreshDrawableState();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(DashboardActivity.this, DetailedDescription.class);
+
+                Promotions promo = usersPromotions.get(position);
+                promoImage = findViewById(R.id.iconImageView);
+                promoTitle = findViewById(R.id.promotionBusinessName);
+                promoDetails = findViewById(R.id.promotionDetailedDescription);
+                String promoID = String.valueOf(promo.getPromotionID());
+
+                i.putExtra("promoID", promoID);
+                i.putExtra("title", promoTitle.getText());
+                i.putExtra("details", promo.getDetails());
+                startActivity(i);
+            }
+        });
+
     }
+
+
 
 
     @Override

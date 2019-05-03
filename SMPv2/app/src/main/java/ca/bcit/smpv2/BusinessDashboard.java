@@ -1,14 +1,21 @@
 package ca.bcit.smpv2;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -36,10 +43,15 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,25 +69,30 @@ public class BusinessDashboard extends AppCompatActivity {
     PromotionsAdapter adapter;
     private static final int RESULT_LOAD_IMAGE = 1;
     ImageView promoImageView;
+    ListView listView;
     Uri selectedImage;
     static List<PointTiers> tiers = new ArrayList<>();
+    private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        checkPermission();
         new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
             business = (Business) businessObj.get(0);
+            new DatabaseObj(this).getBusinessSettings("businessID=" + business.getBusinessID(), (ArrayList<Object> settings)->{
+                for(Object setting : settings)
+                    business.addSetting((BusinessSetting) setting);
 
-            setContentView(R.layout.activity_business_dashboard);
+                setContentView(R.layout.activity_business_dashboard);
 
-            // Find the toolbar view inside the activity layout
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                // Find the toolbar view inside the activity layout
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-            usersPromotions = new ArrayList<Promotions>();
-            adapter = new PromotionsAdapter(this, usersPromotions);
+                usersPromotions = new ArrayList<Promotions>();
+                adapter = new PromotionsAdapter(this, usersPromotions);
 
-            ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+            listView = (ListView) findViewById(R.id.lvBusinessPromotions);
             listView.setAdapter(adapter);
 
             int businessID = LoginActivity.user.getBusinessID();
@@ -86,37 +103,49 @@ public class BusinessDashboard extends AppCompatActivity {
                 listView.setAdapter(adapter);
             });
 
+            listView.refreshDrawableState();
 
-            setSupportActionBar(toolbar);
-            toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-            listView.setOnItemClickListener((parent, view, position, id) -> {
-                selectedPromotion = usersPromotions.get(position);
-            });
+                int businessID = LoginActivity.user.getBusinessID();
+                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
+                    for (Object o : objects) {
+                        adapter.add((Promotions) o);
+                    }
+                    listView.setAdapter(adapter);
+                });
 
-            addBtn = findViewById(R.id.addBtn);
-            editBtn = findViewById(R.id.editBtn);
-            dltBtn = findViewById(R.id.deleteBtn);
 
-            addBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showAddDialog();
-                }
-            });
+                setSupportActionBar(toolbar);
+                toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-            editBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showUpdateDialog(selectedPromotion);
-                }
-            });
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    selectedPromotion = usersPromotions.get(position);
+                });
 
-            dltBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDeleteDialog(selectedPromotion);
-                }
+                addBtn = findViewById(R.id.addBtn);
+                editBtn = findViewById(R.id.editBtn);
+                dltBtn = findViewById(R.id.deleteBtn);
+
+                addBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAddDialog();
+                    }
+                });
+
+                editBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showUpdateDialog(selectedPromotion);
+                    }
+                });
+
+                dltBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDeleteDialog(selectedPromotion);
+                    }
+                });
             });
         });
 
@@ -169,6 +198,26 @@ public class BusinessDashboard extends AppCompatActivity {
         showUpdateDialog(null);
     }
 
+    private void checkPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check
+            if (this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    && this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle("This app needs to access your storage");
+                builder.setMessage("Please grant location access so this app can use images from your storage for promotions");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_STORAGE);
+                    }
+                });
+                builder.show();
+            }
+        }
+    }
+
     private void showDeleteDialog(Promotions promoToDelete) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -188,11 +237,15 @@ public class BusinessDashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO need delete operation in PHP
-                new DatabaseObj(BusinessDashboard.this).deletePromotion(promoToDelete.getPromotionID(), null);
+                new DatabaseObj(BusinessDashboard.this).deletePromotion(promoToDelete.getPromotionID(), (ArrayList<Object> objects) -> {
+                    Delete instance = new Delete();
+                    instance.execute(String.valueOf(promoToDelete.getPromotionID()));
+                });
                 usersPromotions.remove(promoToDelete);
                 alertDialog.dismiss();
-                ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
+                listView.refreshDrawableState();
             }
         });
         buttonCancelDeletePromotion.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +268,6 @@ public class BusinessDashboard extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             selectedImage = data.getData();
             promoImageView.setImageURI(selectedImage);
-
         }
     }
 
@@ -227,6 +279,7 @@ public class BusinessDashboard extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.add_promotion_dialogue, null);
         final EditText editTextPromotionDetail = dialogView.findViewById(R.id.editTextPromotionDetails);
         final Button buttonAddPromotion = dialogView.findViewById(R.id.buttonAddPromotion);
+        final EditText editTextShortDescription = dialogView.findViewById(R.id.editTextShortDescription);
         promoImageView = dialogView.findViewById(R.id.promoImageView);
         Spinner spinner = (Spinner) dialogView.findViewById(R.id.minTier);
 
@@ -244,6 +297,15 @@ public class BusinessDashboard extends AppCompatActivity {
 
         if (updatedPromo != null) {
             editTextPromotionDetail.setText(updatedPromo.getDetails());
+            if (updatedPromo != null) {
+                editTextPromotionDetail.setText(updatedPromo.getDetails());
+                editTextShortDescription.setText(updatedPromo.getShortDescription());
+                Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
+                        + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
+                for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
+                    if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
+                        spinner.setSelection(i);
+            }
 
             for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
                 if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
@@ -255,16 +317,22 @@ public class BusinessDashboard extends AppCompatActivity {
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPermission();
+
                 PointTiers promotionPoints = (PointTiers) spinner.getSelectedItem();
                 String promotionDetails = editTextPromotionDetail.getText().toString();
+                String shortDescription = editTextShortDescription.getText().toString();
                 if (TextUtils.isEmpty(promotionDetails)) {
                     editTextPromotionDetail.setError("Your customer should know what it is you are offering!");
+                }
+                if (TextUtils.isEmpty(promotionDetails)) {
+                    editTextShortDescription.setError("Your customer should know what it is you are offering!");
                 }
 
                 if (updatedPromo == null) {
                     int promoID = -1;
                     int businessID = LoginActivity.user.getBusinessID();
-                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName());
+                    Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName(), shortDescription);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
                         promo.setPromotionID((int) objects.get(0));
 
@@ -273,7 +341,9 @@ public class BusinessDashboard extends AppCompatActivity {
                         usersPromotions.add(promo);
                         usersPromotions.add(promo);
                         ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                        listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
+
                     });
                 } else {
                     updatedPromo.setDetails(promotionDetails);
@@ -283,14 +353,26 @@ public class BusinessDashboard extends AppCompatActivity {
                         /*updatedPromo.setPromotionID((int) objects.get(0));
                         usersPromotions.add(updatedPromo);*/
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
-                        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                        listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
                     });
 
                 }
+                listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                listView.refreshDrawableState();
                 alertDialog.dismiss();
             }
         });
+    }
+
+    private class Delete extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            ImageHandler.getInstance().deleteImage(strings[0], getApplicationContext());
+            return true;
+        }
     }
 }
 
