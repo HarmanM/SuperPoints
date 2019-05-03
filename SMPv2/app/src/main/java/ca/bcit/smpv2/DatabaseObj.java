@@ -208,7 +208,7 @@ public class DatabaseObj extends AsyncTask {
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "USERNAME=" + o.getUsername() + "&";
         params += "PASSWORD=" + o.getPassword() + "&";
-        params += "SETTING=" + o.getSetting();
+        //params += "SETTING=" + o.getSetting();
         setMembers(params, f);
         this.execute();
     }

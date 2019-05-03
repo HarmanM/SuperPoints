@@ -79,14 +79,17 @@ public class BusinessDashboard extends AppCompatActivity {
         checkPermission();
         new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
             business = (Business) businessObj.get(0);
+            new DatabaseObj(this).getBusinessSettings("businessID=" + business.getBusinessID(), (ArrayList<Object> settings)->{
+                for(Object setting : settings)
+                    business.addSetting((BusinessSetting) setting);
 
-            setContentView(R.layout.activity_business_dashboard);
+                setContentView(R.layout.activity_business_dashboard);
 
-            // Find the toolbar view inside the activity layout
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                // Find the toolbar view inside the activity layout
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-            usersPromotions = new ArrayList<Promotions>();
-            adapter = new PromotionsAdapter(this, usersPromotions);
+                usersPromotions = new ArrayList<Promotions>();
+                adapter = new PromotionsAdapter(this, usersPromotions);
 
             listView = (ListView) findViewById(R.id.lvBusinessPromotions);
             listView.setAdapter(adapter);
@@ -102,39 +105,48 @@ public class BusinessDashboard extends AppCompatActivity {
             listView.refreshDrawableState();
 
 
-            setSupportActionBar(toolbar);
-            toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
+                int businessID = LoginActivity.user.getBusinessID();
+                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
+                    for (Object o : objects) {
+                        adapter.add((Promotions) o);
+                    }
+                    listView.setAdapter(adapter);
+                });
 
-            listView.setOnItemClickListener((parent, view, position, id) -> {
-                selectedPromotion = usersPromotions.get(position);
-            });
 
-            addBtn = findViewById(R.id.addBtn);
-            editBtn = findViewById(R.id.editBtn);
-            dltBtn = findViewById(R.id.deleteBtn);
+                setSupportActionBar(toolbar);
+                toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-            addBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showAddDialog();
-                }
-            });
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    selectedPromotion = usersPromotions.get(position);
+                });
 
-            editBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showUpdateDialog(selectedPromotion);
-                }
-            });
+                addBtn = findViewById(R.id.addBtn);
+                editBtn = findViewById(R.id.editBtn);
+                dltBtn = findViewById(R.id.deleteBtn);
 
-            dltBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDeleteDialog(selectedPromotion);
-                }
+                addBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAddDialog();
+                    }
+                });
+
+                editBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showUpdateDialog(selectedPromotion);
+                    }
+                });
+
+                dltBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDeleteDialog(selectedPromotion);
+                    }
+                });
             });
         });
-
 
     }
 
