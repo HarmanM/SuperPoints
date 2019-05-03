@@ -18,14 +18,13 @@
             $userid = $row['userID'];
             $businessid = $row['businessID'];
             $userName = $row['userName'];
-            $settings = $row['settings'];
             if ($businessid != "" ) {
               if (isset($userName) && $userName != "") {
-                echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings;
+                echo $userid . "~s" . $businessid . "~s" . $userName;
               }
             } else {
               if (isset($userName) && $userName != "") {
-              echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings;
+              echo $userid . "~s" . "-1" . "~s" . $userName;
             }
             }
         } else {
@@ -33,14 +32,13 @@
                 $userid = $row_data['userID'];
                 $businessid = $row_data['businessID'];
                 $username = $row_data['userName'];
-                $settings = $row_data['settings'];
                 if ($businessid != "") {
                   if (isset($username) && $username != "") {
-                  echo $userid . "~s" . $businessid . "~s" . $userName . "~s" . $settings . "~n";
+                  echo $userid . "~s" . $businessid . "~s" . $userName . "~n";
                 }
                 } else {
                   if (isset($username) && $username != "") {
-                  echo $userid . "~s" . "-1" . "~s" . $userName . "~s" . $settings . "~n";
+                  echo $userid . "~s" . "-1" . "~s" . $userName . "~n";
                 }
                 }
             }
@@ -385,7 +383,6 @@
         $userid = $_GET['USER_ID'];
         $businessid = $_GET['BUSINESS_ID'];
         $username = $_GET['USERNAME'];
-        $setting = $_GET['SETTING'];
 
         if ($businessid == -1) {
             $businessid = "";
@@ -400,17 +397,21 @@
 
              if ($businessid != "") {
                $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
-                   (`businessID`,`password`,`userName`,`settings`) VALUES ($businessid, '$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
+                   (`businessID`,`password`,`userName`) VALUES ($businessid, '$password', '$username');", MYSQLI_STORE_RESULT);
                $result = $result ? "true" : "";
 
                if ($result == "true") {
                  $result2 = mysqli_query($con, "SELECT * FROM `superpoints`.`Users` WHERE userName = '$username' AND password = '$password'", MYSQLI_STORE_RESULT);
                  $row = mysqli_fetch_array($result2);
+
+                 $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings`
+                    (`userID`,`settingID`,`value`) VALUES ($row[0], 1, 2);", MYSQLI_STORE_RESULT);
+
                  echo $row[0];
             }
           } else {
             $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
-                 (`password`,`userName`,`settings`) VALUES ('$password', '$username', '$setting');", MYSQLI_STORE_RESULT);
+                 (`password`,`userName`) VALUES ('$password', '$username');", MYSQLI_STORE_RESULT);
                 $result = $result ? "true" : "";
 
             if ($result == "true") {
@@ -421,7 +422,7 @@
         }
       } else {
             $result = mysqli_query($con, "UPDATE `superpoints`.`Users` SET
-            username = '$username', settings = $setting WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
+            username = '$username' WHERE (`userID` = '$userid');", MYSQLI_STORE_RESULT);
             echo ($result) ? "$userid" : "";
         }
     }
@@ -470,6 +471,10 @@
             if ($result == "true") {
               $result2 = mysqli_query($con, "SELECT businessID FROM `superpoints`.`Businesses` ORDER BY businessID DESC LIMIT 1");
               $row = mysqli_fetch_array($result2);
+
+              $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`BusinessSetting`
+                  (`businessID`,`settingID`,`value`) VALUES ($row[0], 0, 'duration');", MYSQLI_STORE_RESULT);
+
               echo $row[0];
             }
       } else {
@@ -652,15 +657,14 @@
         $userid = $row[0];
         $businessid = $row[1];
         $userName = $row[3];
-        $settings = $row[4];
 
         if ($businessid != "") {
           if (isset($userName) && $userName != "") {
-            echo $userid . "~s" . $businessid . "~s" . $username . "~s" . $settings;
+            echo $userid . "~s" . $businessid . "~s" . $username;
           }
         } else {
           if (isset($userName) && $userName != "") {
-            echo $userid . "~s" . $username . "~s" . $settings;
+            echo $userid . "~s" . $username;
           }
         }
         mysqli_close($con);
@@ -997,7 +1001,7 @@ function calcNewOldUsers(){
       }
 
       $businessid = $_GET['businessID'];
-      
+
       $result = mysqli_query($con,"
     SELECT COUNT(userID) AS numUsers, 'old' as newOld
     FROM (
