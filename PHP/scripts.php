@@ -507,8 +507,7 @@
               echo $row[0];
             }
       } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`BusinessSettings` SET businessID = '$businessid',
-            settingid = '$settingid', value = '$value' WHERE (`businessID` = '$businessid' AND `settingID = $settingid`);", MYSQLI_STORE_RESULT);
+          $result = mysqli_query($con, "UPDATE `superpoints`.`BusinessSettings` SET value = $value WHERE (businessID = $businessid AND settingID = $settingid)", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
       }
@@ -521,17 +520,17 @@
           echo "Failed to connect to database: " . mysqli_connect_error();
       }
 
-      $usersid = $_GET['USER_ID'];
+      $userid = $_GET['USER_ID'];
       $settingid = $_GET['SETTING_ID'];
       $value = $_GET['VALUE'];
 
-      if ($usersid == -1 || !isset($usersid)) {
-        $usersid = "";
+      if ($userid == -1 || !isset($userid)) {
+        $userid = "";
       }
 
-      if ($usersid == "") {
+      if ($userid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings`
-              (userID, settingID, value) VALUES ('$usersid',
+              (userID, settingID, value) VALUES ('$userid',
                 '$settingid', '$value');", MYSQLI_STORE_RESULT);
             $result = $result ? "true" : "";
 
@@ -541,10 +540,9 @@
               echo $row[0];
             }
       } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`UserSettings` SET userID = '$usersid',
-            settingid = '$settingid', value = '$value' WHERE (`userID` = '$usersid' AND `settingID = $settingid`);", MYSQLI_STORE_RESULT);
+          $result = mysqli_query($con, "UPDATE `superpoints`.`UserSettings` SET value = $value WHERE (userID = $userid AND settingID = $settingid)", MYSQLI_STORE_RESULT);
 
-        echo ($result) ? "$usersid" : "";
+        echo ($result) ? "$userid" : "";
       }
     }
 
@@ -972,11 +970,11 @@ function calcAvgVisitsWeek () {
           echo "Failed to connect to database: " . mysqli_connect_error();
       }
 
-      $business = $_GET['businessID'];
+      $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
     SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
     FROM Visits
-    WHERE BusinessID = $business
+    WHERE BusinessID = $businessid
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
     GROUP BY timeSpan
     ", MYSQLI_STORE_RESULT);
@@ -997,7 +995,7 @@ function calcNewOldUsers(){
           echo "Failed to connect to database: " . mysqli_connect_error();
       }
 
-      $business = $_GET['businessID'];
+      $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
     SELECT COUNT(userID) AS numUsers, 'old' as newOld
     FROM (
@@ -1005,7 +1003,7 @@ function calcNewOldUsers(){
       FROM Visits
       WHERE userID IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
         AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-        AND businessID = $business) oldUser
+        AND businessID = $businessid) oldUser
     UNION
     SELECT COUNT(userID), 'new'
     FROM (
@@ -1013,7 +1011,7 @@ function calcNewOldUsers(){
       FROM Visits
       WHERE userID NOT IN (SELECT userID FROM Visits WHERE MONTH(date) != MONTH(CURDATE()) OR YEAR(date) != YEAR(CURDATE()))
         AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-        AND businessID = $business) newUsers
+        AND businessID = $businessid) newUsers
     ", MYSQLI_STORE_RESULT);
 
 
@@ -1032,7 +1030,7 @@ function calcVisitorsPerTier(){
           echo "Failed to connect to database: " . mysqli_connect_error();
       }
 
-      $business = $_GET['businessID'];
+      $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
     SELECT COUNT(tierID) AS numVisits, tierID
     FROM (
@@ -1040,7 +1038,7 @@ function calcVisitorsPerTier(){
       FROM Visits v
         JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
       WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
-        AND v.businessID = $business
+        AND v.businessID = $businessid
       GROUP BY v.userID, v.businessID) t
     GROUP BY tierID
     ", MYSQLI_STORE_RESULT);
