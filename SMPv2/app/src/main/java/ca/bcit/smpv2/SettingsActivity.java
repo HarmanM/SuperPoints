@@ -81,6 +81,9 @@ public class SettingsActivity extends AppCompatActivity {
             LoginActivity.user.setPassword(pw.getText().toString());
             new DatabaseObj (SettingsActivity.this)
                     .updatePassword(LoginActivity.user.getUserID(), pw.getText().toString());
+            pw.setText("");
+            cpw.setText("");
+            Toast.makeText(this, "Password Updated", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this, "Ensure the two passwords match and are not empty", Toast.LENGTH_LONG).show();
         }

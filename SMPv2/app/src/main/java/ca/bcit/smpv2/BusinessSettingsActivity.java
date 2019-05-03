@@ -49,11 +49,14 @@ public class BusinessSettingsActivity extends AppCompatActivity {
     public void updateSettings(View view) {
         EditText pw = findViewById(R.id.passwordEditText);
         EditText cpw = findViewById(R.id.confirmEditText);
-        if(pw.getText().toString().trim() != "" || cpw.getText().toString().trim() != "") {
+        if(!pw.getText().toString().trim().isEmpty() || !cpw.getText().toString().trim().isEmpty()) {
             if (pw.getText().toString().compareTo(cpw.getText().toString()) == 0) {
                 LoginActivity.user.setPassword(pw.getText().toString());
                 new DatabaseObj(BusinessSettingsActivity.this)
                         .updatePassword(LoginActivity.user.getUserID(), pw.getText().toString());
+                pw.setText("");
+                cpw.setText("");
+                Toast.makeText(this, "Password Updated", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Ensure the two passwords match and are not empty", Toast.LENGTH_LONG).show();
             }

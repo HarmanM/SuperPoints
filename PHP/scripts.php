@@ -591,55 +591,62 @@
     }
 
     function handleVisits() {
-      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+		$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
-      if (mysqli_connect_errno($con)) {
-          echo "Failed to connect to database: " . mysqli_connect_error();
-      }
+		if (mysqli_connect_errno($con)) {
+			echo "Failed to connect to database: " . mysqli_connect_error();
+		}
 
-      $visitid = $_GET['VISIT_ID'];
-      $userid = $_GET['USER_ID'];
-      $businessid = $_GET['BUSINESS_ID'];
-      $duration = $_GET['DURATION'];
-      $date = $_GET['DATE'];
+		$visitid = $_GET['VISIT_ID'];
+		$userid = $_GET['USER_ID'];
+		$businessid = $_GET['BUSINESS_ID'];
+		$duration = $_GET['DURATION'];
+		$date = $_GET['DATE'];
 
-      if ($visitid == -1) {
-        $visitid = "";
-      }
+		if ($visitid == -1) {
+			$visitid = "";
+		}
 
-      if ($visitid == "") {
-          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
-              (`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
-                $duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
+		if ($visitid == "") {
+			$result = mysqli_query($con,"INSERT INTO `superpoints`.`Visits`
+				(`userID`, `businessID`,`duration`, `date`) VALUES ($userid, $businessid,
+				$duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
 
-                $result = $result ? "true" : "";
+			$result = $result ? "true" : "";
+            
+			if ($result == "true") {
+				$result2 = mysqli_query($con, "SELECT visitID FROM `superpoints`.`Visits` ORDER BY visitID DESC LIMIT 1");
+				$row = mysqli_fetch_array($result2);
+				echo $row[0];
+			}
+		} else {
+			$result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
+				duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
+			echo $result ? "$visitid" : "";
+		}
 
-                if ($result == "true") {
-                  $result2 = mysqli_query($con, "SELECT visitID FROM `superpoints`.`Visits` ORDER BY visitID DESC LIMIT 1");
-                  $row = mysqli_fetch_array($result2);
-                  echo $row[0];
-                }
-      } else {
-          $result = mysqli_query($con, "UPDATE `superpoints`.`Visits` SET userid = '$userid', businessid = '$businessid',
-            duration = '$duration', date = convert($date, DATETIME) WHERE (`visitID` = '$visitid');", MYSQLI_STORE_RESULT);
-            echo $result ? "$visitid" : "";
-      }
+		$pointsResult = mysqli_query($con,"SELECT points FROM `superpoints`.`Points` WHERE userID = $userid AND businessID = $businessid", MYSQLI_STORE_RESULT);
 
-	  $pointsResult = mysqli_query($con,"SELECT points FROM `superpoints`.`Points` WHERE userID = $userid AND businessID = $businessid", MYSQLI_STORE_RESULT);
+		$pointsFunc = function($minutes){
+			$optimalTime = 20;
+			$slope = 30;
+			return (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
+		};
 
-	  $pointsFunc = function($minutes){
-		  $optimalTime = 20;
-		  $slope = 30;
-		  return (pow(abs($minutes - $optimalTime), 1/3) * (($minutes - $optimalTime < 0) ? -1 : 1)) * $slope;
-	  };
-
-    $row_count = mysqli_num_rows($pointsResult);
-	  $points = $pointsFunc($duration) + abs($pointsFunc(0));
-	  if($row_count == 0) {
-		  $pointsResult = mysqli_query($con,"INSERT INTO `superpoints`.`Points` (`businessID`, `userID`, `points`) VALUES ($businessid, $userid, $points);", MYSQLI_STORE_RESULT);
-	  } else{
-		  $pointsResult = mysqli_query($con,"UPDATE `superpoints`.`Points` SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
-}
+		$row_count = mysqli_num_rows($pointsResult);
+		
+		$pointAccumulationSetting = mysqli_query($con,"SELECT value FROM `superpoints`.`BusinessSetting` WHERE  businessID = $businessid AND settingID = 0", MYSQLI_STORE_RESULT);
+		$setting = mysqli_fetch_array($pointAccumulationSetting);
+		if($setting == "duration")
+			$points = $pointsFunc($duration) + abs($pointsFunc(0));
+		else
+			$points = 250;
+	
+		if($row_count == 0) {
+			$pointsResult = mysqli_query($con,"INSERT INTO `superpoints`.`Points` (`businessID`, `userID`, `points`) VALUES ($businessid, $userid, $points);", MYSQLI_STORE_RESULT);
+		} else{
+			$pointsResult = mysqli_query($con,"UPDATE `superpoints`.`Points` SET points = points + $points WHERE businessID = $businessid AND userID = $userid", MYSQLI_STORE_RESULT);
+		}
     }
 
     function login() {
