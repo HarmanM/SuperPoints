@@ -1,11 +1,14 @@
 package ca.bcit.smpv2;
 
+import java.util.TreeMap;
+
 public class Business {
     private int businessID;
     private String businessName;
     private double latitude;
     private double longitude;
     private String region;
+    private TreeMap<Integer, BusinessSetting> settings = new TreeMap<>();
 
     public Business(int businessID, String businessName, double latitude, double longitude, String region){
         this.businessID = businessID;
@@ -56,5 +59,13 @@ public class Business {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void addSetting(BusinessSetting setting){
+        settings.put(setting.getSetting().getSettingID(), setting);
+    }
+
+    public BusinessSetting getSetting(int i){
+        return settings.get(i);
     }
 }

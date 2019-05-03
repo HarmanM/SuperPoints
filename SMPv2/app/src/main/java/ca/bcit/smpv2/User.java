@@ -1,11 +1,14 @@
 package ca.bcit.smpv2;
 
+import java.util.TreeMap;
+
 public class User {
     private int userID;
     private int businessID;
     private String password;
     private String username;
     private int setting;
+    private TreeMap<Integer, UserSetting> settings = new TreeMap<>();
 
     public User(int userID, int businessID, String password, String username, int setting) {
         this.userID = userID;
@@ -64,11 +67,11 @@ public class User {
         this.username = username;
     }
 
-    public int getSetting() {
-        return setting;
+    public void addSetting(UserSetting setting){
+        settings.put(setting.getSetting().getSettingID(), setting);
     }
 
-    public void setSetting(int setting) {
-        this.setting = setting;
+    public UserSetting getSetting(int i){
+        return settings.get(i);
     }
 }

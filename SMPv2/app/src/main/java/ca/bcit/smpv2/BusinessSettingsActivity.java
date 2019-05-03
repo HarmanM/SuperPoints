@@ -39,6 +39,11 @@ public class BusinessSettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
+        RadioGroup pointAccumulation = findViewById(R.id.pointOptions);
+        if(BusinessDashboard.business.getSetting(0).getValue().equals("duration"))
+            pointAccumulation.check(R.id.duration);
+        else
+            pointAccumulation.check(R.id.visit);
     }
 
     public void updateSettings(View view) {
@@ -56,6 +61,13 @@ public class BusinessSettingsActivity extends AppCompatActivity {
 
         RadioGroup pointOptions = findViewById(R.id.pointOptions);
         int selectedOpt = pointOptions.getCheckedRadioButtonId();
+        if(selectedOpt == R.id.visit && BusinessDashboard.business.getSetting(0).getValue().equals("duration")){
+            BusinessDashboard.business.getSetting(0).setValue("visit");
+            new DatabaseObj(this).setBusinessSetting(BusinessDashboard.business.getSetting(0));
+        } else if(selectedOpt == R.id.duration && BusinessDashboard.business.getSetting(0).getValue().equals("visit")) {
+            BusinessDashboard.business.getSetting(0).setValue("duration");
+            new DatabaseObj(this).setBusinessSetting(BusinessDashboard.business.getSetting(0));
+        }
 
     }
 

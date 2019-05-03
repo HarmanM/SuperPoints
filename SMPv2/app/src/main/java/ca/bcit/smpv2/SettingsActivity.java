@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         seekBarPrivacy = findViewById(R.id.seekBarPrivacy);
-        seekBarPrivacy.setProgress(LoginActivity.user.getSetting());
+        seekBarPrivacy.setProgress(Integer.parseInt(LoginActivity.user.getSetting(1).getValue()) * privacyStep);
         seekBarPrivacy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -62,8 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
                     int privacySetting = seekBarPrivacy.getProgress();
                     int userID = LoginActivity.user.getUserID();
                     if (userID != 0) {
-                        LoginActivity.user.setSetting(privacySetting/privacyStep);
-                        new DatabaseObj (SettingsActivity.this).setUser(LoginActivity.user);
+                        LoginActivity.user.getSetting(1).setValue(Integer.toString(privacySetting/privacyStep));
+                        new DatabaseObj (SettingsActivity.this).setUserSetting(LoginActivity.user.getSetting(1));
                     }
                 } catch (Exception e) {
                     Log.i("SEEKBAR SETTINGS ACTIVITY:", e.toString());
