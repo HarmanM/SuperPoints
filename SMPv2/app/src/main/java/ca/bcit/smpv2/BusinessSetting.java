@@ -6,9 +6,9 @@ public class BusinessSetting {
     private Setting setting;
     private String value;
 
-    public BusinessSetting(int businessID, Setting businessSetting, String value) {
+    public BusinessSetting(int businessID, Setting setting, String value) {
         this.businessID = businessID;
-        this.setting = businessSetting;
+        this.setting = setting;
         this.value = value;
     }
 
