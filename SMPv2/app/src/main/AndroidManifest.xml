@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".BusinessSettingsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -42,42 +42,45 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait"/>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".SignupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".DashboardActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".ProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".BusinessDashboard"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".MapsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".Analytics"
-            android:screenOrientation="portrait" />
+            android:name=".Analytics" />
         <activity
             android:name=".BusinessSignup"
-            android:screenOrientation="portrait" />
-        <activity android:name=".UserPointsActivity" />
-        <activity android:name=".WelcomeActivity" />
+            android:screenOrientation="sensorPortrait" />
+        <activity android:name=".UserPointsActivity"
+            android:screenOrientation="sensorPortrait"/>
+        <activity android:name=".WelcomeActivity"
+            android:screenOrientation="sensorPortrait"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name=".DetailedDescription"></activity>
+        <activity android:name=".DetailedDescription"
+            android:screenOrientation="sensorPortrait">
+        </activity>
     </application>
 
 </manifest>
