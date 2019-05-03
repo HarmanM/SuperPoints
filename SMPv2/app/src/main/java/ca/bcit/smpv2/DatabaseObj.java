@@ -164,7 +164,6 @@ public class DatabaseObj extends AsyncTask {
 
     public void calcMonthlyVisits(int businessID, Consumer<ArrayList<Object>> f)
     {
-        get = true;
         function = "calcMonthlyVisits";
         params = "";
         params += "businessID=" + businessID;
@@ -175,7 +174,6 @@ public class DatabaseObj extends AsyncTask {
 
     public void calcNewOldUsers(int businessID, Consumer<ArrayList<Object>> f)
     {
-        get = true;
         function = "calcNewOldUsers";
         params = "";
         params += "businessID=" + businessID;
@@ -186,7 +184,6 @@ public class DatabaseObj extends AsyncTask {
 
     public void calcVisitorsPerTier(int businessID, Consumer<ArrayList<Object>> f)
     {
-        get = true;
         function = "calcVisitorsPerTier";
         params = "";
         params += "businessID=" + businessID;
