@@ -7,15 +7,13 @@ public class User {
     private int businessID;
     private String password;
     private String username;
-    private int setting;
     private TreeMap<Integer, UserSetting> settings = new TreeMap<>();
 
-    public User(int userID, int businessID, String password, String username, int setting) {
+    public User(int userID, int businessID, String password, String username) {
         this.userID = userID;
         this.businessID = businessID;
         this.password = password;
         this.username = username;
-        this.setting = setting;
     }
 
     // Parses a string from the php query to the MySQL database.
@@ -24,15 +22,11 @@ public class User {
     public User(String sqlResult) {
         String[] result = sqlResult.split("~s");
         this.userID = Integer.parseInt(result[0]);
-        this.username = result[2];
-        this.setting = Integer.parseInt(result[3]);
-
-        if(result[1].equalsIgnoreCase("NULL")) {
+        if(result[1].equalsIgnoreCase("NULL"))
             this.businessID = -1;
-        }
-        else {
+        else
             this.businessID = Integer.parseInt(result[1]);
-        }
+        this.username = result[2];
     }
 
     public int getUserID() {
