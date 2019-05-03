@@ -978,7 +978,7 @@ function calcAvgVisitsWeek () {
       $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
     SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
-    FROM Visits
+    FROM superpoints.Visits
     WHERE businessID = '$businessid'
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
     GROUP BY timeSpan
@@ -1040,9 +1040,9 @@ function calcVisitorsPerTier(){
       $result = mysqli_query($con,"
     SELECT COUNT(tierID) AS numVisits, tierID
     FROM (
-      SELECT v.userID, v.businessID, (SELECT tierID FROM PointTiers WHERE minPoints < p.points ORDER BY minPoints DESC LIMIT 1) AS tierID
-      FROM Visits v
-        JOIN Points p ON v.userID = p.userID AND v.businessID = p.businessID
+      SELECT v.userID, v.businessID, (SELECT tierID FROM superpoints.PointTiers WHERE minPoints < p.points ORDER BY minPoints DESC LIMIT 1) AS tierID
+      FROM superpoints.Visits v
+        JOIN superpoints.Points p ON v.userID = p.userID AND v.businessID = p.businessID
       WHERE MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE())
         AND v.businessID = '$businessid'
       GROUP BY v.userID, v.businessID) t
