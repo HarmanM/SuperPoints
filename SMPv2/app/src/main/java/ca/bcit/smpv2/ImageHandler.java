@@ -2,6 +2,7 @@ package ca.bcit.smpv2;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -23,7 +24,8 @@ import java.io.OutputStream;
 public class ImageHandler {
 
 	private static ImageHandler instance;
-
+	private BasicAWSCredentials credentials = new BasicAWSCredentials("AKIATGLPVNHQC5LDNPX2", "zx9MVKsBBhBlnaTikDvHYWbXLbTrNgdETnF3eWOX");
+	private AmazonS3Client s3Client = new AmazonS3Client(credentials);
 	private ImageHandler() {
 	}
 
@@ -38,8 +40,7 @@ public class ImageHandler {
 
 
 	public void uploadFile(Uri fileUri, String name, Context context) {
-		BasicAWSCredentials credentials = new BasicAWSCredentials("AKIATGLPVNHQC5LDNPX2", "zx9MVKsBBhBlnaTikDvHYWbXLbTrNgdETnF3eWOX");
-		AmazonS3Client s3Client = new AmazonS3Client(credentials);
+
 
 		if (fileUri != null) {
 			final String fileName = name;
@@ -70,6 +71,16 @@ public class ImageHandler {
 
 		}
 	}
+
+	public void deleteImage(String promoID, Context context) {
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(context)
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(s3Client)
+                        .build();
+        s3Client.deleteObject("superpoints-userfiles-mobilehub-467637819", "promo/" + promoID + ".jpg");
+    }
 
 	private void createFile(Context context, Uri srcUri, File dstFile) {
 		try {

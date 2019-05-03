@@ -287,6 +287,7 @@ public class DatabaseObj extends AsyncTask {
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
         params += "DETAILS=" + o.getDetails() + "&";
+        params += "SHORT_DESCRIPTION=" + o.getShortDescription() + "&";
         params += "CLICKS=" + o.getClicks() + "&";
         params += "MIN_TIER=" + o.getMinTier().getTierID();
         setMembers(params, f);

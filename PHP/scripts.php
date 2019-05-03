@@ -122,7 +122,7 @@
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
                 $businessName = $row_data['businessName'];
-                $shortDescription = $row['shortDescription'];
+                $shortDescription = $row_data['shortDescription'];
 
                 if (isset($businessid) && $businessid != "") {
                   echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
@@ -265,8 +265,8 @@
       $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
       $result = mysqli_query($con,"SELECT * FROM (
         SELECT bs.businessID, s.*, bs.value
-	       FROM BusinessSettings bs
-		       JOIN Settings s ON bs.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
+	       FROM `superpoints`.`BusinessSettings` bs
+		       JOIN `superpoints`.`Settings` s ON bs.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
       $row_count = mysqli_num_rows($result);
 
       if ($row_count <= 1) {
@@ -306,8 +306,8 @@
       }
       $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
       $result = mysqli_query($con,"SELECT * FROM ( SELECT us.userID, s.*, us.value
-	FROM UserSettings us
-		JOIN Settings s ON us.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
+	FROM `superpoints`.`UserSettings` us
+		JOIN `superpoints`.`Settings` s ON us.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
       $row_count = mysqli_num_rows($result);
 
       if ($row_count <= 1) {
@@ -318,7 +318,7 @@
           $valuetype = $row['valueType'];
           $value = $row['value'];
 
-          if (isset($businessid) && $businessid != "") {
+          if (isset($userid) && $userid != "") {
 
           echo $userid . "~s" . $settingid . "~s" .  $settingname . "~s" . $valuetype . "~s" . $value;
         }
@@ -330,7 +330,7 @@
             $valuetype = $row_data['valueType'];
             $value = $row_data['value'];
 
-            if (isset($businessid) && $businessid != "") {
+            if (isset($userid) && $userid != "") {
 
             echo $userid . "~s" . $settingid  . "~s" . $settingname . "~s" . $valuetype . "~s" . $value . "~n";
           }
@@ -560,7 +560,7 @@
       $tierid = $_GET['MIN_TIER'];
       $details = $_GET['DETAILS'];
       $clicks = $_GET['CLICKS'];
-      //$shortDescription = $_GET['SHORT_DESCRIPTION'];
+      $shortDescription = $_GET['SHORT_DESCRIPTION'];
 
       if ($promotionid == -1) {
         $promotionid = "";
@@ -569,8 +569,8 @@
 
       if ($promotionid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Promotions`
-              (businessID, minTierID, details, clicks) VALUES ('$businessid', '$tierid',
-                '$details', '$clicks');", MYSQLI_STORE_RESULT);
+              (businessID, minTierID, details, clicks, shortDescription) VALUES ('$businessid', '$tierid',
+                '$details', '$clicks', '$shortDescription');", MYSQLI_STORE_RESULT);
 
           $result = $result ? "true" : "";
 
@@ -581,7 +581,7 @@
           }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
-            minPoints = '$tierid', details = '$details', clicks = $clicks WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            minPoints = '$tierid', details = '$details', clicks = $clicks, shortDescription = '$shortDescription' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
             echo $result ? "$promotionid" : "";
       }
     }
@@ -1077,6 +1077,15 @@ function calcVisitorsPerTier(){
 		case "getTiers":
 		  getTiers();
 		  break;
+      case "getBusinessSettings":
+        getBusinessSettings();
+        break;
+        case "getUserSettings":
+          getUserSettings();
+          break;
+          case "getSettings":
+            getSettings();
+            break;
         case "setUser":
             handleUser();
             break;
@@ -1088,6 +1097,12 @@ function calcVisitorsPerTier(){
             break;
         case "setBusiness":
             handleBusiness();
+            break;
+        case "setBusinessSettings":
+            handleBusinessSettings();
+            break;
+        case "setUserSettings":
+            handleUserSettings();
             break;
         case "promoClick":
             incrementClick();
