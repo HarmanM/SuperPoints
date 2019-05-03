@@ -94,7 +94,8 @@ public class DashboardActivity extends AppCompatActivity {
                 newusersPromotions = new ArrayList<>();
                 for (int i = 0; i < usersPromotions.size(); i++) {
                     Promotions p = usersPromotions.get(i);
-                    if (p.getBusinessName().toLowerCase().contains(userInput.trim())) {
+                    if (p.getBusinessName().toLowerCase().contains(userInput.trim())
+                            || p.getShortDescription().toLowerCase().contains(userInput.trim())) {
                         newusersPromotions.add(p);
                     }
                 }
