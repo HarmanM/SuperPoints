@@ -71,6 +71,7 @@ public class BusinessDashboard extends AppCompatActivity {
     ImageView promoImageView;
     ListView listView;
     Uri selectedImage;
+    static List<PointTiers> tiers = new ArrayList<>();
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
 
     @Override
@@ -103,16 +104,6 @@ public class BusinessDashboard extends AppCompatActivity {
             });
 
             listView.refreshDrawableState();
-
-
-                int businessID = LoginActivity.user.getBusinessID();
-                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
-                    for (Object o : objects) {
-                        adapter.add((Promotions) o);
-                    }
-                    listView.setAdapter(adapter);
-                });
-
 
                 setSupportActionBar(toolbar);
                 toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
@@ -147,6 +138,14 @@ public class BusinessDashboard extends AppCompatActivity {
                 });
             });
         });
+
+        tiers.clear();
+        new DatabaseObj(this).getTiers("", (ArrayList<Object> objects) -> {
+            Collections.sort((ArrayList<PointTiers>) (ArrayList<?>) objects, Comparator.comparingInt(PointTiers::getMinPoints));
+            for (Object o : objects)
+                tiers.add((PointTiers) o);
+        });
+
 
     }
 
@@ -279,18 +278,15 @@ public class BusinessDashboard extends AppCompatActivity {
 
         final AlertDialog alertDialog = dialogBuilder.create();
 
-        new DatabaseObj(this).getTiers("", (ArrayList<Object> objects) -> {
-            Collections.sort((ArrayList<PointTiers>) (ArrayList<?>) objects, Comparator.comparingInt(PointTiers::getMinPoints));
-            final List<PointTiers> tiers = new ArrayList<>();
-            for (Object o : objects)
-                tiers.add((PointTiers) o);
 
-            final ArrayAdapter<PointTiers> spinnerArrayAdapter = new ArrayAdapter<>(
-                    this, R.layout.spinner_item, tiers);
+        final ArrayAdapter<PointTiers> spinnerArrayAdapter = new ArrayAdapter<>(
+                this, R.layout.spinner_item, tiers);
 
-            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-            spinner.setAdapter(spinnerArrayAdapter);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerArrayAdapter);
 
+        if (updatedPromo != null) {
+            editTextPromotionDetail.setText(updatedPromo.getDetails());
             if (updatedPromo != null) {
                 editTextPromotionDetail.setText(updatedPromo.getDetails());
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
@@ -301,9 +297,12 @@ public class BusinessDashboard extends AppCompatActivity {
                         spinner.setSelection(i);
             }
 
-            alertDialog.show();
-        });
+            for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
+                if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
+                    spinner.setSelection(i);
+        }
 
+        alertDialog.show();
 
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,6 +329,8 @@ public class BusinessDashboard extends AppCompatActivity {
 
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext());
                         usersPromotions.add(promo);
+                        usersPromotions.add(promo);
+                        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
 
