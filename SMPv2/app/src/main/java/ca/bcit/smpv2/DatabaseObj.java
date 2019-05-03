@@ -116,6 +116,85 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void getSettings(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Setting::new;
+        function = "getSettings";
+        get = true;
+        this.execute();
+    }
+
+    public void getBusinessSettings(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = BusinessSetting::new;
+        function = "getBusinessSettings";
+        get = true;
+        this.execute();
+    }
+
+    public void getUserSettings(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = UserSetting::new;
+        function = "getUserSettings";
+        get = true;
+        this.execute();
+    }
+
+    public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageDuration";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = Double::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcAverageVisits(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcAverageVisits";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = Double::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcMonthlyVisits(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcMonthlyVisits";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = DataPoint::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcNewOldUsers(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcNewOldUsers";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = DataPoint::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void calcVisitorsPerTier(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        get = true;
+        function = "calcVisitorsPerTier";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = DataPoint::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void setUser(User o){
         setUser(o, null);
     }
@@ -248,6 +327,38 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void setBusinessSetting(BusinessSetting o){
+        setBusinessSetting(o, null);
+    }
+
+    public void setBusinessSetting(BusinessSetting o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setBusinessSetting";
+        objConstructor = Integer::new;
+        params = "";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
+        params += "VALUE=" + o.getValue() + "&";
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void setUserSetting(UserSetting o){
+        setUserSetting(o, null);
+    }
+
+    public void setUserSetting(UserSetting o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setUserSetting";
+        objConstructor = Integer::new;
+        params = "";
+        params += "USER_ID=" + o.getUserID() + "&";
+        params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
+        params += "VALUE=" + o.getValue() + "&";
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void deletePromotion(int id){
         deletePromotion(id, null);
     }
@@ -256,61 +367,6 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "deletePromotion";
         params = "PROMOTION_ID=" + id;
-        setMembers(params, f);
-        this.execute();
-    }
-
-    public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "calcAverageDuration";
-        params = "";
-        params += "businessID=" + businessID;
-        objConstructor = Double::new;
-        setMembers(params, f);
-        this.execute();
-    }
-
-    public void calcAverageVisits(int businessID, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "calcAverageVisits";
-        params = "";
-        params += "businessID=" + businessID;
-        objConstructor = Double::new;
-        setMembers(params, f);
-        this.execute();
-    }
-
-    public void calcMonthlyVisits(int businessID, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "calcMonthlyVisits";
-        params = "";
-        params += "businessID=" + businessID;
-        objConstructor = DataPoint::new;
-        setMembers(params, f);
-        this.execute();
-    }
-
-    public void calcNewOldUsers(int businessID, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "calcNewOldUsers";
-        params = "";
-        params += "businessID=" + businessID;
-        objConstructor = DataPoint::new;
-        setMembers(params, f);
-        this.execute();
-    }
-
-    public void calcVisitorsPerTier(int businessID, Consumer<ArrayList<Object>> f)
-    {
-        get = true;
-        function = "calcVisitorsPerTier";
-        params = "";
-        params += "businessID=" + businessID;
-        objConstructor = DataPoint::new;
         setMembers(params, f);
         this.execute();
     }

@@ -89,7 +89,7 @@
         $businessID = $_GET['whereClause'];
         $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
-        $result = mysqli_query($con,"SELECT promotionID, businessID, pt.*, details, clicks, businessName
+        $result = mysqli_query($con,"SELECT promotionID, businessID, pt.*, details, clicks, businessName, shortDescription
             FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p
 			INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
 			INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
@@ -116,9 +116,9 @@
             while($row_data = mysqli_fetch_array($result)) {
                 $visitid = $row_data['promotionID'];
                 $businessid = $row_data['businessID'];
-				$tierID = $row_data['tierID'];
-				$minPoints = $row_data['minPoints'];
-				$name = $row_data['name'];
+				        $tierID = $row_data['tierID'];
+				        $minPoints = $row_data['minPoints'];
+				        $name = $row_data['name'];
                 $details = $row_data['details'];
                 $clicks = $row_data['clicks'];
                 $businessName = $row_data['businessName'];
@@ -256,6 +256,124 @@
       mysqli_close($con);
     }
 
+    function getBusinessSettings() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+      $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+      $result = mysqli_query($con,"SELECT * FROM (
+        SELECT bs.businessID, s.*, bs.value
+	       FROM BusinessSettings bs
+		       JOIN Settings s ON bs.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
+      $row_count = mysqli_num_rows($result);
+
+      if ($row_count <= 1) {
+          $row = mysqli_fetch_array($result);
+          $businessid = $row['businessID'];
+          $settingid = $row['settingID'];
+          $settingname = $row['settingName'];
+          $valuetype = $row['valueType'];
+          $value = $row['value'];
+
+          if (isset($businessid) && $businessid != "") {
+
+          echo $businessid . "~s" . $settingid . "~s" . $settingname . "~s" . $valuetype . "~s" . $value;
+        }
+      } else {
+        while($row_data = mysqli_fetch_array($result)) {
+            $businessid = $row_data['businessID'];
+            $settingid = $row_data['settingID'];
+            $settingname = $row_data['settingName'];
+            $valuetype = $row_data['valueType'];
+            $value = $row_data['value'];
+
+            if (isset($businessid) && $businessid != "") {
+
+            echo $businessid . "~s" . $settingid . "~s" . $settingname . "~s" . $valuetype . "~s" . $value . "~n";
+          }
+        }
+      }
+      mysqli_close($con);
+    }
+
+    function getUserSettings() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+      $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+      $result = mysqli_query($con,"SELECT * FROM ( SELECT us.userID, s.*, us.value
+	FROM UserSettings us
+		JOIN Settings s ON us.settingID = s.settingID) t $where", MYSQLI_STORE_RESULT);
+      $row_count = mysqli_num_rows($result);
+
+      if ($row_count <= 1) {
+          $row = mysqli_fetch_array($result);
+          $userid = $row['userID'];
+          $settingid = $row['settingID'];
+          $settingname = $row['settingName'];
+          $valuetype = $row['valueType'];
+          $value = $row['value'];
+
+          if (isset($businessid) && $businessid != "") {
+
+          echo $userid . "~s" . $settingid . "~s" .  $settingname . "~s" . $valuetype . "~s" . $value;
+        }
+      } else {
+        while($row_data = mysqli_fetch_array($result)) {
+            $userid = $row_data['userID'];
+            $settingid = $row_data['settingID'];
+            $settingname = $row_data['settingName'];
+            $valuetype = $row_data['valueType'];
+            $value = $row_data['value'];
+
+            if (isset($businessid) && $businessid != "") {
+
+            echo $userid . "~s" . $settingid  . "~s" . $settingname . "~s" . $valuetype . "~s" . $value . "~n";
+          }
+        }
+      }
+      mysqli_close($con);
+    }
+
+    function getSettings() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+      $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+      $result = mysqli_query($con,"SELECT * FROM superpoints.Settings $where", MYSQLI_STORE_RESULT);
+      $row_count = mysqli_num_rows($result);
+
+      if ($row_count <= 1) {
+          $row = mysqli_fetch_array($result);
+          $settingid = $row['settingID'];
+          $settingname = $row['settingName'];
+          $valuetype = $row['valueType'];
+
+          if (isset($businessid) && $businessid != "") {
+
+          echo $settingid . "~s" .  $settingname . "~s" . $valuetype;
+        }
+      } else {
+        while($row_data = mysqli_fetch_array($result)) {
+        $settingid = $row_data['settingID'];
+        $settingname = $row_data['settingName'];
+        $valuetype = $row_data['valueType'];
+
+            if (isset($businessid) && $businessid != "") {
+
+            echo $settingid . "~s" .  $settingname . "~s" . $valuetype . "~n";
+          }
+        }
+      }
+      mysqli_close($con);
+    }
+
     // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -359,6 +477,74 @@
             latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
+      }
+    }
+
+    function handleBusinessSettings() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $businessid = $_GET['BUSINESS_ID'];
+      $settingid = $_GET['SETTING_ID'];
+      $value = $_GET['VALUE'];
+
+      if ($businessid == -1 || !isset($businessid)) {
+        $businessid = "";
+      }
+
+      if ($businessid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`BusinessSettings`
+              (businessID, settingID, value) VALUES ('$businessid',
+                '$settingid', '$value');", MYSQLI_STORE_RESULT);
+            $result = $result ? "true" : "";
+
+            if ($result == "true") {
+              $result2 = mysqli_query($con, "SELECT businessID FROM `superpoints`.`BusinessSettings` ORDER BY businessID DESC LIMIT 1");
+              $row = mysqli_fetch_array($result2);
+              echo $row[0];
+            }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`BusinessSettings` SET businessID = '$businessid',
+            settingid = '$settingid', value = '$value' WHERE (`businessID` = '$businessid' AND `settingID = $settingid`);", MYSQLI_STORE_RESULT);
+
+        echo ($result) ? "$businessid" : "";
+      }
+    }
+
+    function handleUserSettings() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $usersid = $_GET['USER_ID'];
+      $settingid = $_GET['SETTING_ID'];
+      $value = $_GET['VALUE'];
+
+      if ($usersid == -1 || !isset($usersid)) {
+        $usersid = "";
+      }
+
+      if ($usersid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings`
+              (userID, settingID, value) VALUES ('$usersid',
+                '$settingid', '$value');", MYSQLI_STORE_RESULT);
+            $result = $result ? "true" : "";
+
+            if ($result == "true") {
+              $result2 = mysqli_query($con, "SELECT userID FROM `superpoints`.`UserSettings` ORDER BY businessID DESC LIMIT 1");
+              $row = mysqli_fetch_array($result2);
+              echo $row[0];
+            }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`UserSettings` SET userID = '$usersid',
+            settingid = '$settingid', value = '$value' WHERE (`userID` = '$usersid' AND `settingID = $settingid`);", MYSQLI_STORE_RESULT);
+
+        echo ($result) ? "$usersid" : "";
       }
     }
 
@@ -500,21 +686,21 @@
 				(SELECT minPoints FROM superpoints.PointTiers WHERE superpoints.Promotions.minTierID = superpoints.PointTiers.tierID);", MYSQLI_STORE_RESULT);
 
         while($row_data = mysqli_fetch_array($result)) {
-            $row = mysqli_fetch_array($result);
-            $visitid = $row['promotionID'];
-            $businessid = $row['businessID'];
-            $tierID = $row['tierID'];
-            $minPoints = $row['minPoints'];
-            $name = $row['name'];
-            $details = $row['details'];
-            $clicks = $row['clicks'];
-            $businessName = $row['businessName'];
-            $shortDescription = $row['shortDescription'];
+            $visitid = $row_data['promotionID'];
+            $businessid = $row_data['businessID'];
+            $tierID = $row_data['tierID'];
+            $minPoints = $row_data['minPoints'];
+            $name = $row_data['name'];
+            $details = $row_data['details'];
+            $clicks = $row_data['clicks'];
+            $businessName = $row_data['businessName'];
+            $shortDescription = $row_data['shortDescription'];
 
             if (isset($businessid) && $businessid != "") {
               echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
             }
         }
+
         mysqli_close($con);
     }
 
