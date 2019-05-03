@@ -61,9 +61,8 @@ public class SettingsActivity extends AppCompatActivity {
                 try {
                     int privacySetting = seekBarPrivacy.getProgress();
                     int userID = LoginActivity.user.getUserID();
-                    //probably need a better null check
-                    if (privacySetting != 0 && userID != 0) {
-                        LoginActivity.user.setSetting(privacySetting);
+                    if (userID != 0) {
+                        LoginActivity.user.setSetting(privacySetting/privacyStep);
                         new DatabaseObj (SettingsActivity.this).setUser(LoginActivity.user);
                     }
                 } catch (Exception e) {
