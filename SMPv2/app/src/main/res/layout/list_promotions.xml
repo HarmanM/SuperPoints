@@ -22,7 +22,7 @@ android:layout_height="match_parent">
             android:layout_height="match_parent" />
 
         <TextView
-            android:id = "@+id/promotionDetails"
+            android:id="@+id/shortPromotionDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

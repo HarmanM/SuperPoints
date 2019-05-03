@@ -6,15 +6,17 @@ public class Promotions {
     private PointTiers minTier;
     private String details;
     private int clicks;
+    private String shortDescription;
     private String businessName;
 
-    public Promotions(int promotionID, int businessID, PointTiers minTier, String details, int clicks, String businessName) {
+    public Promotions(int promotionID, int businessID, PointTiers minTier, String details, int clicks, String businessName, String shortDescription) {
         this.promotionID = promotionID;
         this.businessID = businessID;
         this.minTier = minTier;
         this.details = details;
         this.clicks = clicks;
         this.businessName = businessName;
+        this.shortDescription = shortDescription;
     }
 
     public Promotions(String sqlResult) {
@@ -25,6 +27,15 @@ public class Promotions {
         this.details = result[5];
         this.clicks = Integer.parseInt(result[6]);
         this.businessName = result[7];
+        this.shortDescription = result[8];
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public int getPromotionID() {

@@ -16,8 +16,6 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 public class LandingActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_ACCESS_COARSE_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
-    private static final int PERMISSION_REQUEST_EXTERNAL_WRITE_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +34,7 @@ public class LandingActivity extends AppCompatActivity {
                 builder.setPositiveButton(android.R.string.ok, null);
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_ACCESS_COARSE_LOCATION);
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_ACCESS_COARSE_LOCATION);
                     }
                 });
                 builder.show();
