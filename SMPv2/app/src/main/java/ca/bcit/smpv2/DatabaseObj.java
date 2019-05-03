@@ -414,7 +414,6 @@ public class DatabaseObj extends AsyncTask {
         if (!strObject.trim().isEmpty()) {
             //Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
             Log.i("DatabaseObj", "onPostExecute:~" + strObject);
-            if(onCompleteFunction != null) {
                 if (objConstructor != null) {
                     String resArr[] = strObject.split(Pattern.quote("~n"));
                     for(String sObj : resArr) {
@@ -422,10 +421,11 @@ public class DatabaseObj extends AsyncTask {
                         res.add(objConstructor.apply(sObj));
                     }
                 }
-            }
         } else {
             //Toast.makeText(context, "Database query failed", Toast.LENGTH_SHORT).show();
         }
-        onCompleteFunction.accept(res);
+        if(onCompleteFunction != null) {
+            onCompleteFunction.accept(res);
+        }
     }
 }

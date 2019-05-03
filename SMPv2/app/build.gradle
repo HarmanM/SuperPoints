@@ -37,6 +37,11 @@ android {
 
     useLibrary 'org.apache.http.legacy'
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
 }
 
 dependencies {
@@ -54,6 +59,7 @@ dependencies {
     implementation('com.amazonaws:aws-android-sdk-mobile-client:2.6.7@aar') { transitive = true }
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 
