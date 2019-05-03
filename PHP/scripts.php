@@ -397,7 +397,7 @@
 
              if ($businessid != "") {
                $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
-                   (`businessID`,`password`,`userName`) VALUES ($businessid, '$password', '$username');", MYSQLI_STORE_RESULT);
+                   (`userid`,`password`,`userName`) VALUES ($userid, '$password', '$username');", MYSQLI_STORE_RESULT);
                $result = $result ? "true" : "";
 
                if ($result == "true") {
@@ -405,7 +405,7 @@
                  $row = mysqli_fetch_array($result2);
 
                  $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings`
-                    (`userID`,`settingID`,`value`) VALUES ($row[0], 1, 2);", MYSQLI_STORE_RESULT);
+                    (`userID`,`settingID`,`value`) VALUES ($row[0], 1, '2');", MYSQLI_STORE_RESULT);
 
                  echo $row[0];
             }
@@ -472,7 +472,7 @@
               $result2 = mysqli_query($con, "SELECT businessID FROM `superpoints`.`Businesses` ORDER BY businessID DESC LIMIT 1");
               $row = mysqli_fetch_array($result2);
 
-              $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`BusinessSetting`
+              $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`BusinessSettings`
                   (`businessID`,`settingID`,`value`) VALUES ($row[0], 0, 'duration');", MYSQLI_STORE_RESULT);
 
               echo $row[0];
@@ -979,7 +979,7 @@ function calcAvgVisitsWeek () {
       $result = mysqli_query($con,"
     SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
     FROM Visits
-    WHERE BusinessID = '$businessid'
+    WHERE businessID = '$businessid'
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
     GROUP BY timeSpan
     ", MYSQLI_STORE_RESULT);
