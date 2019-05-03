@@ -977,7 +977,7 @@ function calcAvgVisitsWeek () {
 
       $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
-    SELECT COUNT(userID), CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
+    SELECT COUNT(userID) AS numVisits, CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
     FROM superpoints.Visits
     WHERE businessID = '$businessid'
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
