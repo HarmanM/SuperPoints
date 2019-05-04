@@ -72,12 +72,14 @@ public class BusinessDashboard extends AppCompatActivity {
     ImageView promoImageView;
     ListView listView;
     Uri selectedImage;
+    ImageView iconImageView;
     static List<PointTiers> tiers = new ArrayList<>();
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         promoImageView = findViewById(R.id.promoImageView);
+        iconImageView = findViewById(R.id.iconImageView);
         super.onCreate(savedInstanceState);
         checkPermission();
         new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
@@ -264,6 +266,7 @@ public class BusinessDashboard extends AppCompatActivity {
     }
 
 
+
     private void showUpdateDialog(Promotions updatedPromo) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -294,7 +297,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
                 Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
                         + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
-                promoImageView.setImageBitmap(null);
+                promoImageView.setImageURI(null);
                 for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
                     if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
                         spinner.setSelection(i);
@@ -311,8 +314,9 @@ public class BusinessDashboard extends AppCompatActivity {
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPermission();
 
+                checkPermission();
+                iconImageView = findViewById(R.id.iconImageView);
                 PointTiers promotionPoints = (PointTiers) spinner.getSelectedItem();
                 String promotionDetails = editTextPromotionDetail.getText().toString();
                 String shortDescription = editTextShortDescription.getText().toString();
@@ -341,10 +345,9 @@ public class BusinessDashboard extends AppCompatActivity {
                 } else {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setMinTier(promotionPoints);
-                    ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
-                        /*updatedPromo.setPromotionID((int) objects.get(0));
-                        usersPromotions.add(updatedPromo);*/
+                        updatedPromo.setPromotionID((int) objects.get(0));
+                        usersPromotions.add(updatedPromo);
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
                         listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
@@ -353,6 +356,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 }
                 listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
+                iconImageView = findViewById(R.id.iconImageView);
                 countDownTime.start();
                 alertDialog.dismiss();
             }
