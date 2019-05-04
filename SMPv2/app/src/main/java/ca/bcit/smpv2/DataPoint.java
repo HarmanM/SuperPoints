@@ -26,6 +26,6 @@ public class DataPoint {
         String r = "";
         for (String s : data)
             r += s + ",";
-        return r.substring(0, r.length() - 2);
+        return r.substring(0, r.length() - 1);
     }
 }

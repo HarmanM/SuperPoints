@@ -6,9 +6,9 @@ public class UserSetting {
     private Setting setting;
     private String value;
 
-    public UserSetting(int userID, Setting businessSetting, String value) {
+    public UserSetting(int userID, Setting setting, String value) {
         this.userID = userID;
-        this.setting = businessSetting;
+        this.setting = setting;
         this.value = value;
     }
 
