@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -23,12 +25,15 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Analytics extends AppCompatActivity {
@@ -38,12 +43,9 @@ public class Analytics extends AppCompatActivity {
     BarChart barChart;
 
     int pieChartFontSize = 20;
+    int lineChartFontSize = 20;
+    float lineChartLineSize = 3.0f;
     int openingAnimationDuration = 1000;
-
-    float rainfall[] = {98.8f, 123.8f};
-    String monthNames[] = {"Jan", "Feb"};
-    //, "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    //, 161.6f, 24.2f, 52f, 58.2f, 35.4f, 13.8f, 78.4f, 203.4f, 240.2f, 159.7f
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +58,93 @@ public class Analytics extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-        //setupPieChart();
+        //generatePieData();
+        //generateLineData();
+        generateBarData();
+
         //setUpLineChart();
         //setUpBarChart();
 
+    }
+
+    private void generatePieData()
+    {
+        ArrayList<DataPoint> pieDataPoints = new ArrayList<>();
+        ArrayList<Object> pieData = new ArrayList<>();
+        ArrayList<Object> pieDataValues = new ArrayList<>();
+        new DatabaseObj(Analytics.this).calcNewOldUsers(BusinessDashboard.business.getBusinessID(), (ArrayList<Object> objects) ->
+        {
+            for(Object o : objects)
+                pieDataPoints.add((DataPoint) o);
+            for(int i = 0; i < pieDataPoints.size(); ++i)
+            {
+                for(int k = 0; k < pieDataPoints.get(i).getData().size(); ++k) {
+                    if (pieDataPoints.get(i).getData().get(k).equals("new") || pieDataPoints.get(i).getData().get(k).equals("old"))
+                    {
+                        pieData.add(pieDataPoints.get(i).getData().get(k));
+                    } else {
+                        pieDataValues.add(pieDataPoints.get(i).getData().get(k));
+                    }
+                }
+            }
+            setupPieChart(pieData, pieDataValues, "New and Old Visitors");
+        });
+    }
+
+    private void generateLineData()
+    {
+        ArrayList<DataPoint> lineDataPoints = new ArrayList<>();
+        ArrayList<Object> lineData = new ArrayList<>();
+        ArrayList<Object> lineDataValues = new ArrayList<>();
+        new DatabaseObj(Analytics.this).calcMonthlyVisits(BusinessDashboard.business.getBusinessID(), (ArrayList<Object> objects) ->
+        {
+            for(Object o : objects)
+                lineDataPoints.add((DataPoint) o);
+            for(int i = 0; i < lineDataPoints.size(); ++i)
+            {
+                for(int k = 0; k < lineDataPoints.get(i).getData().size(); ++k)
+                {
+                    if(k == 0)
+                    {
+                        lineData.add(lineDataPoints.get(i).getData().get(k));
+                    }
+                    else
+                    {
+                        lineDataValues.add(lineDataPoints.get(i).getData().get(k));
+                    }
+
+                }
+            }
+            setUpLineChart(lineData, lineDataValues, "Last 12 Months of Visits");
+        });
+    }
+
+    private void generateBarData()
+    {
+        ArrayList<DataPoint> barDataPoints = new ArrayList<>();
+        ArrayList<Object> barData = new ArrayList<>();
+        ArrayList<Object> barDataValues = new ArrayList<>();
+        new DatabaseObj(Analytics.this).calcVisitorsPerTier(BusinessDashboard.business.getBusinessID(), (ArrayList<Object> objects) ->
+        {
+            for(Object o : objects)
+                barDataPoints.add((DataPoint) o);
+            for(int i = 0; i < barDataPoints.size(); ++i)
+            {
+                for(int k = 0; k < barDataPoints.get(i).getData().size(); ++k)
+                {
+                    if(k == 0)
+                    {
+                        barData.add(barDataPoints.get(i).getData().get(k));
+                    }
+                    else
+                    {
+                        barDataValues.add(barDataPoints.get(i).getData().get(k));
+                    }
+
+                }
+            }
+            setUpBarChart(barData, barDataValues, "Visitors Per Tier");
+        });
     }
 
     private void setupPieChart(ArrayList<Object> pieData, ArrayList<Object> pieDataValues, String pieChartName)
@@ -72,7 +157,7 @@ public class Analytics extends AppCompatActivity {
         pieEntries = new ArrayList<>();
         for(int i = 0; i < pieData.size(); ++i)
         {
-            pieEntries.add(new PieEntry(Float.parseFloat((String) pieDataValues.get(i)), (String) pieData.get(i)));
+            pieEntries.add(new PieEntry(Float.parseFloat((String)pieDataValues.get(i)), (String) pieData.get(i)));
         }
         dataSet = new PieDataSet(pieEntries, pieChartName);
         data = new PieData(dataSet);
@@ -87,54 +172,60 @@ public class Analytics extends AppCompatActivity {
     private void setUpLineChart(ArrayList<Object> lineData, ArrayList<Object> lineDataValues, String lineChartName)
     {
         lineChart = (LineChart) findViewById(R.id.lineChart);
+        XAxis lineChartXAxis;
+        ArrayList<Entry> lineEntries;
+        LineDataSet lineDataSet;
+        ArrayList<ILineDataSet> dataSets;
+        LineData data;
 
+        lineChartXAxis = lineChart.getXAxis();
+        lineChartXAxis.setValueFormatter(new MonthValueFormatter());
 
-        /*lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(false);*/
-
-        ArrayList<Entry> lineEntries = new ArrayList<>();
+        lineEntries = new ArrayList<>();
         for(int i = 0; i < lineData.size(); ++i)
         {
-            //lineEntries.add(new Entry (lineData.get(i), Float.parseFloat((String) lineDataValues.get(i))));
+            lineEntries.add(new Entry (
+                    Integer.parseInt(lineData.get(i).toString().substring(0,4)) * 12
+                            + Integer.parseInt(lineData.get(i).toString().substring(5,7)), Float.parseFloat((String)lineDataValues.get(i))));
         }
-        LineDataSet set1 = new LineDataSet(lineEntries, "Data Set 1");
 
-        set1.setFillAlpha(110);
-        set1.setColor(Color.RED);
-        set1.setLineWidth(3.0f);
-        set1.setValueTextSize(10f);
+        lineDataSet = new LineDataSet(lineEntries, lineChartName);
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
+        lineDataSet.setColor(Color.RED);
+        lineDataSet.setLineWidth(lineChartLineSize);
+        lineDataSet.setValueTextSize(lineChartFontSize);
 
-        LineData data = new LineData(dataSets);
+        dataSets = new ArrayList<>();
+        dataSets.add(lineDataSet);
+
+        data = new LineData(dataSets);
+
 
         lineChart.setData(data);
     }
 
-    void setUpBarChart()
+    void setUpBarChart(ArrayList<Object> barData, ArrayList<Object> barDataValues, String barChartName)
     {
+
+        Collections.sort((ArrayList<DataPoint>) (ArrayList<?>) barData,
+                (DataPoint d1, DataPoint d2) -> Integer.compare(Integer.parseInt(d1.getData().get(0)), Integer.parseInt(d2.getData().get(0))));
         barChart = (BarChart) findViewById(R.id.barchart);
-        ArrayList<BarEntry> entries = new ArrayList<>();
+        XAxis barChartXAxis = barChart.getXAxis();
+        barChartXAxis.setValueFormatter(new TierValueFormatter());
 
-        entries.add(new BarEntry(8f, 0));
-        entries.add(new BarEntry(2f, 1));
-        entries.add(new BarEntry(5f, 2));
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        for(int i = 0; i < barData.size(); ++i)
+        {
+            barEntries.add(new BarEntry (Float.parseFloat((String) barData.get(i)), Float.parseFloat((String)barDataValues.get(i))));
+        }
 
-        BarDataSet barDataSet  = new BarDataSet(entries, "Cells");
-
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("Dec");
-        labels.add("Nov");
-        labels.add("Oct");
+        BarDataSet barDataSet  = new BarDataSet(barEntries, barChartName);
 
         BarData data = new BarData(barDataSet);
         barChart.setData(data);
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
         barChart.animateY(1000);
-
-
     }
 
 

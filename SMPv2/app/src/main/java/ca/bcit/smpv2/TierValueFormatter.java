@@ -5,12 +5,15 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 public class TierValueFormatter extends ValueFormatter {
 
-    public String[] tierIDs = {};
-
     @Override
-    public String getFormattedValue(float value, AxisBase axis) {
-        String yearMonth = Float.toString(value);
-        String yearMonthFormat = yearMonth.substring(0, 4) + "-" + yearMonth.substring(5, 7);
-        return yearMonthFormat;
+    public String getFormattedValue(float value)
+    {
+        String tier = "";
+        for(int i = 0; i < BusinessDashboard.tiers.size(); ++i)
+        {
+            if(value == BusinessDashboard.tiers.get(i).getTierID())
+                tier = BusinessDashboard.tiers.get(i).getName();
+        }
+        return tier;
     }
 }
