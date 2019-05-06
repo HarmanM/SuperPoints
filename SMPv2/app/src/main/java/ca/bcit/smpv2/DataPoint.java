@@ -6,6 +6,11 @@ public class DataPoint {
 
     private ArrayList<String> data;
 
+    public DataPoint(ArrayList<String> data)
+    {
+        this.data = data;
+    }
+
     public DataPoint(String sqlResult){
         String[] result = sqlResult.split("~s");
         data = new ArrayList<>();

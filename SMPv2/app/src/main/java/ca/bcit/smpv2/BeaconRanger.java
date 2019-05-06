@@ -124,10 +124,10 @@ public class BeaconRanger implements BeaconConsumer {
                             new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
                                             + " AND businessID=" + businessIDHolder,
                                     (ArrayList<Object> pointsObj) -> {
-                                        MapsActivity.showNotification("Store Visit",
+                                        NotificationHandler.showNotification("Store Visit",
                                                 "You have " + ((Points) pointsObj.get(0)).getPoints() + " points, see available promotions!",
                                                 PendingIntent.getActivity(context, 0, new Intent(context, MapsActivity.class), 0),
-                                                context);
+                                                context, 0);
                                     });
                         });
                     }

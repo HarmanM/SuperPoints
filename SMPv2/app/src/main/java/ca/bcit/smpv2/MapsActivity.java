@@ -2,24 +2,17 @@ package ca.bcit.smpv2;
 
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,19 +43,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.app.NotificationManager.IMPORTANCE_HIGH;
-
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener {
 
-
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static int notifSent = 0;
-
-    //Notification related variables
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private static int NOTIFICATION_ID = 0;
 
     //Map related variables
     private GoogleMap mMap;
@@ -71,6 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private float defaultZoom = 16.0f;
     private int locationRequestInterval = 1500; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     static ArrayList<Business> businessesNearby = new ArrayList<>();
     static ArrayList<Business> oldBusinessesNearby = new ArrayList<>();
@@ -80,6 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Map<LatLng, BusinessMapMarker> markerExtras;
 
     BeaconRanger br;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,20 +75,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
 
         br = new BeaconRanger(this);
+
+        //Pref business related
         preferBusinessButton = findViewById(R.id.prefer_business_button);
         markerExtras = new HashMap<>();
 
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
+        //TODO useless?
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //API client
+        //API client for maps
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -160,19 +150,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location == null)
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            Log.i(TAG, "Location not found.");
         }
         else
         {
-            Log.i(TAG, "Location was found");
             handleNewLocation(location);
-            if(notifSent == 0)
-            {
-                generateBusinessesNearby(location);
-                genPrefBusinesses(LoginActivity.user.getUserID());
-            }
+            generateBusinessesNearby(location);
+            genPrefBusinesses(LoginActivity.user.getUserID());
         }
-        Log.i(TAG, "Location services connected.");
     }
 
     @Override
@@ -195,7 +179,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
@@ -212,34 +195,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-    }
-
-    //TODO make this into a class
-    // action to open maps activity
-    static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext) {
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
-                .setSmallIcon(R.drawable.aptimg)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = (NotificationManager) callingContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel_Name";
-            String description = "Channel_Description";
-            NotificationChannel channel = new NotificationChannel("MyChannel", name, IMPORTANCE_HIGH);
-            channel.setDescription(description);
-            channel.setLightColor(Color.RED);
-            channel.enableVibration(true);
-            if (channel != null) {
-                notificationManager.createNotificationChannel(channel);
-                notificationManager.notify(++NOTIFICATION_ID, builder.build());
-            }
-        }
     }
 
     @Override
@@ -288,17 +243,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         generateBusinessesNearby(location);
         if(compareOldNearbyWithNewNearby(oldBusinessesNearby, businessesNearby))
         {
-            Intent intent;
-            PendingIntent pendingIntent;
-
-
-            mMap.clear();
-            notifSent++;
-            intent = new Intent(MapsActivity.this, MapsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
-            showNotification(getString(R.string.title_activity_maps), getString(R.string.notif_business_nearby), pendingIntent, MapsActivity.this);
-            //Start chain of calls to generate markers
             genPrefBusinesses(LoginActivity.user.getUserID());
         }
         handleNewLocation(location);
@@ -313,6 +257,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 , (ArrayList<Object> objects)->{
                 for(Object o: objects)
                     businessesNearby.add((Business) o);
+                if(compareOldNearbyWithNewNearby(oldBusinessesNearby, businessesNearby) && businessesNearby.size() != 0)
+                {
+                    Intent intent;
+                    PendingIntent pendingIntent;
+                    intent = new Intent(MapsActivity.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    pendingIntent = PendingIntent.getActivity(MapsActivity.this, 0, intent, 0);
+                    NotificationHandler.showNotification(getString(R.string.title_activity_maps), getString(R.string.notif_business_nearby), pendingIntent, MapsActivity.this, 2);
+                }
         });
     }
 

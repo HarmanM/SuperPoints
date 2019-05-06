@@ -53,10 +53,13 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Construct the data source, maybe construct arraylist beforehand
         usersPromotions = new ArrayList<Promotions>();
+        final PromotionsAdapter preferredAdapter = new PromotionsAdapter(this, usersPromotions);
         final PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
         listView = (ListView) findViewById(R.id.lvPromotions);
         new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> objects)-> {
-                for(Object o : objects) {
+                for(Object o : objects)
+                {
+                    //TODO check if this works after preferring on map and checking again
                     adapter.add((Promotions) o);
                 }
                 listView.setAdapter(adapter);
