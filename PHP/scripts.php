@@ -372,6 +372,42 @@
       mysqli_close($con);
     }
 
+    function getBeacons() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+      $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+      $result = mysqli_query($con,"SELECT * FROM superpoints.Beacons $where", MYSQLI_STORE_RESULT);
+      $row_count = mysqli_num_rows($result);
+
+      if ($row_count <= 1) {
+          $row = mysqli_fetch_array($result);
+          $beaconid = $row['beaconID'];
+          $businessid = $row['businessID'];
+          $major = $row['major'];
+          $minor = $row['minor'];
+          $txpower = $row['txPower'];
+
+          echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower;
+
+      } else {
+        while($row_data = mysqli_fetch_array($result)) {
+          $beaconid = $row_data['beaconID'];
+          $businessid = $row_data['businessID'];
+          $major = $row_data['major'];
+          $minor = $row_data['minor'];
+          $txpower = $row_data['txPower'];
+
+          if (isset($beaconid) && $beaconid != "") {
+            echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower;
+          }
+        }
+      }
+      mysqli_close($con);
+    }
+
     // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -397,15 +433,14 @@
 
              if ($businessid != "") {
                $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
-                   (`userid`,`password`,`userName`) VALUES ($userid, '$password', '$username');", MYSQLI_STORE_RESULT);
+                   (`businessID`,`password`,`userName`) VALUES ($businessid, '$password', '$username');", MYSQLI_STORE_RESULT);
                $result = $result ? "true" : "";
 
                if ($result == "true") {
                  $result2 = mysqli_query($con, "SELECT * FROM `superpoints`.`Users` WHERE userName = '$username' AND password = '$password'", MYSQLI_STORE_RESULT);
                  $row = mysqli_fetch_array($result2);
 
-                 $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings`
-                    (`userID`,`settingID`,`value`) VALUES ($row[0], 1, '2');", MYSQLI_STORE_RESULT);
+                 $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings` (`userID`,`settingID`,`value`) VALUES ($row[0], 1, '2');", MYSQLI_STORE_RESULT);
 
                  echo $row[0];
             }
@@ -417,6 +452,9 @@
             if ($result == "true") {
               $result2 = mysqli_query($con, "SELECT * FROM `superpoints`.`Users` WHERE userName = '$username' AND password = '$password'", MYSQLI_STORE_RESULT);
               $row = mysqli_fetch_array($result2);
+
+              $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings` (`userID`,`settingID`,`value`) VALUES ($row[0], 1, '2');", MYSQLI_STORE_RESULT);
+
               echo $row[0];
           }
         }
@@ -482,6 +520,43 @@
             latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
+      }
+    }
+
+    function handleBeacons() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $beaconid = $_GET['BEACON_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+      $major = $_GET['MAJOR'];
+      $minor = $_GET['MINOR'];
+      $txpower = $_GET['TX_POWER'];
+
+      if ($beaconid == -1 || !isset($beaconid)) {
+        $beaconid = "";
+      }
+
+      if ($beaconid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Beacons`
+              (businessID, major, minor, txPower) VALUES ('$businessid',
+                '$major', '$minor', '$txpower');", MYSQLI_STORE_RESULT);
+            $result = $result ? "true" : "";
+
+            if ($result == "true") {
+              $result2 = mysqli_query($con, "SELECT beaconID FROM `superpoints`.`Beacons` ORDER BY beaconID DESC LIMIT 1");
+              $row = mysqli_fetch_array($result2);
+
+              echo $row[0];
+            }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Beacons` SET businessID = '$businessid',
+            major = '$major', minor = '$minor', txPower = $txPower WHERE (`beaconID` = '$beaconid');", MYSQLI_STORE_RESULT);
+
+        echo ($result) ? "$beaconid" : "";
       }
     }
 
@@ -585,7 +660,7 @@
           }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
-            minPoints = '$tierid', details = '$details', clicks = $clicks, shortDescription = '$shortDescription' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            minTierID = '$tierid', details = '$details', clicks = $clicks, shortDescription = '$shortDescription' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
             echo $result ? "$promotionid" : "";
       }
     }
@@ -613,7 +688,7 @@
 				$duration, convert('$date', DATETIME));", MYSQLI_STORE_RESULT);
 
 			$result = $result ? "true" : "";
-            
+
 			if ($result == "true") {
 				$result2 = mysqli_query($con, "SELECT visitID FROM `superpoints`.`Visits` ORDER BY visitID DESC LIMIT 1");
 				$row = mysqli_fetch_array($result2);
@@ -634,15 +709,17 @@
 		};
 
 		$row_count = mysqli_num_rows($pointsResult);
-		
-		$pointAccumulationSetting = mysqli_query($con,"SELECT * FROM `superpoints`.`BusinessSetting` WHERE  businessID = $businessid AND settingID = 0", MYSQLI_STORE_RESULT);
+
+		$pointAccumulationSetting = mysqli_query($con,"SELECT * FROM `superpoints`.`BusinessSettings` WHERE  businessID = $businessid AND settingID = 0", MYSQLI_STORE_RESULT);
 		$row = mysqli_fetch_array($pointAccumulationSetting);
-		$setting = $row['value']
-		if($setting == "duration")
+		$setting = $row['value'];
+		if ($setting == "duration") {
 			$points = $pointsFunc($duration) + abs($pointsFunc(0));
-		else
+    }
+		else {
 			$points = 250;
-	
+    }
+
 		if($row_count == 0) {
 			$pointsResult = mysqli_query($con,"INSERT INTO `superpoints`.`Points` (`businessID`, `userID`, `points`) VALUES ($businessid, $userid, $points);", MYSQLI_STORE_RESULT);
 		} else{
@@ -985,13 +1062,12 @@ function calcAvgVisitsWeek () {
 
       $businessid = $_GET['businessID'];
       $result = mysqli_query($con,"
-    SELECT COUNT(userID) AS numVisits, CONCAT(YEAR(date), '-', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
+    SELECT COUNT(userID) AS numVisits, CONCAT(YEAR(date), '.', RIGHT(CONCAT('00', MONTH(date)), 2)) as timeSpan
     FROM superpoints.Visits
     WHERE businessID = '$businessid'
       AND (MONTH(CURDATE()) + YEAR(CURDATE()) * 12) - (MONTH(date) + YEAR(date) * 12) < 12
     GROUP BY timeSpan
     ", MYSQLI_STORE_RESULT);
-
 
   while($row_data = mysqli_fetch_array($result)) {
           $timeSpan = $row_data['timeSpan'];
@@ -1062,7 +1138,7 @@ function calcVisitorsPerTier(){
           $numVisits = $row_data['numVisits'];
           $tierID = $row_data['tierID'];
           if (isset($businessid) && $businessid != "")
-      echo $tierID . "~s" . $numVisits . "~n";
+          echo $tierID . "~s" . $numVisits . "~n";
       }
 }
 
@@ -1083,20 +1159,23 @@ function calcVisitorsPerTier(){
         case "getPromo":
             getPromotion();
             break;
-		case "getPoints":
-		  getPoints();
-		  break;
-		case "getTiers":
-		  getTiers();
-		  break;
-      case "getBusinessSettings":
-        getBusinessSettings();
-        break;
+		    case "getPoints":
+		        getPoints();
+		        break;
+		    case "getTiers":
+		        getTiers();
+		        break;
+        case "getBusinessSettings":
+            getBusinessSettings();
+            break;
         case "getUserSettings":
-          getUserSettings();
-          break;
-          case "getSettings":
+            getUserSettings();
+            break;
+        case "getSettings":
             getSettings();
+            break;
+        case "getBeacon":
+            getBeacons();
             break;
         case "setUser":
             handleUser();
@@ -1115,6 +1194,9 @@ function calcVisitorsPerTier(){
             break;
         case "setUserSetting":
             handleUserSettings();
+            break;
+        case "setBeacons":
+            handleBeacons();
             break;
         case "promoClick":
             incrementClick();
