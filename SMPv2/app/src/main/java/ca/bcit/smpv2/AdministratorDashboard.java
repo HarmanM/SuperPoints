@@ -11,7 +11,9 @@ public class AdministratorDashboard extends AppCompatActivity {
 
     Button sendKPIBtn;
     ListView beaconListView;
-    ArrayList<>
+    ArrayList<Beacon> beaconList;
+    //BeaconAdapter beaconAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,8 @@ public class AdministratorDashboard extends AppCompatActivity {
         sendKPIBtn = findViewById(R.id.emailKPIbtn);
         beaconListView = findViewById(R.id.beaconListView);
 
-        usersPromotions = new ArrayList<Promotions>();
-        adapter = new PromotionsAdapter(this, usersPromotions);
+        beaconList = new ArrayList<Beacon>();
+        //beaconAdapter = new BeaconAdapter(this, beaconList);
 
     }
 }
