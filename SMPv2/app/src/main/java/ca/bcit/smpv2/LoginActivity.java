@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         usernameField = (EditText) findViewById(R.id.cityEditText);
         passwordField = (EditText) findViewById(R.id.postalEditText);
 
@@ -49,26 +50,24 @@ public class LoginActivity extends AppCompatActivity {
         new DatabaseObj(this).getUsers("userName='" + username + "' AND password='" + password + "'", (ArrayList<Object> objects)->{
             if(objects.size() == 1){
                 user = (User) objects.get(0);
-                Log.i("2222UID", Integer.toString(user.getUserID()));
                 new DatabaseObj(this).getUserSettings("userID=" + user.getUserID(), (ArrayList<Object> settings)->{
                     for(Object setting : settings)
                         user.addSetting((UserSetting) setting);
-
+                    Intent i;
                     if (user.getBusinessID() != -1) {
-                        Intent i = new Intent(this, BusinessDashboard.class);
-                        i.putExtra("username", username);
-                        this.startActivity(i);
-
+                        i = new Intent(this, BusinessDashboard.class);
+                    } else if (user.getUserID() == 0) {
+                        i = new Intent(this, AdministratorDashboard.class);
                     } else {
-                        Intent i = new Intent(this, MapsActivity.class);
-                        i.putExtra("username", username);
-                        this.startActivity(i);
+                        i = new Intent(this, MapsActivity.class);
                     }
+                    i.putExtra("username", username);
+                    this.startActivity(i);
 
                     usernameField.setText("");
                     passwordField.setText("");
                 });
-            }else{
+            } else {
                 Toast.makeText(this, "Please check your credentials", Toast.LENGTH_SHORT).show();
             }
         });
@@ -76,6 +75,5 @@ public class LoginActivity extends AppCompatActivity {
 
     static public void logout(){
         user = null;
-
     }
 }
