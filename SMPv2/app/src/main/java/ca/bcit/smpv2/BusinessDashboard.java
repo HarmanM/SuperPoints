@@ -297,7 +297,6 @@ public class BusinessDashboard extends AppCompatActivity {
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
                 Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
                         + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
-                promoImageView.setImageURI(null);
                 for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
                     if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
                         spinner.setSelection(i);
@@ -344,13 +343,16 @@ public class BusinessDashboard extends AppCompatActivity {
                     });
                 } else {
                     updatedPromo.setDetails(promotionDetails);
+                    updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
-                        updatedPromo.setPromotionID((int) objects.get(0));
-                        usersPromotions.add(updatedPromo);
+//                        updatedPromo.setPromotionID((int) objects.get(0));
+//                        usersPromotions.add(updatedPromo);
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
                         listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                         listView.setAdapter(adapter);
+                        Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
+                                + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
                     });
 
                 }
@@ -363,7 +365,7 @@ public class BusinessDashboard extends AppCompatActivity {
         });
     }
 
-    CountDownTimer countDownTime = new CountDownTimer(1700,850) {
+    CountDownTimer countDownTime = new CountDownTimer(3000,1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             // TODO Auto-generated method stub
