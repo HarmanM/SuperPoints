@@ -12,10 +12,10 @@ public class UserSetting {
         this.value = value;
     }
 
-    public UserSetting(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public UserSetting(String[] result){
+        
         this.userID = Integer.parseInt(result[0]);
-        this.setting = new Setting(result[1] + "~s" + result[2] + "~s" + result[3]);
+        this.setting = new Setting(new String[]{result[1], result[2], result[3]});
         this.value = result[4];
     }
 

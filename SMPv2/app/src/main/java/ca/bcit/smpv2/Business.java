@@ -18,8 +18,8 @@ public class Business {
         this.region = region;
     }
 
-    public Business(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public Business(String[] result){
+        
         this.businessID = Integer.parseInt(result[0]);
         this.businessName = result[1];
         this.latitude = Double.parseDouble(result[2]);

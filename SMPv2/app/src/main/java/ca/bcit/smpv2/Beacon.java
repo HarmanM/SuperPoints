@@ -1,5 +1,7 @@
 package ca.bcit.smpv2;
 
+import java.util.ArrayList;
+
 public class Beacon {
     private int beaconID;
     private int businessID;
@@ -15,8 +17,8 @@ public class Beacon {
         this.txPower = txPower;
     }
 
-    public Beacon(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public Beacon(String[] result){
+
         this.beaconID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.major = Integer.parseInt(result[2]);

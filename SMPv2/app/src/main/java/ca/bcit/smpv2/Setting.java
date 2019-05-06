@@ -12,8 +12,8 @@ public class Setting {
         this.valueType = valueType;
     }
 
-    public Setting(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public Setting(String[] result){
+        
         this.settingID = Integer.parseInt(result[0]);
         this.settingName = result[1];
         this.valueType = result[2];

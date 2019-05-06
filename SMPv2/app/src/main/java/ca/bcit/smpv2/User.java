@@ -19,8 +19,8 @@ public class User {
     // Parses a string from the php query to the MySQL database.
     // First value is the userID, second value is the username, third value is the integer representing the setting
     // No other values are sent
-    public User(String sqlResult) {
-        String[] result = sqlResult.split("~s");
+    public User(String[] result) {
+        
         this.userID = Integer.parseInt(result[0]);
         if(result[1].equalsIgnoreCase("NULL"))
             this.businessID = -1;

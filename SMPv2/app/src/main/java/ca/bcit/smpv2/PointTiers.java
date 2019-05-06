@@ -12,8 +12,8 @@ public class PointTiers {
         this.name = name;
     }
 
-    public PointTiers(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public PointTiers(String[] result){
+        
         this.tierID = Integer.parseInt(result[0]);
         this.minPoints = Integer.parseInt(result[1]);
         this.name = result[2];

@@ -12,10 +12,10 @@ public class BusinessSetting {
         this.value = value;
     }
 
-    public BusinessSetting(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public BusinessSetting(String[] result){
+        
         this.businessID = Integer.parseInt(result[0]);
-        this.setting = new Setting(result[1] + "~s" + result[2] + "~s" + result[3]);
+        this.setting = new Setting(new String[]{result[1], result[2], result[3]});
         this.value = result[4];
     }
 

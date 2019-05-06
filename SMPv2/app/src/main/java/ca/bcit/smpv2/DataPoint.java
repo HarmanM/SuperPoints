@@ -11,8 +11,8 @@ public class DataPoint {
         this.data = data;
     }
 
-    public DataPoint(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public DataPoint(String[] result){
+        
         data = new ArrayList<>();
         for(String res : result)
             data.add(res);

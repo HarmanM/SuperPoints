@@ -19,11 +19,11 @@ public class Promotions {
         this.shortDescription = shortDescription;
     }
 
-    public Promotions(String sqlResult) {
-        String[] result = sqlResult.split("~s");
+    public Promotions(String[] result) {
+        
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
-        this.minTier = new PointTiers(result[2] + "~s" + result[3] + "~s" + result[4]);
+        this.minTier = new PointTiers(new String[]{result[2], result[3], result[4]});
         this.details = result[5];
         this.clicks = Integer.parseInt(result[6]);
         this.businessName = result[7];

@@ -10,8 +10,8 @@ public class PreferredBusiness {
         this.businessID = businessID;
     }
 
-    public PreferredBusiness(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public PreferredBusiness(String[] result){
+        
         this.userID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
     }

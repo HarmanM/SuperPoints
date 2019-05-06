@@ -28,8 +28,8 @@ public class Visit {
         this.date = date;
     }
 
-    public Visit(String sqlResult){
-        String[] result = sqlResult.split("~s");
+    public Visit(String[] result){
+        
         this.visitID = Integer.parseInt(result[0]);
         this.userID = Integer.parseInt(result[1]);
         this.businessID = Integer.parseInt(result[2]);

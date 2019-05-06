@@ -27,7 +27,7 @@ public class DatabaseObj extends AsyncTask {
     private String params = "";
     private String function;
     private Consumer<ArrayList<Object>> onCompleteFunction;
-    private Function<String, Object> objConstructor;
+    private Function<String[], Object> objConstructor;
     private boolean get;
 
     public DatabaseObj(Context context) {
@@ -42,6 +42,10 @@ public class DatabaseObj extends AsyncTask {
             this.params = this.params.replace(")", "%29");
         }
         onCompleteFunction = f;
+    }
+
+    static private Object dbReturnID(String[] result){
+        return Double.parseDouble(result[0]);
     }
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
@@ -146,7 +150,7 @@ public class DatabaseObj extends AsyncTask {
         function = "calcAverageDuration";
         params = "";
         params += "businessID=" + businessID;
-        objConstructor = Double::new;
+        objConstructor = DatabaseObj::dbReturnID;
         setMembers(params, f);
         this.execute();
     }
@@ -157,7 +161,7 @@ public class DatabaseObj extends AsyncTask {
         function = "calcAverageVisits";
         params = "";
         params += "businessID=" + businessID;
-        objConstructor = Double::new;
+        objConstructor = DatabaseObj::dbReturnID;
         setMembers(params, f);
         this.execute();
     }
@@ -199,7 +203,7 @@ public class DatabaseObj extends AsyncTask {
     public void setUser(User o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUser";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -231,7 +235,7 @@ public class DatabaseObj extends AsyncTask {
     public void setBusiness(Business o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setBusiness";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
@@ -249,6 +253,7 @@ public class DatabaseObj extends AsyncTask {
     public void setPreferredBusiness(PreferredBusiness o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setPreferredBusiness";
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID();
@@ -278,7 +283,7 @@ public class DatabaseObj extends AsyncTask {
     public void setPromotion(Promotions o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setPromotion";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "PROMOTION_ID=" + o.getPromotionID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -298,7 +303,7 @@ public class DatabaseObj extends AsyncTask {
     public void setVisit(Visit o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setVisit";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "VISIT_ID=" + o.getVisitID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -316,7 +321,7 @@ public class DatabaseObj extends AsyncTask {
     public void setPoints(Points o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUserBusinessTier";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
@@ -332,7 +337,7 @@ public class DatabaseObj extends AsyncTask {
     public void setBusinessSetting(BusinessSetting o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setBusinessSetting";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "BUSINESS_ID=" + o.getBusinessID() + "&";
         params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
@@ -348,7 +353,7 @@ public class DatabaseObj extends AsyncTask {
     public void setUserSetting(UserSetting o, Consumer<ArrayList<Object>> f){
         get = false;
         function = "setUserSetting";
-        objConstructor = Integer::new;
+        objConstructor = DatabaseObj::dbReturnID;
         params = "";
         params += "USER_ID=" + o.getUserID() + "&";
         params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
@@ -406,17 +411,26 @@ public class DatabaseObj extends AsyncTask {
     }
 
     @Override
-    protected void onPostExecute(Object obj) {
-        String strObject = (String) obj;
+    protected void onPostExecute(Object objs) {
+        String strObjects = (String) objs;
         ArrayList<Object> res = new ArrayList<Object>();
-        if (!strObject.trim().isEmpty()) {
+        if (!strObjects.trim().isEmpty()) {
             //Toast.makeText(context, "Database queried successfully", Toast.LENGTH_SHORT).show();
-            Log.i("DatabaseObj", "onPostExecute:~" + strObject);
+            Log.i("DatabaseObj", "onPostExecute:~" + strObjects);
                 if (objConstructor != null) {
-                    String resArr[] = strObject.split(Pattern.quote("~n"));
-                    for(String sObj : resArr) {
-                        Log.i("SOBJ", sObj);
-                        res.add(objConstructor.apply(sObj));
+                    String strArrObjects[] = strObjects.split(Pattern.quote("~n"));
+                    for(String strObject : strArrObjects) {
+                        Log.i("SOBJ", strObject);
+                        strObject = strObject.replace("NULL", "`NULL");
+                        strObject = strObject.replace("~s~s", "~sNULL~s");
+                        strObject = strObject.replace("~s~n", "~sNULL~n");
+                        String[] strObjectArr = strObject.split(Pattern.quote("~s"));
+                        for(int i = 0; i < strObjectArr.length; ++i)
+                            if(strObjectArr[i].equals("NULL"))
+                                strObjectArr[i] = null;
+                            else if(strObjectArr[i].equals("`NULL"))
+                                strObjectArr[i] = "NULL";
+                        res.add(objConstructor.apply(strObjectArr));
                     }
                 }
         } else {
