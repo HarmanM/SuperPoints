@@ -94,20 +94,20 @@ public class BusinessDashboard extends AppCompatActivity {
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
                 usersPromotions = new ArrayList<Promotions>();
-                adapter = new PromotionsAdapter(this, usersPromotions);
 
-            listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-            listView.setAdapter(adapter);
-
-            int businessID = LoginActivity.user.getBusinessID();
-            new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
-                for (Object o : objects) {
-                    adapter.add((Promotions) o);
-                }
+                listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
-            });
 
-            listView.refreshDrawableState();
+                int businessID = LoginActivity.user.getBusinessID();
+                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
+                    for (Object o : objects) {
+                        usersPromotions.add((Promotions) o);
+                    }
+                    adapter = new PromotionsAdapter(this, usersPromotions);
+                    listView.setAdapter(adapter);
+                });
+
+                listView.refreshDrawableState();
 
                 setSupportActionBar(toolbar);
                 toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
@@ -313,7 +313,6 @@ public class BusinessDashboard extends AppCompatActivity {
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 checkPermission();
                 iconImageView = findViewById(R.id.iconImageView);
                 PointTiers promotionPoints = (PointTiers) spinner.getSelectedItem();
@@ -332,13 +331,12 @@ public class BusinessDashboard extends AppCompatActivity {
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName(), shortDescription);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
                         promo.setPromotionID((int) objects.get(0));
-
-
-                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext());
+                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
+                                ()->{
+                                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                                    listView.setAdapter(adapter);
+                                });
                         usersPromotions.add(promo);
-                        ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                        listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                        listView.setAdapter(adapter);
 
                     });
                 } else {
@@ -346,37 +344,18 @@ public class BusinessDashboard extends AppCompatActivity {
                     updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
-//                        updatedPromo.setPromotionID((int) objects.get(0));
-//                        usersPromotions.add(updatedPromo);
-                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext());
-                        listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                        listView.setAdapter(adapter);
-                        Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
-                                + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
+                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
+                                ()->{
+                                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                                    listView.setAdapter(adapter);
+                                });
                     });
 
                 }
-                listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                listView.setAdapter(adapter);
-                iconImageView = findViewById(R.id.iconImageView);
-                countDownTime.start();
                 alertDialog.dismiss();
             }
         });
     }
-
-    CountDownTimer countDownTime = new CountDownTimer(3000,1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void onFinish() {
-            // TODO Auto-generated method stub
-            adapter.notifyDataSetChanged();
-        }
-    };
 
     private class Delete extends AsyncTask<String, Void, Boolean> {
         @Override
