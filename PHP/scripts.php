@@ -1062,7 +1062,7 @@ function calcVisitorsPerTier(){
           $numVisits = $row_data['numVisits'];
           $tierID = $row_data['tierID'];
           if (isset($businessid) && $businessid != "")
-      echo $numVisits . "~s" . $tierID . "~n";
+      echo $tierID . "~s" . $numVisits . "~n";
       }
 }
 
