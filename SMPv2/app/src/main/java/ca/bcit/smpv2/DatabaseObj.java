@@ -45,7 +45,7 @@ public class DatabaseObj extends AsyncTask {
     }
 
     static private Object dbReturnID(String[] result){
-        return Double.parseDouble(result[0]);
+        return Integer.parseInt(result[0]);
     }
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){

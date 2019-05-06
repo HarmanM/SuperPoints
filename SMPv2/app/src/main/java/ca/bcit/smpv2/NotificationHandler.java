@@ -15,11 +15,11 @@ public class NotificationHandler {
     private static int NOTIFICATION_ID = 0;
     private static int SHOW_NOTIFICATION_ID = 1;
 
-    static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext, int privacySetting) {
+    static public void showNotification(String title, String text, PendingIntent pendingIntent, Context callingContext, int privacyLevel) {
 
         UserSetting us = (UserSetting) LoginActivity.user.getSetting(SHOW_NOTIFICATION_ID);
         int usersPrivacySetting = Integer.parseInt(us.getValue());
-        if(usersPrivacySetting >= privacySetting)
+        if(usersPrivacySetting >= privacyLevel)
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(callingContext, "MyChannel")
                     .setSmallIcon(R.drawable.aptimg)

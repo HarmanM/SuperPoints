@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -41,8 +43,12 @@ public class PromotionsAdapter extends ArrayAdapter<Promotions> {
         shortPromotionDetails.setText(promotion.getShortDescription());
         promotionMinimumPoints.setText(String.valueOf(promotion.getMinTier().getName()));
         try {
-            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + promotion.getPromotionID() + ".jpg").into(promotionIcon);
-            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + promotion.getPromotionID() + ".jpg").into(promotionUploadImage);
+            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + promotion.getPromotionID() + ".jpg")
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .into(promotionIcon);
+            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + promotion.getPromotionID() + ".jpg")
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .into(promotionUploadImage);
         } catch (Exception e) {
             e.printStackTrace();
         }
