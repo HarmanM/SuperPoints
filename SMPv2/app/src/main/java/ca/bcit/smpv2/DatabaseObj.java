@@ -423,7 +423,8 @@ public class DatabaseObj extends AsyncTask {
                         Log.i("SOBJ", strObject);
                         strObject = strObject.replace("NULL", "`NULL");
                         strObject = strObject.replace("~s~s", "~sNULL~s");
-                        strObject = strObject.replace("~s~n", "~sNULL~n");
+                        if(strObject.endsWith("~s"));
+                            strObject += "NULL";
                         String[] strObjectArr = strObject.split(Pattern.quote("~s"));
                         for(int i = 0; i < strObjectArr.length; ++i)
                             if(strObjectArr[i].equals("NULL"))
