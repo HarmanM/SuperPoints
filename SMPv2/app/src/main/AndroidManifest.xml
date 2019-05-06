@@ -42,7 +42,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="sensorPortrait" />
@@ -64,23 +64,25 @@
         <activity
             android:name=".MapsActivity"
             android:screenOrientation="sensorPortrait" />
-        <activity
-            android:name=".Analytics" />
+        <activity android:name=".Analytics" />
         <activity
             android:name=".BusinessSignup"
             android:screenOrientation="sensorPortrait" />
-        <activity android:name=".UserPointsActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity android:name=".WelcomeActivity"
-            android:screenOrientation="sensorPortrait"/>
+        <activity
+            android:name=".UserPointsActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name=".DetailedDescription"
-            android:screenOrientation="sensorPortrait">
-        </activity>
+        <activity
+            android:name=".DetailedDescription"
+            android:screenOrientation="sensorPortrait"></activity>
+        <activity android:name=".AdministratorDashboard"></activity>
     </application>
 
 </manifest>

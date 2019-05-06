@@ -31,7 +31,8 @@
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
     </com.github.mikephil.charting.charts.LineChart>
 
@@ -40,6 +41,7 @@
         android:id="@+id/barchart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
 >
 
     </com.github.mikephil.charting.charts.BarChart>

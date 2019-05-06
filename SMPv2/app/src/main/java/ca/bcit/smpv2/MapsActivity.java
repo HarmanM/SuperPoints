@@ -155,6 +155,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             handleNewLocation(location);
             generateBusinessesNearby(location);
+            //TODO if log out onconnected is called and user is destroyed
             genPrefBusinesses(LoginActivity.user.getUserID());
         }
     }
