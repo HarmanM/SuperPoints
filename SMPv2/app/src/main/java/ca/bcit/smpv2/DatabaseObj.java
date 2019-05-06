@@ -429,8 +429,8 @@ public class DatabaseObj extends AsyncTask {
                         for(int i = 0; i < strObjectArr.length; ++i)
                             if(strObjectArr[i].equals("NULL"))
                                 strObjectArr[i] = null;
-                            else if(strObjectArr[i].equals("`NULL"))
-                                strObjectArr[i] = "NULL";
+                            else
+                                strObjectArr[i] = strObjectArr[i].replace("`NULL", "NULL");
                         res.add(objConstructor.apply(strObjectArr));
                     }
                 }
