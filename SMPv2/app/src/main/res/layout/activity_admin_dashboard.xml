@@ -28,12 +28,13 @@
             android:text="@string/send_email_title"></Button>
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/kpiCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/send_email_monthly"
-            android:checked="true"/>
+            android:onClick="onCheckboxClicked"
+            />
 
 
     </LinearLayout>
