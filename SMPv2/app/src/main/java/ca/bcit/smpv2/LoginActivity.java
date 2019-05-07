@@ -1,28 +1,12 @@
 package ca.bcit.smpv2;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
@@ -57,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (user.getBusinessID() != -1) {
                         i = new Intent(this, BusinessDashboard.class);
                     } else if (user.getUserID() == 0) {
-                        i = new Intent(this, AdministratorDashboard.class);
+                        i = new Intent(this, AdminDashboardActivity.class);
                     } else {
                         i = new Intent(this, MapsActivity.class);
                     }

@@ -2,36 +2,23 @@ package ca.bcit.smpv2;
 
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-
-public class BusinessSettingsActivity extends AppCompatActivity {
+public class AdminSettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_settings);
+        setContentView(R.layout.activity_admin_settings);
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,11 +26,7 @@ public class BusinessSettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
-        RadioGroup pointAccumulation = findViewById(R.id.pointOptions);
-        if(BusinessDashboard.business.getSetting(0).getValue().equals("duration"))
-            pointAccumulation.check(R.id.duration);
-        else
-            pointAccumulation.check(R.id.visit);
+        ((CheckBox)findViewById(R.id.monthlyKPI)).setChecked(Boolean.valueOf(LoginActivity.user.getSetting(2).getValue()));
     }
 
     public void updateSettings(View view) {
@@ -62,16 +45,11 @@ public class BusinessSettingsActivity extends AppCompatActivity {
             }
         }
 
-        RadioGroup pointOptions = findViewById(R.id.pointOptions);
-        int selectedOpt = pointOptions.getCheckedRadioButtonId();
-        if(selectedOpt == R.id.visit && BusinessDashboard.business.getSetting(0).getValue().equals("duration")){
-            BusinessDashboard.business.getSetting(0).setValue("visit");
-            new DatabaseObj(this).setBusinessSetting(BusinessDashboard.business.getSetting(0));
-            Toast.makeText(this, "Point Accumulation Updated", Toast.LENGTH_LONG).show();
-        } else if(selectedOpt == R.id.duration && BusinessDashboard.business.getSetting(0).getValue().equals("visit")) {
-            BusinessDashboard.business.getSetting(0).setValue("duration");
-            new DatabaseObj(this).setBusinessSetting(BusinessDashboard.business.getSetting(0));
-            Toast.makeText(this, "Point Accumulation Updated", Toast.LENGTH_LONG).show();
+        CheckBox monthlyKPI = findViewById(R.id.monthlyKPI);
+        if(monthlyKPI.isChecked() != Boolean.valueOf(LoginActivity.user.getSetting(2).getValue())){
+            LoginActivity.user.getSetting(2).setValue(Boolean.toString(monthlyKPI.isChecked()));
+            new DatabaseObj(this).setUserSetting(LoginActivity.user.getSetting(2));
+            Toast.makeText(this, "Monthly KPI Updated", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -80,7 +58,7 @@ public class BusinessSettingsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_business, menu);
+        getMenuInflater().inflate(R.menu.menu_admin, menu);
 
         return true;
     }
@@ -92,12 +70,8 @@ public class BusinessSettingsActivity extends AppCompatActivity {
             finish();
         switch (item.getItemId()) {
             case R.id.dashboard:
-                Intent i = new Intent(getBaseContext(), BusinessDashboard.class);
+                Intent i = new Intent(getBaseContext(), AdminDashboardActivity.class);
                 startActivity(i);
-                return true;
-            case R.id.analytics:
-                Intent j = new Intent(getBaseContext(), Analytics.class);
-                startActivity(j);
                 return true;
             case R.id.settings:
 //                Intent i = new Intent(getBaseContext(), BusinessSettingsActivity.class);
