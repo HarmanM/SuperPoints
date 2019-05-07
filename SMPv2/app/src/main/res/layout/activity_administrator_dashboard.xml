@@ -4,22 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdministratorDashboard"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".AdministratorDashboard">
 
-    <Button
-        android:id="@+id/emailKPIbtn"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:background="@drawable/btn_rounded"
-        android:text="@string/send_email_title">
-    </Button>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/emailKPIbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_rounded"
+            android:text="@string/send_email_title"></Button>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/send_email_monthly"
+            android:checked="true"/>
+
+
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/beaconListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="wrap_content"></ListView>
 
 
 </LinearLayout>
