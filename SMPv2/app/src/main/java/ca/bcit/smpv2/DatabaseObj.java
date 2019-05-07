@@ -144,6 +144,14 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void getBeacons(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Beacon::new;
+        function = "getBeacons";
+        get = true;
+        this.execute();
+    }
+
     public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
     {
         get = true;
@@ -371,6 +379,13 @@ public class DatabaseObj extends AsyncTask {
         function = "deletePromotion";
         params = "PROMOTION_ID=" + id;
         setMembers(params, f);
+        this.execute();
+    }
+
+    public void sendEmail() {
+        get = false;
+        function = "sendEmail";
+        setMembers("", null);
         this.execute();
     }
 
