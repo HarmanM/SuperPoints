@@ -49,6 +49,7 @@ public class Analytics extends AppCompatActivity {
 
     int pieChartFontSize = 20;
     int lineChartFontSize = 20;
+    int barChartFontSize = 20;
     float lineChartLineSize = 3.0f;
     int openingAnimationDuration = 1000;
 
@@ -60,6 +61,10 @@ public class Analytics extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //This order of function calls determines order of appearance by swiping as well
+        generateLineData();
+        generatePieData();
+        generateBarData();
         setContentView(R.layout.activity_analytics);
 
         // Find the toolbar view inside the activity layout
@@ -68,10 +73,6 @@ public class Analytics extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
-        //This order of function calls determines order of appearance by swiping as well
-        generateLineData();
-        generatePieData();
-        generateBarData();
     }
 
     @Override
@@ -89,6 +90,7 @@ public class Analytics extends AppCompatActivity {
                 if (Math.abs(deltaX) > MIN_DISTANCE)
                 {
                     // Left to Right swipe action
+                    charts.get(currentView).setVisibility(View.GONE);
                     if (x2 > x1)
                     {
                         currentView++;
@@ -102,14 +104,7 @@ public class Analytics extends AppCompatActivity {
                         if(currentView < 0)
                             currentView = charts.size() - 1;
                     }
-                    for(int i = 0; i < charts.size(); ++i)
-                    {
-                        if(i == currentView) {
-                            charts.get(currentView).setVisibility(View.VISIBLE);
-                        } else {
-                            charts.get(currentView).setVisibility(View.GONE);
-                        }
-                    }
+                    charts.get(currentView).setVisibility(1);
                 }
                 else
                 {
@@ -170,6 +165,7 @@ public class Analytics extends AppCompatActivity {
                 }
             }
             setUpLineChart(lineData, lineDataValues, "Last 12 Months of Visits");
+            charts.get(currentView).setVisibility(1);
         });
     }
 
@@ -251,6 +247,7 @@ public class Analytics extends AppCompatActivity {
         lineDataSet.setLineWidth(lineChartLineSize);
         lineDataSet.setValueTextSize(lineChartFontSize);
 
+
         dataSets = new ArrayList<>();
         dataSets.add(lineDataSet);
 
@@ -274,6 +271,7 @@ public class Analytics extends AppCompatActivity {
         }
 
         BarDataSet barDataSet  = new BarDataSet(barEntries, barChartName);
+        barDataSet.setValueTextSize(barChartFontSize);
 
         BarData data = new BarData(barDataSet);
         barChart.setData(data);
