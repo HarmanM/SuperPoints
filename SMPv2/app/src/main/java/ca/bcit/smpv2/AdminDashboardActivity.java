@@ -81,4 +81,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
             user.getSetting(2).setValue("false");
         }
     }
+
+    public void onSendKPIBtnClick(View view) {
+        new DatabaseObj(this).sendEmail();
+
+    }
 }
