@@ -331,10 +331,14 @@ public class BusinessDashboard extends AppCompatActivity {
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName(), shortDescription);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
                         promo.setPromotionID((int) objects.get(0));
+                        if (selectedImage == null) {
+                            selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
+                        }
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
                                 ()->{
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                                     listView.setAdapter(adapter);
+                                    selectedImage = null;
                                 });
                         usersPromotions.add(promo);
 
@@ -343,11 +347,15 @@ public class BusinessDashboard extends AppCompatActivity {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
+                    if (selectedImage == null) {
+                        selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
+                    }
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
                                 ()->{
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                                     listView.setAdapter(adapter);
+                                    selectedImage = null;
                                 });
                     });
 
