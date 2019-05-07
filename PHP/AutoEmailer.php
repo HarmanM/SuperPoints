@@ -1,7 +1,5 @@
 <?php
 
-// REMEMBER TO UNCOMMENT OPENSSL IN PHP.INI OTHERWISE SCRIPT WONT WORK
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
