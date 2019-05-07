@@ -1,5 +1,5 @@
 <?php
-    include AutoEmailer.php;
+    include 'C:\Users\Harman\COMP 3900\SMP\PHP\AutoEmailer.php';
     define('DB_SERVER', "superpointsdb.cuwiyoumlele.ca-central-1.rds.amazonaws.com");
     define('DB_USERNAME', "admin");
     define('DB_PASSWORD', "zxcasdqwe123");

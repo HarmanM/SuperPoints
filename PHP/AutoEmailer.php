@@ -35,7 +35,7 @@ function sendKPIEmail() {
   $mail->Subject = 'Monthly KPI Report';
   $mail->Body = 'Test';
   $mail->AddAddress('spemaileradm@gmail.com');
-  
+
   if(!$mail->send()) {
     echo 'Message was not sent.';
     echo 'Mailer error: ' . $mail->ErrorInfo;
