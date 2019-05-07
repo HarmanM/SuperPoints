@@ -1174,7 +1174,7 @@ function calcVisitorsPerTier(){
         case "getSettings":
             getSettings();
             break;
-        case "getBeacon":
+        case "getBeacons":
             getBeacons();
             break;
         case "setUser":

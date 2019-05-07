@@ -144,6 +144,14 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void getBeacons(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Beacon::new;
+        function = "getBeacons";
+        get = true;
+        this.execute();
+    }
+
     public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
     {
         get = true;
