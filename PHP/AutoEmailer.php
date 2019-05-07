@@ -7,11 +7,11 @@ require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
 
-define('DB_SERVER', "superpointsdb.cuwiyoumlele.ca-central-1.rds.amazonaws.com");
-define('DB_USERNAME', "admin");
-define('DB_PASSWORD', "zxcasdqwe123");
+define('DB_SERVER_', "superpointsdb.cuwiyoumlele.ca-central-1.rds.amazonaws.com");
+define('DB_USERNAME_', "admin");
+define('DB_PASSWORD_', "zxcasdqwe123");
 
-$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+$con = mysqli_connect(DB_SERVER_, DB_USERNAME_, DB_PASSWORD_);
 
 if (mysqli_connect_errno($con)) {
     echo "Failed to connect to database: " . mysqli_connect_error();
