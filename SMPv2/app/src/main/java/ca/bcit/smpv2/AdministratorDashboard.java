@@ -37,38 +37,6 @@ public class AdministratorDashboard extends AppCompatActivity {
 //        adapter = new PromotionsAdapter(this, usersPromotions);
 
         beaconList = new ArrayList<Beacon>();
-        new DatabaseObj(AdministratorDashboard.this).getBeacons("", (ArrayList<Object> settings)->{
-            for(Object setting : settings)
-                business.addSetting((BusinessSetting) setting);
 
-            setContentView(R.layout.activity_business_dashboard);
 
-            // Find the toolbar view inside the activity layout
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-            usersPromotions = new ArrayList<Promotions>();
-
-            listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-            listView.setAdapter(adapter);
-
-            int businessID = LoginActivity.user.getBusinessID();
-            new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
-                for (Object o : objects) {
-                    usersPromotions.add((Promotions) o);
-                }
-                adapter = new PromotionsAdapter(this, usersPromotions);
-                listView.setAdapter(adapter);
-            });)
-        //beaconAdapter = new BeaconAdapter(this, beaconList);
-    }
-
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-        if (checked) {
-            user.getSetting(2).setValue("true");
-        } else {
-            user.getSetting(2).setValue("false");
-        }
-    }
 }

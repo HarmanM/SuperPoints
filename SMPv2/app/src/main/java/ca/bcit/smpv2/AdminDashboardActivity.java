@@ -5,21 +5,26 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
     Button sendKPIBtn;
     ListView beaconListView;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
-
+        user = LoginActivity.user;
+        CheckBox kpiCheckbox;
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -29,6 +34,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         sendKPIBtn = findViewById(R.id.emailKPIbtn);
         beaconListView = findViewById(R.id.beaconListView);
+
+        kpiCheckbox = findViewById(R.id.kpiCheckbox);
+        Log.i("harman", user.getSetting(2).getValue());
+        kpiCheckbox.setChecked(Boolean.parseBoolean(user.getSetting(2).getValue()));
 
     }
 
@@ -60,6 +69,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        if (checked) {
+            user.getSetting(2).setValue("true");
+        } else {
+            user.getSetting(2).setValue("false");
         }
     }
 }
