@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -218,6 +220,7 @@ public class Analytics extends AppCompatActivity {
         pieChart.animateY(openingAnimationDuration);
         pieChart.invalidate();
         pieChart.setTouchEnabled(false);
+        setUpLegend(pieChart);
         charts.add(pieChart);
     }
 
@@ -254,6 +257,7 @@ public class Analytics extends AppCompatActivity {
         data = new LineData(dataSets);
         lineChart.setData(data);
         lineChart.setTouchEnabled(false);
+        setUpLegend(lineChart);
         charts.add(lineChart);
     }
 
@@ -279,7 +283,16 @@ public class Analytics extends AppCompatActivity {
 
         barChart.animateY(1000);
         barChart.setTouchEnabled(false);
+        setUpLegend(barChart);
         charts.add(barChart);
+    }
+
+    public void setUpLegend(Chart chart)
+    {
+        Legend chartLegend = chart.getLegend();
+        chartLegend.setTextSize(pieChartFontSize);
+        chartLegend.setXOffset(20f);
+        chart.getDescription().setEnabled(false);
     }
 
 
