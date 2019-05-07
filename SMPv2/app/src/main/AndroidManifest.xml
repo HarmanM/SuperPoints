@@ -83,7 +83,7 @@
         <activity
             android:name=".DetailedDescription"
             android:screenOrientation="sensorPortrait"></activity>
-        <activity android:name=".AdministratorDashboard"></activity>
+        <activity android:name=".AdminDashboardActivity"></activity>
     </application>
 
 </manifest>

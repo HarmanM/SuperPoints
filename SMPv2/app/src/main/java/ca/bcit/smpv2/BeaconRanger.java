@@ -115,10 +115,10 @@ public class BeaconRanger implements BeaconConsumer {
                     visit = new Visit(LoginActivity.user.getUserID(), currentBusinessConnection.getBusinessID(), Calendar.getInstance());
                 }
                 else if(wasInStore && !inStore) {
-                    visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000));
+                    visit.setDuration((int)((Calendar.getInstance().getTimeInMillis() - visit.getDate().getTimeInMillis()) / 1000 / 60));
                     businessIDHolder = currentBusinessConnection.getBusinessID();
-
-                    if(visit.getDuration() > 120) {
+                    // Minimum visit duration is 2 min
+                    if(visit.getDuration() >= 2) {
                         Toast.makeText(context, "Exited store" + currentBusinessConnection.getBusinessName(), Toast.LENGTH_LONG).show();
                         new DatabaseObj(context).setVisit(visit, (ArrayList<Object> objects) -> {
                             new DatabaseObj(context).getPoints("userID=" + LoginActivity.user.getUserID()
@@ -131,7 +131,6 @@ public class BeaconRanger implements BeaconConsumer {
                                     });
                         });
                     }
-
                     currentBusinessConnection = null;
                 }
             }
