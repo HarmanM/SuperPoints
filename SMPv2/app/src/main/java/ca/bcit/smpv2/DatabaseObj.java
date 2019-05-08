@@ -383,6 +383,13 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void sendEmail() {
+        get = false;
+        function = "sendEmail";
+        setMembers("", null);
+        this.execute();
+    }
+
     @Override
     protected String doInBackground(Object[] arg0) {
         try {

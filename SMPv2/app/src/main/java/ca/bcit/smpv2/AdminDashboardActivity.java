@@ -32,7 +32,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
         user = LoginActivity.user;
-        CheckBox kpiCheckbox;
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,14 +78,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
     }
 
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-        if (checked) {
-            user.getSetting(2).setValue("true");
-        } else {
-            user.getSetting(2).setValue("false");
-        }
+    public void onSendKPIBtnClick(View view) {
+        new DatabaseObj(this).sendEmail();
     }
 
     public void setUpBusinessListView ()

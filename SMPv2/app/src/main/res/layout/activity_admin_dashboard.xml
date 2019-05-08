@@ -26,16 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded"
-            android:text="@string/send_email_title"></Button>
-
-        <CheckBox
-            android:id="@+id/kpiCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/send_email_monthly"
-            android:onClick="onCheckboxClicked"
-            />
+            android:text="@string/send_email_title"
+            android:onClick="onSendKPIBtnClick"></Button>
 
 
     </LinearLayout>
