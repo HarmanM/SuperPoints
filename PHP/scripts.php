@@ -1,5 +1,6 @@
 <?php
-    include 'C:\Users\Harman\COMP 3900\SMP\PHP\AutoEmailer.php';
+    include './AutoEmailer.php';
+
     define('DB_SERVER', "superpointsdb.cuwiyoumlele.ca-central-1.rds.amazonaws.com");
     define('DB_USERNAME', "admin");
     define('DB_PASSWORD', "zxcasdqwe123");
@@ -402,7 +403,7 @@
           $txpower = $row_data['txPower'];
 
           if (isset($beaconid) && $beaconid != "") {
-            echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower;
+            echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~n";
           }
         }
       }
@@ -493,12 +494,15 @@
       $businessname = $_GET['BUSINESS_NAME'];
       $latitude = $_GET['LATITUDE'];
       $longitude = $_GET['LONGITUDE'];
+      $region = $_GET['REGION'];
 
       if ($businessid == -1 || !isset($businessid)) {
         $businessid = "";
       }
 
+      if ($region == -1 || !isset($region)) {
         $region = "null";
+      }
 
 
       if ($businessid == "") {
@@ -764,15 +768,14 @@
         }
 
         // Becomes WHERE userid = userid
-        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+        $where = isset($_GET['whereClause']) ? "AND " . $_GET['whereClause'] : '';
         //$userID = $_GET['uid'];
-        $result = mysqli_query($con,"SELECT DISTINCT promotionID, superpoints.Promotions.businessID, superpoints.PointTiers.tierID, superpoints.PointTiers.minPoints, superpoints.PointTiers.name, details, clicks, businessName, shortDescription
+        $result = mysqli_query($con,"SELECT promotionID, superpoints.Promotions.businessID, superpoints.PointTiers.tierID, superpoints.PointTiers.minPoints, superpoints.PointTiers.name, details, clicks, businessName, shortDescription
             FROM superpoints.Promotions INNER JOIN superpoints.Businesses ON
 				superpoints.Promotions.businessID = superpoints.Businesses.businessID
             INNER JOIN superpoints.Points ON superpoints.Promotions.businessID = superpoints.Points.businessID
             INNER JOIN superpoints.PointTiers ON superpoints.Promotions.minTierID = superpoints.PointTiers.tierID
-            WHERE (SELECT points FROM superpoints.Points $where AND superpoints.Points.businessID = superpoints.Promotions.businessID) >
-				(SELECT minPoints FROM superpoints.PointTiers WHERE superpoints.Promotions.minTierID = superpoints.PointTiers.tierID);", MYSQLI_STORE_RESULT);
+            WHERE superpoints.Points.businessID = superpoints.Promotions.businessID AND points > minPoints $where;", MYSQLI_STORE_RESULT);
 
         while($row_data = mysqli_fetch_array($result)) {
             $visitid = $row_data['promotionID'];
