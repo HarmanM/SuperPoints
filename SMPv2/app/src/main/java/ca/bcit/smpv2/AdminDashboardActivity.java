@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +25,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
     ListView businessListView;
     ArrayList<Beacon> beaconList;
     ArrayList<Business> businessList;
+    ArrayList<Business> newBusinessList;
     User user;
     BusinessAdapter adapter;
+    BusinessAdapter newBusinessAdapter;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +45,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         sendKPIBtn = findViewById(R.id.emailKPIbtn);
 
-        kpiCheckbox = findViewById(R.id.kpiCheckbox);
-        kpiCheckbox.setChecked(Boolean.parseBoolean(user.getSetting(2).getValue()));
-
+        setUpSearchView();
         setUpBusinessListView();
     }
 
@@ -121,6 +123,48 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 businessesBeacons.add(allBeacons.get(i));
         }
         return businessesBeacons;
+    }
+
+    public void setUpSearchView()
+    {
+        searchView = findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                String userInput = s.toLowerCase();
+                newBusinessList = new ArrayList<>();
+                for (int i = 0; i < businessList.size(); i++) {
+                    Business business = businessList.get(i);
+                    if (business.getBusinessName().toLowerCase().contains(userInput.trim())
+                            || business.getBusinessAddress(AdminDashboardActivity.this).toLowerCase().contains(userInput.trim())) {
+                        newBusinessList.add(business);
+                    }
+                }
+                newBusinessAdapter = new BusinessAdapter(AdminDashboardActivity.this, newBusinessList);
+                businessListView.setAdapter(newBusinessAdapter);
+                businessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i = new Intent(AdminDashboardActivity.this, BusinessBeaconDetailsActivity.class);
+
+                        Business business = businessList.get(position);
+                        ArrayList<Beacon> businessesBeacons = getBusinessesBeacons(business.getBusinessID(), beaconList);
+                        i.putExtra("business", business);
+                        i.putExtra("businessesBeacons", businessesBeacons);
+                        startActivity(i);
+                    }
+                });
+                return true;
+            }
+        });
+
+
     }
 
 }
