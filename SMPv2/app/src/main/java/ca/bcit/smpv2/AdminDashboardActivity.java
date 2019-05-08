@@ -9,15 +9,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class AdminDashboardActivity extends AppCompatActivity {
 
     Button sendKPIBtn;
-    ListView beaconListView;
+    ListView businessListView;
+    ArrayList<Beacon> beaconList;
+    ArrayList<Business> businessList;
     User user;
+    BusinessAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +41,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         sendKPIBtn = findViewById(R.id.emailKPIbtn);
-        beaconListView = findViewById(R.id.beaconListView);
 
         kpiCheckbox = findViewById(R.id.kpiCheckbox);
-        Log.i("harman", user.getSetting(2).getValue());
         kpiCheckbox.setChecked(Boolean.parseBoolean(user.getSetting(2).getValue()));
 
+        setUpBusinessListView();
     }
 
     // Menu icons are inflated just as they were with actionbar
@@ -81,4 +88,46 @@ public class AdminDashboardActivity extends AppCompatActivity {
             user.getSetting(2).setValue("false");
         }
     }
+
+    public void setUpBusinessListView ()
+    {
+        businessListView = findViewById(R.id.businessListView);
+        businessList = new ArrayList<Business>();
+        new DatabaseObj(AdminDashboardActivity.this).getBusinesses("", (ArrayList<Object> businesses) ->
+        {
+            for(Object o : businesses)
+                businessList.add((Business) o);
+            adapter = new BusinessAdapter(this, businessList);
+            businessListView.setAdapter(adapter);
+            beaconList = new ArrayList<Beacon>();
+            new DatabaseObj(AdminDashboardActivity.this).getBeacons("", (ArrayList<Object> beacons) -> {
+                for (Object o : beacons)
+                    beaconList.add((Beacon) o);
+                businessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i = new Intent(AdminDashboardActivity.this, BusinessBeaconDetailsActivity.class);
+
+                        Business business = businessList.get(position);
+                        ArrayList<Beacon> businessesBeacons = getBusinessesBeacons(business.getBusinessID(), beaconList);
+                        i.putExtra("business", business);
+                        i.putExtra("businessesBeacons", businessesBeacons);
+                        startActivity(i);
+                    }
+                });
+            });
+        });
+    }
+
+    ArrayList<Beacon> getBusinessesBeacons (int businessID, ArrayList<Beacon> allBeacons)
+    {
+        ArrayList<Beacon> businessesBeacons = new ArrayList<>();
+        for(int i = 0; i < allBeacons.size(); ++i)
+        {
+            if(allBeacons.get(i).getBusinessID() == businessID)
+                businessesBeacons.add(allBeacons.get(i));
+        }
+        return businessesBeacons;
+    }
+
 }

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AdminSettingsActivity"></activity>
+        <activity android:name=".AdminSettingsActivity" />
         <activity
             android:name=".BusinessSettingsActivity"
             android:screenOrientation="sensorPortrait" />
@@ -82,8 +82,9 @@
 
         <activity
             android:name=".DetailedDescription"
-            android:screenOrientation="sensorPortrait"></activity>
-        <activity android:name=".AdminDashboardActivity"></activity>
+            android:screenOrientation="sensorPortrait" />
+        <activity android:name=".AdminDashboardActivity" />
+        <activity android:name=".BusinessBeaconDetailsActivity"></activity>
     </application>
 
 </manifest>

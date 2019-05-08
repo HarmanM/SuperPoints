@@ -15,6 +15,7 @@
         tools:layout_editor_absoluteX="9dp"
         tools:layout_editor_absoluteY="0dp" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,9 +42,10 @@
 
 
     <ListView
-        android:id="@+id/beaconListView"
+        android:id="@+id/businessListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content">
+    </ListView>
 
 
 </LinearLayout>

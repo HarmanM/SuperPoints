@@ -249,6 +249,7 @@ public class DatabaseObj extends AsyncTask {
         params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
         params += "LATITUDE=" + o.getLatitude() + "&";
         params += "LONGITUDE=" + o.getLongitude() + "&";
+        params += "REGION=" + o.getRegion() + "&";
         setMembers(params, f);
         this.execute();
     }

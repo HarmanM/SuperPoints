@@ -307,40 +307,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void generateBusinessMarkers(Map<Business, Boolean> prefAndUnpreBusinessesNearby) {
         String BusinessName;
-        String BusinessAddress;
         double BusinessLatitude;
         double BusinessLongitude;
         Marker marker;
         MarkerOptions options;
-        Geocoder geocoder;
-        List<Address> addresses;
 
 
         for (Map.Entry<Business, Boolean> pair : prefAndUnpreBusinessesNearby.entrySet()) {
             BusinessLatitude = pair.getKey().getLatitude();
             BusinessLongitude = pair.getKey().getLongitude();
             BusinessName = pair.getKey().getBusinessName();
-            BusinessAddress = "";
             LatLng latLng = new LatLng(BusinessLatitude, BusinessLongitude);
 
             options = new MarkerOptions()
                     .position(latLng)
                     .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized) : BitmapDescriptorFactory.fromResource(R.drawable.shop_resized))
-                    .title(BusinessName);
-
-            geocoder = new Geocoder(this, Locale.getDefault());
-            try {
-                addresses = geocoder.getFromLocation(BusinessLatitude, BusinessLongitude, 1);
-                if (addresses.size() > 0 && addresses != null) {
-                    String SubThoroughFare = addresses.get(0).getSubThoroughfare();
-                    String ThoroughFare = addresses.get(0).getThoroughfare();
-                    BusinessAddress += ((SubThoroughFare == null) ? "" : SubThoroughFare + ", ");
-                    BusinessAddress = ((ThoroughFare == null) ? BusinessAddress : BusinessAddress + ThoroughFare);
-                    options.snippet(BusinessAddress);
-                }
-            } catch (IOException e) {
-                Log.e("EXCEPTION: GEOCODER MAPSACTIVITY GENERATEBUSINESS MARKERS", e.toString());
-            }
+                    .title(BusinessName)
+                    .snippet(pair.getKey().getBusinessAddress(MapsActivity.this));
 
             marker = mMap.addMarker(options);
             markerExtras.put(latLng, new BusinessMapMarker(pair.getKey(), marker, options, pair.getValue()));
