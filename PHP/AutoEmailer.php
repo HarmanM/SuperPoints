@@ -20,6 +20,8 @@ if (mysqli_connect_errno($con)) {
 $result = mysqli_query($con,"SELECT value FROM superpoints.UserSettings WHERE userID = 0", MYSQLI_STORE_RESULT);
 $row = mysqli_fetch_array($result);
 $sendMonthly = $row['value'];
+echo "test";
+echo $sendMonthly;
 
 function sendKPIEmail() {
     if ($sendMonthly) {
