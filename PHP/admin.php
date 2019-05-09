@@ -116,13 +116,13 @@ function calcNewOldUsers($arr)
 function calcVisitorsPerTier($arr)
 {
 
-    $businessid   = $arr['Business ID'];
-    $businessname = $arr['Business Name'];
-
     $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
     if (mysqli_connect_errno($con)) {
         echo "Failed to connect to database: " . mysqli_connect_error();
     }
+
+        $businessid   = $arr['Business ID'];
+        $businessname = $arr['Business Name'];
 
     $result = mysqli_query($con, "
   SELECT COUNT(tierID) AS numVisits, tierID AS tierName
@@ -213,11 +213,6 @@ $var2 = 'BusinessName';
 $var3 = 'Time Span';
 $var4 = 'Number of Visits';
 
-/*
-for ($i = 0; $i < $count; $i++) {
-calcMonthlyVisits($arr[$i]);
-}
-*/
 $monthlyVisits = array();
 $newUsers = array();
 $tieredVisits = array();

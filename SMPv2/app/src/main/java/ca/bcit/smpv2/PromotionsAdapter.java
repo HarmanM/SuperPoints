@@ -58,6 +58,9 @@ public class PromotionsAdapter extends ArrayAdapter<Promotions> {
         return convertView;
     }
 
-
+    public int getViewTypeCount()
+    {
+        return 3;
+    }
 
 }

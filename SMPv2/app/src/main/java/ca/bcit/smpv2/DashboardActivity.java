@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +27,8 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -53,17 +56,45 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Construct the data source, maybe construct arraylist beforehand
         usersPromotions = new ArrayList<Promotions>();
-        final PromotionsAdapter preferredAdapter = new PromotionsAdapter(this, usersPromotions);
+        //final PromotionsAdapter preferredAdapter = new PromotionsAdapter(this, usersPromotions);
         final PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
         listView = (ListView) findViewById(R.id.lvPromotions);
-        new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> objects)-> {
-                for(Object o : objects)
+        new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> promotions)-> {
+            ArrayList<Business> preferredBusinesses = new ArrayList<>();
+            new DatabaseObj(DashboardActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + LoginActivity.user.getUserID() + " )",(ArrayList<Object> preferredBusineses)->{
+                for(Object preferredBusiness: preferredBusineses)
+                    preferredBusinesses.add((Business) preferredBusiness);
+            });
+            //Sort promotions by business name
+            Collections.sort((ArrayList<Promotions>) (ArrayList<?>) promotions,(Promotions p1, Promotions p2) -> p1.getBusinessName().compareToIgnoreCase(p2.getBusinessName()));
+            //Array to hold all promotions that are preferred to be deleted from original list later to append other promotions
+            ArrayList<Promotions> preferredPromotions = new ArrayList<>();
+            for(Object promotion : promotions)
+            {
+                Promotions currentPromotion = (Promotions) promotion;
+                for(int i = 0; i < preferredBusinesses.size(); ++i)
                 {
-                    //TODO check if this works after preferring on map and checking again
-                    adapter.add((Promotions) o);
+                    //TODO optimize?
+                    if(currentPromotion.getBusinessID() == preferredBusinesses.get(i).getBusinessID())
+                    {
+                        adapter.add(currentPromotion);
+                        preferredPromotions.add(currentPromotion);
+                        break;
+                    }
                 }
-                listView.setAdapter(adapter);
+            }
+            //promotions.add(new Promotions)
+            //All promotions left will not be preferred so add them all
+            promotions.removeAll(preferredPromotions);
+            for(Object promotion : promotions)
+            {
+                adapter.add((Promotions) promotion);
+            }
+            listView.setAdapter(adapter);
         });
+
+        //TODO get applicable promos, cross businessid with return from get applicable promos, maybe make where condition do it for me
+        //TODO insert blank promo with id -1 to indicate separator from preferred to unpreferred
 
         listView.refreshDrawableState();
 
@@ -123,9 +154,6 @@ public class DashboardActivity extends AppCompatActivity {
             finish();
         switch (item.getItemId()) {
             case R.id.home:
-                //Intent h = new Intent(getBaseContext(), MapsActivity.class);
-                //startActivity(h);
-
                 return true;
             case R.id.dashboard:
                 //Intent i = new Intent(getBaseContext(), DashboardActivity.class);
@@ -153,5 +181,4 @@ public class DashboardActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
