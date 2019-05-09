@@ -25,7 +25,7 @@ $sendMonthly = $row['value'];
 
 
 function sendKPIEmail($sendMonthly) {
-    if ($sendMonthly) {
+    if ($sendMonthly == 'true') {
       $mail = new PHPMailer();
       $mail->isSMTP();
       $mail->SMTPAuth = true;
