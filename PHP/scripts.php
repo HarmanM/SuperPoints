@@ -1147,7 +1147,7 @@ function calcVisitorsPerTier(){
 }
 
 function sendEmail() {
-  sendKPIEmail();
+  $mail->send();
 }
 
     $func = $_GET['function'];

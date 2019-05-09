@@ -22,26 +22,28 @@ $row = mysqli_fetch_array($result);
 $sendMonthly = $row['value'];
 
 function sendKPIEmail() {
-  $mail = new PHPMailer();
-  $mail->isSMTP();
-  $mail->SMTPAuth = true;
-  $mail->SMTPSecure = 'ssl';
-  $mail->Host = 'smtp.gmail.com';
-  $mail->Port = '465';
-  $mail->isHTML();
-  $mail->Username = 'spemaileradm@gmail.com';
-  $mail->Password = 'Redsaw123qwe';
-  $mail->setFrom('spemaileradm@gmail.com');
-  $mail->Subject = 'Monthly KPI Report';
-  $mail->Body = 'Test';
-  $mail->AddAddress('spemaileradm@gmail.com');
+    if ($sendMonthly) {
+      $mail = new PHPMailer();
+      $mail->isSMTP();
+      $mail->SMTPAuth = true;
+      $mail->SMTPSecure = 'ssl';
+      $mail->Host = 'smtp.gmail.com';
+      $mail->Port = '465';
+      $mail->isHTML();
+      $mail->Username = 'spemaileradm@gmail.com';
+      $mail->Password = 'Redsaw123qwe';
+      $mail->setFrom('spemaileradm@gmail.com');
+      $mail->Subject = 'Monthly KPI Report';
+      $mail->Body = 'Test';
+      $mail->AddAddress('spemaileradm@gmail.com');
 
-  if(!$mail->send()) {
-    echo 'Message was not sent.';
-    echo 'Mailer error: ' . $mail->ErrorInfo;
-  } else {
-    echo 'Message has been sent.';
-  }
+      if(!$mail->send()) {
+        echo 'Message was not sent.';
+        echo 'Mailer error: ' . $mail->ErrorInfo;
+      } else {
+        echo 'Message has been sent.';
+        }
+    }
 
 }
 

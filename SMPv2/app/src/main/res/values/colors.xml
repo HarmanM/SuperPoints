@@ -9,5 +9,6 @@
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
     <color name="defaultButtonColor">#00CED1</color>
+    <color name="selectedColor">#C0C0C0</color>
 
 </resources>
