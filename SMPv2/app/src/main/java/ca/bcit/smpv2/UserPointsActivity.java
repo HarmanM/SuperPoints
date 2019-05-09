@@ -37,12 +37,12 @@ public class UserPointsActivity extends AppCompatActivity {
 
             ArrayList<Points> points = new ArrayList<>();
             ArrayList<Business> businesses = new ArrayList<>();
-            new DatabaseObj(this).getPoints("userID=" + LoginActivity.user.getUserID(), (ArrayList<Object> objects)->{
+            new DatabaseObj(this).getPoints("userID=" + DatabaseObj.SQLSafe(LoginActivity.user.getUserID()), (ArrayList<Object> objects)->{
                 if(objects.size() > 0) {
                     String whereClause = "businessID IN(";
                     for (int i = 0; i < objects.size(); ++i) {
                         points.add((Points) objects.get(i));
-                        whereClause += ((Points) objects.get(i)).getBusinessID() + ((i == objects.size() - 1) ? "" : ",");
+                        whereClause += DatabaseObj.SQLSafe(((Points) objects.get(i)).getBusinessID()) + ((i == objects.size() - 1) ? "" : ",");
                     }
                     whereClause += ")";
                     new DatabaseObj(this).getBusinesses(whereClause, (ArrayList<Object> busObjects) -> {

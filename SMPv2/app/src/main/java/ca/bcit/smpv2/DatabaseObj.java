@@ -34,12 +34,25 @@ public class DatabaseObj extends AsyncTask {
         this.context = context;
     }
 
+    public static String SQLSafe(String s){
+        return s.replace("'", "''");
+    }
+    public static String SQLSafe(int s){
+        return Integer.toString(s);
+    }
+    public static String SQLSafe(double s){
+        return Double.toString(s);
+    }
+    public static String SQLSafe(float s){
+        return Float.toString(s);
+    }
+
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
         if(whereClause != "") {
             this.params = whereClause;
-            this.params = this.params.replace(" ", "%20");
-            this.params = this.params.replace("(", "%28");
-            this.params = this.params.replace(")", "%29");
+            //this.params = this.params.replace(" ", "%20");
+            //this.params = this.params.replace("(", "%28");
+            //this.params = this.params.replace(")", "%29");
         }
         onCompleteFunction = f;
     }
@@ -215,10 +228,10 @@ public class DatabaseObj extends AsyncTask {
         function = "setUser";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "USERNAME=" + o.getUsername() + "&";
-        params += "PASSWORD=" + o.getPassword() + "&";
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "USERNAME=" + DatabaseObj.SQLSafe(o.getUsername()) + "&";
+        params += "PASSWORD=" + DatabaseObj.SQLSafe(o.getPassword()) + "&";
         //params += "SETTING=" + o.getSetting();
         setMembers(params, f);
         this.execute();
@@ -232,8 +245,8 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "updatePassword";
         params = "";
-        params += "USER_ID=" + userID + "&";
-        params += "NEW_PASSWORD=" + newPW;
+        params += "USER_ID=" + DatabaseObj.SQLSafe(userID) + "&";
+        params += "NEW_PASSWORD=" + DatabaseObj.SQLSafe(newPW);
         setMembers(params, f);
         this.execute();
     }
@@ -247,11 +260,11 @@ public class DatabaseObj extends AsyncTask {
         function = "setBusiness";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
-        params += "LATITUDE=" + o.getLatitude() + "&";
-        params += "LONGITUDE=" + o.getLongitude() + "&";
-        params += "REGION=" + o.getRegion() + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "BUSINESS_NAME=" + DatabaseObj.SQLSafe(o.getBusinessName()) + "&";
+        params += "LATITUDE=" + DatabaseObj.SQLSafe(o.getLatitude()) + "&";
+        params += "LONGITUDE=" + DatabaseObj.SQLSafe(o.getLongitude()) + "&";
+        params += "REGION=" + DatabaseObj.SQLSafe(o.getRegion()) + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -266,8 +279,8 @@ public class DatabaseObj extends AsyncTask {
         function = "setPreferredBusiness";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID();
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID());
         setMembers(params, f);
         this.execute();
     }
@@ -281,8 +294,8 @@ public class DatabaseObj extends AsyncTask {
         get = false;
         function = "deletePreferredBusiness";
         params = "";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID();
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID());
         setMembers(params, f);
         this.execute();
     }
@@ -296,13 +309,13 @@ public class DatabaseObj extends AsyncTask {
         function = "setPromotion";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "PROMOTION_ID=" + o.getPromotionID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "BUSINESS_NAME=" + o.getBusinessName() + "&";
-        params += "DETAILS=" + o.getDetails() + "&";
-        params += "SHORT_DESCRIPTION=" + o.getShortDescription() + "&";
-        params += "CLICKS=" + o.getClicks() + "&";
-        params += "MIN_TIER=" + o.getMinTier().getTierID();
+        params += "PROMOTION_ID=" + DatabaseObj.SQLSafe(o.getPromotionID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "BUSINESS_NAME=" + DatabaseObj.SQLSafe(o.getBusinessName()) + "&";
+        params += "DETAILS=" + DatabaseObj.SQLSafe(o.getDetails()) + "&";
+        params += "SHORT_DESCRIPTION=" + DatabaseObj.SQLSafe(o.getShortDescription()) + "&";
+        params += "CLICKS=" + DatabaseObj.SQLSafe(o.getClicks()) + "&";
+        params += "MIN_TIER=" + DatabaseObj.SQLSafe(o.getMinTier().getTierID());
         setMembers(params, f);
         this.execute();
     }
@@ -316,11 +329,11 @@ public class DatabaseObj extends AsyncTask {
         function = "setVisit";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "VISIT_ID=" + o.getVisitID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "DATE=" + (new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss")).format(o.getDate().getTime()) + "&";
-        params += "DURATION=" + o.getDuration();
+        params += "VISIT_ID=" + DatabaseObj.SQLSafe(o.getVisitID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "DATE=" + DatabaseObj.SQLSafe((new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss")).format(o.getDate().getTime())) + "&";
+        params += "DURATION=" + DatabaseObj.SQLSafe(o.getDuration());
         setMembers(params, f);
         this.execute();
     }
@@ -334,9 +347,9 @@ public class DatabaseObj extends AsyncTask {
         function = "setUserBusinessTier";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "POINTS=" + o.getPoints() + "&";
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "POINTS=" + DatabaseObj.SQLSafe(o.getPoints()) + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -350,9 +363,9 @@ public class DatabaseObj extends AsyncTask {
         function = "setBusinessSetting";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
-        params += "VALUE=" + o.getValue() + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "SETTING_ID=" + DatabaseObj.SQLSafe(o.getSetting().getSettingID()) + "&";
+        params += "VALUE=" + DatabaseObj.SQLSafe(o.getValue()) + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -366,9 +379,9 @@ public class DatabaseObj extends AsyncTask {
         function = "setUserSetting";
         objConstructor = DatabaseObj::dbReturnID;
         params = "";
-        params += "USER_ID=" + o.getUserID() + "&";
-        params += "SETTING_ID=" + o.getSetting().getSettingID() + "&";
-        params += "VALUE=" + o.getValue() + "&";
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        params += "SETTING_ID=" + DatabaseObj.SQLSafe(o.getSetting().getSettingID()) + "&";
+        params += "VALUE=" + DatabaseObj.SQLSafe(o.getValue()) + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -398,11 +411,25 @@ public class DatabaseObj extends AsyncTask {
             String link;
             // if its a get from database
             if(get) {
-                 link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
-                        + ((!params.isEmpty()) ? "&whereClause=" + params : "");
+                link = new URI(
+                        "http",
+                        "ec2-99-79-49-31.ca-central-1.compute.amazonaws.com",
+                        "/scripts.php",
+                        "function=" + function + ((!params.isEmpty()) ? "&whereClause=" + params : ""),
+                        null).toASCIIString();
+
+                 /*link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
+                        + ((!params.isEmpty()) ? "&whereClause=" + params : "");*/
             } else{
-                link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
-                        + ((!params.isEmpty()) ? "&" + params : "");
+                link = new URI(
+                        "http",
+                        "ec2-99-79-49-31.ca-central-1.compute.amazonaws.com",
+                        "/scripts.php",
+                        "function=" + function + ((!params.isEmpty()) ? "&" + params : ""),
+                        null).toASCIIString();
+
+                /*link = "http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/scripts.php?function=" + function
+                        + ((!params.isEmpty()) ? "&" + params : "");*/
             }
             Log.i("LINK::" , link);
             URL url = new URL(link);

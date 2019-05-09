@@ -254,8 +254,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
-        new DatabaseObj (MapsActivity.this).getBusinessesNearby("lat=" + lat + "%20" + "long=" + lon
-                , (ArrayList<Object> objects)->{
+        new DatabaseObj (MapsActivity.this)
+                .getBusinessesNearby("lat=" + DatabaseObj.SQLSafe(lat) + " long=" + DatabaseObj.SQLSafe(lon), (ArrayList<Object> objects)->{
                 for(Object o: objects)
                     businessesNearby.add((Business) o);
                 if(compareOldNearbyWithNewNearby(oldBusinessesNearby, businessesNearby) && businessesNearby.size() != 0)

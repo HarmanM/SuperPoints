@@ -61,7 +61,9 @@ public class DashboardActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.lvPromotions);
         new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> promotions)-> {
             ArrayList<Business> preferredBusinesses = new ArrayList<>();
-            new DatabaseObj(DashboardActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + LoginActivity.user.getUserID() + " )",(ArrayList<Object> preferredBusineses)->{
+            new DatabaseObj(DashboardActivity.this)
+                    .getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = "
+                            + DatabaseObj.SQLSafe(LoginActivity.user.getUserID()) + " )",(ArrayList<Object> preferredBusineses)->{
                 for(Object preferredBusiness: preferredBusineses)
                     preferredBusinesses.add((Business) preferredBusiness);
             });

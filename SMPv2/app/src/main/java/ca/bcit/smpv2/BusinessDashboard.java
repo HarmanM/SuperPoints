@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,9 +83,9 @@ public class BusinessDashboard extends AppCompatActivity {
         iconImageView = findViewById(R.id.iconImageView);
         super.onCreate(savedInstanceState);
         checkPermission();
-        new DatabaseObj(this).getBusinesses("businessID=" + LoginActivity.user.getBusinessID(), (ArrayList<Object> businessObj) -> {
+        new DatabaseObj(this).getBusinesses("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> businessObj) -> {
             business = (Business) businessObj.get(0);
-            new DatabaseObj(this).getBusinessSettings("businessID=" + business.getBusinessID(), (ArrayList<Object> settings)->{
+            new DatabaseObj(this).getBusinessSettings("businessID=" + DatabaseObj.SQLSafe(business.getBusinessID()), (ArrayList<Object> settings)->{
                 for(Object setting : settings)
                     business.addSetting((BusinessSetting) setting);
 
@@ -99,7 +100,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 listView.setAdapter(adapter);
 
                 int businessID = LoginActivity.user.getBusinessID();
-                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + businessID, (ArrayList<Object> objects) -> {
+                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + DatabaseObj.SQLSafe(businessID), (ArrayList<Object> objects) -> {
                     for (Object o : objects) {
                         usersPromotions.add((Promotions) o);
                     }
@@ -329,11 +330,11 @@ public class BusinessDashboard extends AppCompatActivity {
                     int promoID = -1;
                     int businessID = LoginActivity.user.getBusinessID();
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName(), shortDescription);
+                    if (selectedImage == null) {
+                        selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
+                    }
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
-                        promo.setPromotionID((Integer) objects.get(0));
-                        if (selectedImage == null) {
-                            selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
-                        }
+                        promo.setPromotionID(Integer.parseInt(objects.get(0).toString()));
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
                                 ()->{
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);

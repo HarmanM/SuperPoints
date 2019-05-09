@@ -31,7 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameField.getText().toString().trim();
         String password = passwordField.getText().toString();
 
-        new DatabaseObj(this).getUsers("userName='" + username + "' AND password='" + password + "'", (ArrayList<Object> objects)->{
+        new DatabaseObj(this).getUsers("userName='" + DatabaseObj.SQLSafe(username)
+                + "' AND password='" + DatabaseObj.SQLSafe(password) + "'", (ArrayList<Object> objects)->{
             if(objects.size() == 1){
                 user = (User) objects.get(0);
                 new DatabaseObj(this).getUserSettings("userID=" + user.getUserID(), (ArrayList<Object> settings)->{
