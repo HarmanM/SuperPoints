@@ -40,12 +40,11 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
 
         businessName.setText(business.getBusinessName());
         businessAddress.setText(business.getBusinessAddress(this));
-        //businessRegion.setText(business.getRegion());
+        businessRegion.setText(business.getRegion());
 
         businessRegion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                businessRegion.setText(business.getRegion());
             }
 
             @Override

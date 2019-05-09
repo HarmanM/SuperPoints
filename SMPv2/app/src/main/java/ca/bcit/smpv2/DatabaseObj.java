@@ -44,8 +44,10 @@ public class DatabaseObj extends AsyncTask {
         onCompleteFunction = f;
     }
 
+    //TODO WHAT ABOUT IF ID IS NOT AN INT LIKE FOR A BEACON
     static private Object dbReturnID(String[] result){
-        return Integer.parseInt(result[0]);
+        return result[0];
+        //return Integer.parseInt(result[0]);
     }
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
