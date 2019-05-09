@@ -396,9 +396,10 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
           $businessid = $row['businessID'];
           $major = $row['major'];
           $minor = $row['minor'];
-          $txpower = $row['txPower'];
+          $txpower = $row['txPower']
+		  $region = $row['region'];
 
-          echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower;
+          echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~s" . $region;
 
       } else {
         while($row_data = mysqli_fetch_array($result)) {
@@ -407,9 +408,10 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
           $major = $row_data['major'];
           $minor = $row_data['minor'];
           $txpower = $row_data['txPower'];
+		  $region = $row_data['region'];
 
           if (isset($beaconid) && $beaconid != "") {
-            echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~n";
+            echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~s" . $region . "~n";
           }
         }
       }
@@ -545,7 +547,8 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       $businessid = $_GET['BUSINESS_ID'];
       $major = $_GET['MAJOR'];
       $minor = $_GET['MINOR'];
-      $txpower = $_GET['TX_POWER'];
+      $txpower = $_GET['TX_POWER']
+	  $region = $_GET['REGION'];
 
       if ($beaconid == -1 || !isset($beaconid)) {
         $beaconid = "";
@@ -553,8 +556,8 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
 
       if ($beaconid == "") {
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`Beacons`
-              (businessID, major, minor, txPower) VALUES ('$businessid',
-                '$major', '$minor', '$txpower');", MYSQLI_STORE_RESULT);
+              (businessID, major, minor, txPower, region) VALUES ('$businessid',
+                '$major', '$minor', '$txpower', '$region');", MYSQLI_STORE_RESULT);
             $result = $result ? "true" : "";
 
             if ($result == "true") {
@@ -565,7 +568,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
             }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Beacons` SET businessID = '$businessid',
-            major = '$major', minor = '$minor', txPower = $txPower WHERE (`beaconID` = '$beaconid');", MYSQLI_STORE_RESULT);
+            major = '$major', minor = '$minor', txPower = $txPower, region = $region WHERE (`beaconID` = '$beaconid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$beaconid" : "";
       }
@@ -1234,7 +1237,7 @@ function sendEmail() {
         case "setUserSetting":
             handleUserSettings();
             break;
-        case "setBeacons":
+        case "setBeacon":
             handleBeacons();
             break;
         case "promoClick":

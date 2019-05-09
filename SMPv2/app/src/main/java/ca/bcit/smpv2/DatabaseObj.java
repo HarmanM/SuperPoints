@@ -166,6 +166,24 @@ public class DatabaseObj extends AsyncTask {
         get = true;
         this.execute();
     }
+    public void setBeacon(Beacon o){
+        setBeacon(o, null);
+    }
+
+    public void setBeacon(Beacon o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setBeacon";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "";
+        params += "BEACON_ID=" + o.getBeaconID() + "&";
+        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
+        params += "MAJOR=" + o.getMajor() + "&";
+        params += "MINOR=" + o.getMajor() + "&";
+        params += "TXPOWER=" + o.getTxPower() + "&";
+        params += "REGION=" + o.getRegion() + "&";
+        setMembers(params, f);
+        this.execute();
+    }
 
     public void calcAverageDuration(int businessID, Consumer<ArrayList<Object>> f)
     {
