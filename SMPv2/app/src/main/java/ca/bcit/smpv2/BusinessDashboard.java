@@ -330,7 +330,7 @@ public class BusinessDashboard extends AppCompatActivity {
                     int businessID = LoginActivity.user.getBusinessID();
                     Promotions promo = new Promotions(promoID, businessID, promotionPoints, promotionDetails, 0, business.getBusinessName(), shortDescription);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
-                        promo.setPromotionID(Integer.parseInt((String) objects.get(0)));
+                        promo.setPromotionID((Integer) objects.get(0));
                         if (selectedImage == null) {
                             selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
                         }
