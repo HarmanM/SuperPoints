@@ -20,11 +20,11 @@ if (mysqli_connect_errno($con)) {
 $result = mysqli_query($con,"SELECT value FROM superpoints.UserSettings WHERE userID = 0", MYSQLI_STORE_RESULT);
 $row = mysqli_fetch_array($result);
 $sendMonthly = $row['value'];
-echo "test";
-echo $sendMonthly;
 
-function sendKPIEmail() {
-    if ($sendMonthly) {
+
+
+
+function sendKPIEmail($sendMonthly) {
       $mail = new PHPMailer();
       $mail->isSMTP();
       $mail->SMTPAuth = true;
@@ -38,17 +38,19 @@ function sendKPIEmail() {
       $mail->Subject = 'Monthly KPI Report';
       $mail->Body = 'Test';
       $mail->AddAddress('spemaileradm@gmail.com');
-
-      if(!$mail->send()) {
-        echo 'Message was not sent.';
-        echo 'Mailer error: ' . $mail->ErrorInfo;
-      } else {
-        echo 'Message has been sent.';
+      if ($sendMonthly) {
+        echo "reached here";
+        if(!$mail->send()) {
+            echo 'Message was not sent.';
+            echo 'Mailer error: ' . $mail->ErrorInfo;
+        } else {
+            echo 'Message has been sent.';
         }
     }
-
 }
 
+
+sendKPIEmail($sendMonthly);
 
 
 
