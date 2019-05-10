@@ -396,8 +396,8 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
           $businessid = $row['businessID'];
           $major = $row['major'];
           $minor = $row['minor'];
-          $txpower = $row['txPower']
-		  $region = $row['region'];
+          $txpower = $row['txPower'];
+		      $region = $row['region'];
 
           echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~s" . $region;
 
@@ -408,7 +408,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
           $major = $row_data['major'];
           $minor = $row_data['minor'];
           $txpower = $row_data['txPower'];
-		  $region = $row_data['region'];
+		      $region = $row_data['region'];
 
           if (isset($beaconid) && $beaconid != "") {
             echo $beaconid . "~s" .  $businessid . "~s" . $major . "~s" . $minor . "~s" . $txpower . "~s" . $region . "~n";
@@ -530,7 +530,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
             }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Businesses` SET businessName = '$businessname',
-            latitude = '$latitude', longitude = '$longitude', region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
+            latitude = $latitude, longitude = $longitude, region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
       }
@@ -547,8 +547,8 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       $businessid = $_GET['BUSINESS_ID'];
       $major = $_GET['MAJOR'];
       $minor = $_GET['MINOR'];
-      $txpower = $_GET['TX_POWER']
-	  $region = $_GET['REGION'];
+      $txpower = $_GET['TX_POWER'];
+	    $region = $_GET['REGION'];
 
       if ($beaconid == -1 || !isset($beaconid)) {
         $beaconid = "";
@@ -1169,16 +1169,16 @@ function sendEmail() {
       $mail->Subject = 'Monthly KPI Report';
       $mail->Body = 'Test';
       $mail->AddAddress('spemaileradm@gmail.com');
-      
-        
+
+
         if(!$mail->send()) {
             echo 'Message was not sent.';
             echo 'Mailer error: ' . $mail->ErrorInfo;
         } else {
             echo 'Message has been sent.';
         }
-   
-   
+
+
 }
 
     $func = $_GET['function'];
