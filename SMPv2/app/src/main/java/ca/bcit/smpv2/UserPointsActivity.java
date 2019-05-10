@@ -88,10 +88,10 @@ public class UserPointsActivity extends AppCompatActivity {
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(k);
                 return true;
-            case R.id.profile:
+            /*case R.id.profile:
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(j);
-                return true;
+                return true;*/
             case R.id.logOut:
                 Intent m = new Intent(this, MapsActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

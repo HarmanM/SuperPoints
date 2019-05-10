@@ -8,9 +8,9 @@
     <item android:title="View Points"
         android:id="@+id/viewPoints"
         />
-    <item android:title="Profile"
+    <!--<item android:title="Profile"
         android:id="@+id/profile"
-        />
+        />-->
     <item android:title="Settings"
         android:id="@+id/settings"
         />

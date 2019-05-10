@@ -30,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() != R.id.profile)
+        /*if(item.getItemId() != R.id.profile)
             finish();
         switch (item.getItemId()) {
             case R.id.home:
@@ -63,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
+        }*/
+        return false;
     }
 }
