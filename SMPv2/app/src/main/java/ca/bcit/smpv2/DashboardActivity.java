@@ -61,7 +61,9 @@ public class DashboardActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.lvPromotions);
         new DatabaseObj (DashboardActivity.this).getApplicablePromotions(LoginActivity.user.getUserID(), (ArrayList<Object> promotions)-> {
             ArrayList<Business> preferredBusinesses = new ArrayList<>();
-            new DatabaseObj(DashboardActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + LoginActivity.user.getUserID() + " )",(ArrayList<Object> preferredBusineses)->{
+            new DatabaseObj(DashboardActivity.this)
+                    .getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = "
+                            + DatabaseObj.SQLSafe(LoginActivity.user.getUserID()) + " )",(ArrayList<Object> preferredBusineses)->{
                 for(Object preferredBusiness: preferredBusineses)
                     preferredBusinesses.add((Business) preferredBusiness);
             });
@@ -164,8 +166,8 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(k);
                 return true;
             case R.id.profile:
-                Intent l = new Intent(getBaseContext(), ProfileActivity.class);
-                startActivity(l);
+                Intent p = new Intent(getBaseContext(), ProfileActivity.class);
+                startActivity(p);
                 return true;
             case R.id.viewPoints:
                 Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
@@ -175,7 +177,9 @@ public class DashboardActivity extends AppCompatActivity {
                 Intent m = new Intent(this, MapsActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(m);
-                LoginActivity.logout();
+                Intent l = new Intent(getBaseContext(), LandingActivity.class);
+                l.putExtra("logout", true);
+                startActivity(l);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

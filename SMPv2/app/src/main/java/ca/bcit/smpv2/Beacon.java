@@ -11,13 +11,15 @@ public class Beacon implements Serializable {
     private int major;
     private int minor;
     private int txPower;
+    private String region;
 
-    public Beacon(String beaconID, int businessID, int major, int minor, int txPower){
+    public Beacon(String beaconID, int businessID, int major, int minor, int txPower, String region){
         this.beaconID = beaconID;
         this.businessID = businessID;
         this.major = major;
         this.minor = minor;
         this.txPower = txPower;
+        this.region = region;
     }
 
     public Beacon(String[] result){
@@ -27,6 +29,7 @@ public class Beacon implements Serializable {
         this.major = Integer.parseInt(result[2]);
         this.minor = Integer.parseInt(result[3]);
         this.txPower = Integer.parseInt(result[4]);
+        this.region = result[5];
     }
 
     public String getBeaconID() {
@@ -67,5 +70,13 @@ public class Beacon implements Serializable {
 
     public void setTxPower(int txPower) {
         this.txPower = txPower;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
