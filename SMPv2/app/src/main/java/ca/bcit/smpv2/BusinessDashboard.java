@@ -314,6 +314,7 @@ public class BusinessDashboard extends AppCompatActivity {
 
         alertDialog.show();
 
+
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,9 +352,8 @@ public class BusinessDashboard extends AppCompatActivity {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
-                    if (selectedImage == null) {
-                        selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
-                    }
+                    Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
+                            + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
                                 ()->{
