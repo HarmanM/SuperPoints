@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,7 +68,7 @@ public class BusinessDashboard extends AppCompatActivity {
     Button addBtn;
     Button editBtn;
     Button dltBtn;
-    ArrayList<Promotions> usersPromotions;
+    ArrayList<Pair<Promotions, Boolean>> usersPromotions;
     PromotionsAdapter adapter;
     private static final int RESULT_LOAD_IMAGE = 1;
     ImageView promoImageView;
@@ -94,7 +95,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 // Find the toolbar view inside the activity layout
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-                usersPromotions = new ArrayList<Promotions>();
+                usersPromotions = new ArrayList<>();
 
                 listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
@@ -102,7 +103,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 int businessID = LoginActivity.user.getBusinessID();
                 new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + DatabaseObj.SQLSafe(businessID), (ArrayList<Object> objects) -> {
                     for (Object o : objects) {
-                        usersPromotions.add((Promotions) o);
+                        usersPromotions.add(new Pair<Promotions, Boolean>((Promotions) o, false));
                     }
                     adapter = new PromotionsAdapter(this, usersPromotions);
                     listView.setAdapter(adapter);
@@ -114,7 +115,7 @@ public class BusinessDashboard extends AppCompatActivity {
                 toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
                 listView.setOnItemClickListener((parent, view, position, id) -> {
-                    selectedPromotion = usersPromotions.get(position);
+                    selectedPromotion = usersPromotions.get(position).first;
                 });
 
                 addBtn = findViewById(R.id.addBtn);
@@ -343,7 +344,7 @@ public class BusinessDashboard extends AppCompatActivity {
                                     listView.setAdapter(adapter);
                                     selectedImage = null;
                                 });
-                        usersPromotions.add(promo);
+                        usersPromotions.add(new Pair<>(promo, false));
 
                     });
                 } else {

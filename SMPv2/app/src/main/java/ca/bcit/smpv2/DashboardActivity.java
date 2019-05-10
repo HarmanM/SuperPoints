@@ -12,6 +12,7 @@ import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +40,8 @@ public class DashboardActivity extends AppCompatActivity {
     ImageView promoImage;
     TextView promoTitle;
     TextView promoDetails;
-    private ArrayList<Promotions> usersPromotions;
-    private ArrayList<Promotions> newusersPromotions;
+    private ArrayList<Pair<Promotions, Boolean>> usersPromotions;
+    private ArrayList<Pair<Promotions, Boolean>> newusersPromotions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class DashboardActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
         // Construct the data source, maybe construct arraylist beforehand
-        usersPromotions = new ArrayList<Promotions>();
+        usersPromotions = new ArrayList<Pair<Promotions, Boolean>>();
         //final PromotionsAdapter preferredAdapter = new PromotionsAdapter(this, usersPromotions);
         final PromotionsAdapter adapter = new PromotionsAdapter(this, usersPromotions);
         listView = (ListView) findViewById(R.id.lvPromotions);
@@ -68,7 +69,8 @@ public class DashboardActivity extends AppCompatActivity {
                     preferredBusinesses.add((Business) preferredBusiness);
             });
             //Sort promotions by business name
-            Collections.sort((ArrayList<Promotions>) (ArrayList<?>) promotions,(Promotions p1, Promotions p2) -> p1.getBusinessName().compareToIgnoreCase(p2.getBusinessName()));
+            Collections.sort((ArrayList<Promotions>) (ArrayList<?>) promotions,
+                    (Promotions p1, Promotions p2) -> p1.getBusinessName().compareToIgnoreCase(p2.getBusinessName()));
             //Array to hold all promotions that are preferred to be deleted from original list later to append other promotions
             ArrayList<Promotions> preferredPromotions = new ArrayList<>();
             for(Object promotion : promotions)
@@ -79,7 +81,7 @@ public class DashboardActivity extends AppCompatActivity {
                     //TODO optimize?
                     if(currentPromotion.getBusinessID() == preferredBusinesses.get(i).getBusinessID())
                     {
-                        adapter.add(currentPromotion);
+                        adapter.add(new Pair<Promotions, Boolean>(currentPromotion, true));
                         preferredPromotions.add(currentPromotion);
                         break;
                     }
@@ -90,7 +92,7 @@ public class DashboardActivity extends AppCompatActivity {
             promotions.removeAll(preferredPromotions);
             for(Object promotion : promotions)
             {
-                adapter.add((Promotions) promotion);
+                adapter.add(new Pair<Promotions, Boolean>((Promotions) promotion, true));
             }
             listView.setAdapter(adapter);
         });
@@ -105,7 +107,7 @@ public class DashboardActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(DashboardActivity.this, DetailedDescription.class);
 
-                Promotions promo = usersPromotions.get(position);
+                Promotions promo = usersPromotions.get(position).first;
                 promoImage = findViewById(R.id.iconImageView);
                 promoTitle = findViewById(R.id.promotionBusinessName);
                 promoDetails = findViewById(R.id.promotionDetailedDescription);
@@ -129,9 +131,9 @@ public class DashboardActivity extends AppCompatActivity {
                 String userInput = s.toLowerCase();
                 newusersPromotions = new ArrayList<>();
                 for (int i = 0; i < usersPromotions.size(); i++) {
-                    Promotions p = usersPromotions.get(i);
-                    if (p.getBusinessName().toLowerCase().contains(userInput.trim())
-                            || p.getShortDescription().toLowerCase().contains(userInput.trim())) {
+                    Pair<Promotions, Boolean> p = usersPromotions.get(i);
+                    if (p.first.getBusinessName().toLowerCase().contains(userInput.trim())
+                            || p.first.getShortDescription().toLowerCase().contains(userInput.trim())) {
                         newusersPromotions.add(p);
                     }
                 }
@@ -165,10 +167,10 @@ public class DashboardActivity extends AppCompatActivity {
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(k);
                 return true;
-            case R.id.profile:
+            /*case R.id.profile:
                 Intent p = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(p);
-                return true;
+                return true;*/
             case R.id.viewPoints:
                 Intent j = new Intent(getBaseContext(), UserPointsActivity.class);
                 startActivity(j);

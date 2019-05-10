@@ -218,10 +218,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent k = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(k);
                 return true;
-            case R.id.profile:
+            /*case R.id.profile:
                 Intent j = new Intent(getBaseContext(), ProfileActivity.class);
                 startActivity(j);
-                return true;
+                return true;*/
             case R.id.viewPoints:
                 Intent p = new Intent(getBaseContext(), UserPointsActivity.class);
                 startActivity(p);
