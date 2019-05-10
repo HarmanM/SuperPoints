@@ -57,7 +57,9 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent m = new Intent(this, MapsActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(m);
-                LoginActivity.logout();
+                Intent l = new Intent(getBaseContext(), LandingActivity.class);
+                l.putExtra("logout", true);
+                startActivity(l);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

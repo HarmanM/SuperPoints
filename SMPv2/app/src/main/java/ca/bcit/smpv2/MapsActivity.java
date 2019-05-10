@@ -223,14 +223,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(j);
                 return true;
             case R.id.viewPoints:
-                Intent l = new Intent(getBaseContext(), UserPointsActivity.class);
-                startActivity(l);
+                Intent p = new Intent(getBaseContext(), UserPointsActivity.class);
+                startActivity(p);
                 return true;
             case R.id.logOut:
                 Intent m = new Intent(this, MapsActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(m);
-                LoginActivity.logout();
+                Intent l = new Intent(getBaseContext(), LandingActivity.class);
+                l.putExtra("logout", true);
+                startActivity(l);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
