@@ -52,6 +52,7 @@ public class SignupActivity extends AppCompatActivity {
         String password = passwordField.getText().toString();
         String confirmPassword = passwordConfirmField.getText().toString();
         if (confirmPassword.equals(password)) {
+
             if (businessRB.isChecked()) {
                 Intent i = new Intent(this, BusinessSignup.class);
                 i.putExtra("USERNAME", username);
@@ -60,14 +61,25 @@ public class SignupActivity extends AppCompatActivity {
             }
             else {
                 User u = new User(-1, -1, password, username);
-
-
-                new DatabaseObj (SignupActivity.this).setUser(u, new Consumer<ArrayList<Object>>() {
+                //TODO TEST
+                new DatabaseObj(SignupActivity.this).getUsers("", new Consumer<ArrayList<Object>>() {
                     @Override
                     public void accept(ArrayList<Object> objects) {
+                        for (Object user : objects) {
+                            User temp = (User) user;
+                            if (username.equals(((User) user).getUsername())) {
+                                Toast.makeText(SignupActivity.this, "Username is not unique", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                        new DatabaseObj (SignupActivity.this).setUser(u, new Consumer<ArrayList<Object>>() {
+                            @Override
+                            public void accept(ArrayList<Object> objects) {
 
-                        Intent i = new Intent(SignupActivity.this, LoginActivity.class);
-                        startActivity(i);
+                                Intent i = new Intent(SignupActivity.this, LoginActivity.class);
+                                startActivity(i);
+                            }
+                        });
                     }
                 });
             }
