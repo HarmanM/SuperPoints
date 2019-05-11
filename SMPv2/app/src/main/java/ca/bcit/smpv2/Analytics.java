@@ -36,10 +36,14 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 public class Analytics extends AppCompatActivity {
 
@@ -232,16 +236,34 @@ public class Analytics extends AppCompatActivity {
         LineDataSet lineDataSet;
         ArrayList<ILineDataSet> dataSets;
         LineData data;
+        TreeMap<Integer, Float> defaultMonths;
+        Calendar cal;
+        SimpleDateFormat monthDate;
 
         lineChartXAxis = lineChart.getXAxis();
         lineChartXAxis.setValueFormatter(new MonthValueFormatter());
+        lineChartXAxis.setLabelCount(12, true);
+        lineChartXAxis.setTextSize(10.0f);
 
         lineEntries = new ArrayList<>();
-        for(int i = 0; i < lineData.size(); ++i)
+        defaultMonths = new TreeMap<>();
+        monthDate = new SimpleDateFormat("MM-yyyy");
+        cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        for (int i = 1; i <= 12; i++) {
+            String month = monthDate.format(cal.getTime()).replace('-','.');
+            int month_converted = Integer.parseInt(month.substring(5,7)) * 12 + Integer.parseInt(month.substring(0,2));
+            defaultMonths.put(month_converted, 0.0f);
+            cal.add(Calendar.MONTH, -1);
+        }
+        for(int k = 0; k < lineData.size(); ++k)
         {
-            lineEntries.add(new Entry (
-                    Integer.parseInt(lineData.get(i).toString().substring(0,4)) * 12
-                            + Integer.parseInt(lineData.get(i).toString().substring(5,7)), Float.parseFloat((String)lineDataValues.get(i))));
+            int dataMonth = Integer.parseInt(lineData.get(k).toString().substring(2, 4)) * 12
+                    + Integer.parseInt(lineData.get(k).toString().substring(5, 7));
+            defaultMonths.put(dataMonth, Float.parseFloat((String)lineDataValues.get(k)));
+        }
+        for(TreeMap.Entry<Integer, Float> entry : defaultMonths.entrySet()) {
+            lineEntries.add(new Entry(entry.getKey(), entry.getValue()));
         }
 
         lineDataSet = new LineDataSet(lineEntries, lineChartName);

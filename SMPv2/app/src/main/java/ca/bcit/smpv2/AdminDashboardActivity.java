@@ -139,6 +139,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                //ListView businessListView = findViewById(R.id.businessListView);
                 String userInput = s.toLowerCase();
                 newBusinessList = new ArrayList<>();
                 for (int i = 0; i < businessList.size(); i++) {
@@ -149,19 +150,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     }
                 }
                 newBusinessAdapter = new BusinessAdapter(AdminDashboardActivity.this, newBusinessList);
-                businessListView.setAdapter(newBusinessAdapter);
                 businessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent i = new Intent(AdminDashboardActivity.this, BusinessBeaconDetailsActivity.class);
 
-                        Business business = businessList.get(position);
+                        Business business = newBusinessList.get(position);
                         ArrayList<Beacon> businessesBeacons = getBusinessesBeacons(business.getBusinessID(), beaconList);
                         i.putExtra("business", business);
                         i.putExtra("businessesBeacons", businessesBeacons);
                         startActivity(i);
                     }
                 });
+                businessListView.setAdapter(newBusinessAdapter);
                 return true;
             }
         });
