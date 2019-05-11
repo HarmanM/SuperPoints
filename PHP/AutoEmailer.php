@@ -37,7 +37,7 @@ function sendKPIEmail($sendMonthly) {
       $mail->Password = 'Redsaw123qwe';
       $mail->setFrom('spemaileradm@gmail.com');
       $mail->Subject = 'Monthly KPI Report';
-      $mail->Body = 'Test';
+      $mail->Body = 'Here is the KPI for this month: http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/admin.php';
       $mail->AddAddress('spemaileradm@gmail.com');
       if ($sendMonthly) {
         echo "reached here";

@@ -42,11 +42,11 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
                 $username = $row_data['userName'];
                 if ($businessid != "") {
                   if (isset($username) && $username != "") {
-                  echo $userid . "~s" . $businessid . "~s" . $userName . "~n";
+                  echo $userid . "~s" . $businessid . "~s" . $username . "~n";
                 }
                 } else {
                   if (isset($username) && $username != "") {
-                  echo $userid . "~s" . "-1" . "~s" . $userName . "~n";
+                  echo $userid . "~s" . "-1" . "~s" . $username . "~n";
                 }
                 }
             }
@@ -1167,7 +1167,7 @@ function sendEmail() {
       $mail->Password = 'Redsaw123qwe';
       $mail->setFrom('spemaileradm@gmail.com');
       $mail->Subject = 'Monthly KPI Report';
-      $mail->Body = 'Test';
+      $mail->Body = 'Here is the KPI for this month: http://ec2-99-79-49-31.ca-central-1.compute.amazonaws.com/admin.php';
       $mail->AddAddress('spemaileradm@gmail.com');
 
 
