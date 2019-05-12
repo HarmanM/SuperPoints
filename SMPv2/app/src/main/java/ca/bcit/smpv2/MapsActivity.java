@@ -140,7 +140,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mMap.clear();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -153,10 +152,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else
         {
-            handleNewLocation(location);
             generateBusinessesNearby(location);
             //TODO if log out onconnected is called and user is destroyed
-            genPrefBusinesses(LoginActivity.user.getUserID());
+            genPrefBusinesses(LoginActivity.user.getUserID(), location);
         }
     }
 
@@ -207,6 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        oldBusinessesNearby = businessesNearby;
         switch (item.getItemId()) {
             case R.id.home:
                 return true;
@@ -242,11 +241,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         //TODO check if this works
+        mMap.clear();
         oldBusinessesNearby = businessesNearby;
         generateBusinessesNearby(location);
         if(compareOldNearbyWithNewNearby(oldBusinessesNearby, businessesNearby))
         {
-            genPrefBusinesses(LoginActivity.user.getUserID());
+            genPrefBusinesses(LoginActivity.user.getUserID(), location);
         }
         handleNewLocation(location);
         Log.i(TAG, "LOCATION CHANGED.");
@@ -272,7 +272,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    void genPrefBusinesses(int userID)
+    void genPrefBusinesses(int userID, Location location)
     {
         ArrayList<Business> preferredBusinesses = new ArrayList<>();
 
@@ -281,6 +281,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 preferredBusinesses.add((Business) o);
             Map<Business, Boolean> preferredBusinessesNearby = genPrefAndUnprefBusinesses(businessesNearby, preferredBusinesses);
             generateBusinessMarkers(preferredBusinessesNearby);
+            handleNewLocation(location);
         });
     }
 
@@ -313,7 +314,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         double BusinessLongitude;
         Marker marker;
         MarkerOptions options;
-
+        mMap.clear();
 
         for (Map.Entry<Business, Boolean> pair : prefAndUnpreBusinessesNearby.entrySet()) {
             BusinessLatitude = pair.getKey().getLatitude();

@@ -2,6 +2,7 @@ package ca.bcit.smpv2;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -53,11 +55,11 @@ public class Analytics extends AppCompatActivity {
 
     ArrayList<View> charts = new ArrayList<>();
 
-    int pieChartFontSize = 20;
-    int lineChartFontSize = 20;
-    int barChartFontSize = 20;
+    int chartDefaultFontSize = 18;
     float lineChartLineSize = 3.0f;
-    int openingAnimationDuration = 1000;
+    int chartAxisDefaultFontSize = 12;
+    Typeface chartDefaultFont;
+    Typeface chartDefaultTitleFont;
 
     //Gesture left and right variables
     float x1,x2;
@@ -67,6 +69,8 @@ public class Analytics extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        chartDefaultFont = Typeface.createFromAsset(getAssets(),"champagnebold.ttf");
+        chartDefaultTitleFont = Typeface.createFromAsset(getAssets(), "theboldfont.ttf");
         //This order of function calls determines order of appearance by swiping as well
         generateLineData();
         generatePieData();
@@ -213,18 +217,26 @@ public class Analytics extends AppCompatActivity {
         pieEntries = new ArrayList<>();
         for(int i = 0; i < pieData.size(); ++i)
         {
-            pieEntries.add(new PieEntry(Float.parseFloat((String)pieDataValues.get(i)), (String) pieData.get(i)));
+            String pieDataLabel = (String) pieData.get(i);
+            pieEntries.add(new PieEntry(Float.parseFloat((String)pieDataValues.get(i)), (pieDataLabel.substring(0,1).toUpperCase() + pieDataLabel.substring(1, pieDataLabel.length()))));
         }
+
         dataSet = new PieDataSet(pieEntries, pieChartName);
         data = new PieData(dataSet);
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataSet.setValueTextSize(pieChartFontSize);
+        dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        dataSet.setValueTypeface(chartDefaultTitleFont);
+        dataSet.setValueTextSize(chartDefaultFontSize);
+        dataSet.setValueTextColor(Color.WHITE);
+        data.setValueTypeface(chartDefaultFont);
+        data.setValueTextSize(chartDefaultFontSize);
+        data.setValueTextColor(Color.WHITE);
         pieChart = (PieChart) findViewById(R.id.pieChart);
         pieChart.setData(data);
-        pieChart.animateY(openingAnimationDuration);
         pieChart.invalidate();
         pieChart.setTouchEnabled(false);
-        setUpLegend(pieChart);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
+        //setUpLegend(pieChart);
         charts.add(pieChart);
     }
 
@@ -243,13 +255,13 @@ public class Analytics extends AppCompatActivity {
         lineChartXAxis = lineChart.getXAxis();
         lineChartXAxis.setValueFormatter(new MonthValueFormatter());
         lineChartXAxis.setLabelCount(12, true);
-        lineChartXAxis.setTextSize(10.0f);
 
         lineEntries = new ArrayList<>();
         defaultMonths = new TreeMap<>();
         monthDate = new SimpleDateFormat("MM-yyyy");
         cal = Calendar.getInstance();
         cal.setTime(new Date());
+
         for (int i = 1; i <= 12; i++) {
             String month = monthDate.format(cal.getTime()).replace('-','.');
             int month_converted = Integer.parseInt(month.substring(5,7)) * 12 + Integer.parseInt(month.substring(0,2));
@@ -258,8 +270,7 @@ public class Analytics extends AppCompatActivity {
         }
         for(int k = 0; k < lineData.size(); ++k)
         {
-            int dataMonth = Integer.parseInt(lineData.get(k).toString().substring(2, 4)) * 12
-                    + Integer.parseInt(lineData.get(k).toString().substring(5, 7));
+            int dataMonth = Integer.parseInt(lineData.get(k).toString().substring(2, 4)) * 12  + Integer.parseInt(lineData.get(k).toString().substring(5, 7));
             defaultMonths.put(dataMonth, Float.parseFloat((String)lineDataValues.get(k)));
         }
         for(TreeMap.Entry<Integer, Float> entry : defaultMonths.entrySet()) {
@@ -268,18 +279,21 @@ public class Analytics extends AppCompatActivity {
 
         lineDataSet = new LineDataSet(lineEntries, lineChartName);
 
-        lineDataSet.setColor(Color.RED);
+        lineDataSet.setColor(R.color.darkBlue);
         lineDataSet.setLineWidth(lineChartLineSize);
-        lineDataSet.setValueTextSize(lineChartFontSize);
+        lineDataSet.setValueTextSize(chartDefaultFontSize);
+        lineDataSet.setValueTypeface(chartDefaultFont);
 
 
         dataSets = new ArrayList<>();
         dataSets.add(lineDataSet);
 
+
         data = new LineData(dataSets);
         lineChart.setData(data);
         lineChart.setTouchEnabled(false);
         setUpLegend(lineChart);
+        setUpFonts(lineChart);
         charts.add(lineChart);
     }
 
@@ -297,25 +311,37 @@ public class Analytics extends AppCompatActivity {
         }
 
         BarDataSet barDataSet  = new BarDataSet(barEntries, barChartName);
-        barDataSet.setValueTextSize(barChartFontSize);
+        barDataSet.setValueTextSize(chartDefaultFontSize);
+        barDataSet.setValueTypeface(chartDefaultTitleFont);
+        barDataSet.setColors(ColorTemplate.PASTEL_COLORS);
 
         BarData data = new BarData(barDataSet);
-        barChart.setData(data);
-        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        data.setValueTextSize(chartDefaultFontSize);
+        data.setValueTypeface(chartDefaultFont);
 
-        barChart.animateY(1000);
+        barChart.setData(data);
+
         barChart.setTouchEnabled(false);
         setUpLegend(barChart);
+        setUpFonts(barChart);
         charts.add(barChart);
     }
 
     public void setUpLegend(Chart chart)
     {
         Legend chartLegend = chart.getLegend();
-        chartLegend.setTextSize(pieChartFontSize);
         chartLegend.setXOffset(20f);
         chart.getDescription().setEnabled(false);
     }
+
+    public void setUpFonts(Chart chart)
+    {
+        chart.getXAxis().setTypeface(chartDefaultFont);
+        chart.getXAxis().setTextSize(chartAxisDefaultFontSize);
+        chart.getLegend().setTextSize(chartDefaultFontSize);
+        chart.getLegend().setTypeface(chartDefaultTitleFont);
+    }
+
 
 
     @Override

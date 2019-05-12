@@ -1,0 +1,22 @@
+Admin
+Admin after you search business details are different FIXED JOHN
+
+Login Activity
+Back button login/logout interaction? FIXED OLIVER
+
+Analytics
+why is it only 8 months?
+on rotation it looks like olivers mother and then it deletes the app cause virus
+Pie graph make pie chart display that it is for this month, change legend formatting
+
+Notification
+Everytime u go back to maps you get pinged
+
+Business Promotions
+On editting tier image dissapears FIXED HARMANDO VAN BUREN
+
+Signup
+Can signup as someone else
+
+User Setting
+Misaligned

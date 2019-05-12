@@ -22,6 +22,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="198dp"
         android:text="Settings"
+        android:fontFamily="@font/theboldfont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +37,7 @@
         android:layout_marginTop="152dp"
         android:layout_toStartOf="@+id/logoImageView"
         android:text="Password"
+        android:fontFamily="@font/champagnebold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -46,6 +48,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="27dp"
         android:text="Confirm Password"
+        android:fontFamily="@font/champagnebold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
@@ -58,6 +61,7 @@
         android:layout_marginEnd="54dp"
         android:ems="10"
         android:inputType="textPassword"
+        android:fontFamily="@font/champagnebold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/passwordTextView"
         app:layout_constraintTop_toBottomOf="@+id/settingsTextView" />
@@ -66,9 +70,10 @@
         android:id="@+id/confirmEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
+        android:fontFamily="@font/champagnebold"
         android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
@@ -77,9 +82,11 @@
         android:id="@+id/pointAccumulationOpt"
         android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/theboldfont"
         android:text="Point Accumulation Options"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmEditText" />
 
@@ -88,15 +95,13 @@
         android:layout_width="wrap_content"
         android:layout_height="37dp"
         android:layout_marginStart="49dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="37dp"
-        android:layout_marginBottom="17dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pointAccumulationOpt"
-        app:layout_constraintVertical_bias="0.32">
+        app:layout_constraintTop_toBottomOf="@+id/pointAccumulationOpt">
 
         <RadioButton
             android:id="@+id/visit"
@@ -105,6 +110,7 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="10dp"
+            android:fontFamily="@font/champagnebold"
             android:text="Visit Based"
             app:layout_constraintEnd_toStartOf="@+id/duration"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,6 +123,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="45dp"
+            android:fontFamily="@font/champagnebold"
             android:text="Duration Based"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/duration"
@@ -127,12 +134,16 @@
         android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="120dp"
-        android:text="Update"
+        android:background="@drawable/btn_rounded"
+        android:fontFamily="@font/theboldfont"
         android:onClick="updateSettings"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Update"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pointOptions" />
 
 
