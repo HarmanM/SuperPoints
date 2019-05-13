@@ -4,4 +4,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/darkBlue"
     app:titleTextColor="@android:color/white"
-    android:fontFamily="@font/theboldfont"/>
+    android:fontFamily="@font/theboldfont"
+    android:textSize="40sp"/>

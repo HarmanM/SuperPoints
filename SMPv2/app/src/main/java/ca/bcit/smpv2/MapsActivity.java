@@ -38,10 +38,12 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeSet;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -59,8 +61,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    static ArrayList<Business> businessesNearby = new ArrayList<>();
-    static ArrayList<Business> oldBusinessesNearby = new ArrayList<>();
+    static TreeSet<Business> businessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
+    static TreeSet<Business> oldBusinessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
 
     //Preferred business variables
     FloatingActionButton preferBusinessButton;
@@ -115,6 +117,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
         //setUpMapIfNeeded();
         mGoogleApiClient.connect();
+
     }
 
     @Override
@@ -274,7 +277,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void genPrefBusinesses(int userID, Location location)
     {
-        ArrayList<Business> preferredBusinesses = new ArrayList<>();
+        TreeSet<Business> preferredBusinesses = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
 
         new DatabaseObj(MapsActivity.this).getPreferredBusinesses("businessID IN (SELECT businessID FROM superpoints.PreferredBusinesses WHERE userID = " + userID + " )",(ArrayList<Object> objects)->{
             for(Object o: objects)
@@ -286,25 +289,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public Map<Business, Boolean> genPrefAndUnprefBusinesses(ArrayList<Business> businessesNearby, ArrayList<Business> preferredBusinesses)
+    public Map<Business, Boolean> genPrefAndUnprefBusinesses(TreeSet<Business> businessesNearby, TreeSet<Business> preferredBusinesses)
     {
         Map<Business, Boolean> allBusinessesNearby = new HashMap<>();
 
-        for(int i = 0; i < businessesNearby.size(); ++i)
-        {
-            boolean found = false;
-            for(int k = 0; k < preferredBusinesses.size(); ++k)
-            {
-                if(businessesNearby.get(i).getBusinessID() == preferredBusinesses.get(k).getBusinessID())
-                {
-                    allBusinessesNearby.put(businessesNearby.get(i), true);
-                    found = true;
-                    break;
-                }
-            }
-            if(!found)
-                allBusinessesNearby.put(businessesNearby.get(i), false);
-        }
+        for(Business bus : businessesNearby)
+           allBusinessesNearby.put(bus, preferredBusinesses.contains(bus));
         return allBusinessesNearby;
     }
 
@@ -335,15 +325,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public boolean compareOldNearbyWithNewNearby (ArrayList<Business> oldBusinessesNearby, ArrayList<Business> businessesNearby)
+    public boolean compareOldNearbyWithNewNearby (TreeSet<Business> oldBusinessesNearby, TreeSet<Business> businessesNearby)
     {
         if(oldBusinessesNearby.size() != businessesNearby.size())
             return true;
-        for(int i = 0; i < oldBusinessesNearby.size(); ++i)
-        {
-            if (oldBusinessesNearby.get(i).getBusinessID() != businessesNearby.get(i).getBusinessID())
+        for(Business bus : oldBusinessesNearby)
+            if (!businessesNearby.contains(bus))
                 return true;
-        }
         return false;
     }
 

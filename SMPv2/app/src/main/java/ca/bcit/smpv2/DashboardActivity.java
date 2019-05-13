@@ -67,33 +67,33 @@ public class DashboardActivity extends AppCompatActivity {
                             + DatabaseObj.SQLSafe(LoginActivity.user.getUserID()) + " )",(ArrayList<Object> preferredBusineses)->{
                 for(Object preferredBusiness: preferredBusineses)
                     preferredBusinesses.add((Business) preferredBusiness);
-            });
-            //Sort promotions by business name
-            Collections.sort((ArrayList<Promotions>) (ArrayList<?>) promotions,
-                    (Promotions p1, Promotions p2) -> p1.getBusinessName().compareToIgnoreCase(p2.getBusinessName()));
-            //Array to hold all promotions that are preferred to be deleted from original list later to append other promotions
-            ArrayList<Promotions> preferredPromotions = new ArrayList<>();
-            for(Object promotion : promotions)
-            {
-                Promotions currentPromotion = (Promotions) promotion;
-                for(int i = 0; i < preferredBusinesses.size(); ++i)
+                Collections.sort((ArrayList<Promotions>) (ArrayList<?>) promotions,
+                        (Promotions p1, Promotions p2) -> p1.getBusinessName().compareToIgnoreCase(p2.getBusinessName()));
+                //Array to hold all promotions that are preferred to be deleted from original list later to append other promotions
+                ArrayList<Promotions> preferredPromotions = new ArrayList<>();
+                for(Object promotion : promotions)
                 {
-                    //TODO optimize?
-                    if(currentPromotion.getBusinessID() == preferredBusinesses.get(i).getBusinessID())
+                    Promotions currentPromotion = (Promotions) promotion;
+                    for(int i = 0; i < preferredBusinesses.size(); ++i)
                     {
-                        adapter.add(new Pair<Promotions, Boolean>(currentPromotion, true));
-                        preferredPromotions.add(currentPromotion);
-                        break;
+                        //TODO optimize?
+                        if(currentPromotion.getBusinessID() == preferredBusinesses.get(i).getBusinessID())
+                        {
+                            adapter.add(new Pair<Promotions, Boolean>(currentPromotion, true));
+                            preferredPromotions.add(currentPromotion);
+                            break;
+                        }
                     }
                 }
-            }
-            //promotions.add(new Promotions)
-            //All promotions left will not be preferred so add them all
-            promotions.removeAll(preferredPromotions);
-            for(Object promotion : promotions)
-            {
-                adapter.add(new Pair<Promotions, Boolean>((Promotions) promotion, true));
-            }
+                //promotions.add(new Promotions)
+                //All promotions left will not be preferred so add them all
+                promotions.removeAll(preferredPromotions);
+                for(Object promotion : promotions)
+                {
+                    adapter.add(new Pair<Promotions, Boolean>((Promotions) promotion, false));
+                }
+            });
+            //Sort promotions by business name
             listView.setAdapter(adapter);
         });
 

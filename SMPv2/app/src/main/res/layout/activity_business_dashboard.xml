@@ -8,16 +8,13 @@
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/toolbar"
+        layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white">
-
-    </android.support.v7.widget.Toolbar>
-
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +34,8 @@
             android:fontFamily="@font/theboldfont"
             android:text="ADD"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"/>
 
         <Button
             android:id="@+id/deleteBtn"
@@ -49,7 +47,8 @@
             android:fontFamily="@font/theboldfont"
             android:text="REMOVE"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"/>
 
         <Button
             android:id="@+id/editBtn"
@@ -61,7 +60,8 @@
             android:fontFamily="@font/theboldfont"
             android:text="EDIT"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 
@@ -71,15 +71,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <ListView
-        android:id="@+id/lvBusinessPromotions"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="@color/selectedColor">
-    </ListView>
+        <ListView
+            android:id="@+id/lvBusinessPromotions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:listSelector="@color/selectedColor"></ListView>
 
 
-</LinearLayout>
+    </LinearLayout>
 
 
 

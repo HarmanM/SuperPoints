@@ -29,6 +29,7 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //get data for this position
+        Pair<Promotions, Boolean> test = getItem(position);
         Promotions promotion = getItem(position).first;
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -43,6 +44,8 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
         // Populate the data into the template view using the data object
         if(getItem(position).second)
             convertView.setBackgroundColor(Color.YELLOW);
+        else
+            convertView.setBackgroundColor(Color.WHITE);
         promotionBusinessName.setText(promotion.getBusinessName());
         shortPromotionDetails.setText(promotion.getShortDescription());
         promotionMinimumPoints.setText(String.valueOf(promotion.getMinTier().getName()));
@@ -60,11 +63,6 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
         // Return the completed view to render on screen
 
         return convertView;
-    }
-
-    public int getViewTypeCount()
-    {
-        return 3;
     }
 
 }

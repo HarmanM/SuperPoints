@@ -17,14 +17,13 @@
         android:layout_height="match_parent"
         tools:context=".MapsActivity" />
 
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/toolbar"
-        android:layout_width="fill_parent"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white">
-    </android.support.v7.widget.Toolbar>
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 
     <android.support.design.widget.FloatingActionButton

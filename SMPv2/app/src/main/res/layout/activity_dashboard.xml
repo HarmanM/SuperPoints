@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".DashboardActivity">
+    tools:context=".DashboardActivity"
+    android:background="@color/white">
 
     <include
         android:id="@+id/toolbar"
