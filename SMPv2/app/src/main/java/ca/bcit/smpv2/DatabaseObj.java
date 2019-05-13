@@ -35,7 +35,7 @@ public class DatabaseObj extends AsyncTask {
     }
 
     public static String SQLSafe(String s){
-        return s.replace("'", "''");
+        return s.replace("'", "''").replace("&", "%26");
     }
     public static String SQLSafe(int s){
         return Integer.toString(s);

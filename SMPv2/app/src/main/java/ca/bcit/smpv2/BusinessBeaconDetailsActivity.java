@@ -66,50 +66,90 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
             businessRegion.setText("");
 
         //f7826da6-4fa2-4e98-8024-bc5b71e0893e
-        businessRegion.setCursorVisible(false);
 
-        businessRegion.addTextChangedListener(new TextWatcher() {
+        TextWatcher tw = new TextWatcher() {
             int originalInputLength = 0;
             int currentInputLength = 0;
             boolean backspaceDetected = false;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //12345678-765
-                //1234567
-                originalInputLength++;
-                currentInputLength = businessRegion.getText().length();
-                backspaceDetected = (currentInputLength != originalInputLength);
-                if (backspaceDetected)
-                    originalInputLength = businessRegion.getText().length();
-                if (backspaceDetected && (s.length() == 8 || s.length() == 13 || s.length() == 18 || s.length() == 23)) {
-                    businessRegion.getText().delete(s.length() - 1, s.length());
-                } else if (s.length() == 8 || s.length() == 13 || s.length() == 18 || s.length() == 23) {
-                    businessRegion.append("-");
-                }
-                StringBuilder newS = new StringBuilder(s);
-                if (s.length() >= 10 && s.charAt(8) != '-') {
-                    newS.insert(8, '-');
-                } else if (s.length() >= 15 && s.charAt(13) != '-') {
-                    newS.insert(13, '-');
-                } else if (s.length() >= 20 && s.charAt(18) != '-') {
-                    newS.insert(18, '-');
-                } else if (s.length() >= 25 && s.charAt(23) != '-') {
-                    newS.insert(23, '-');
-                }
-                businessRegion.setText(newS.toString());
-                return;
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                int i = businessRegion.getSelectionStart();
+                currentInputLength = businessRegion.getText().length();
+                backspaceDetected = (currentInputLength < originalInputLength);
+
+                businessRegion.removeTextChangedListener(this);
+
+                String str = s.toString();
+
+                int dashes = 0;
+                for(int j = 0; j < str.length(); ++j)
+                    if(str.charAt(j) == '-')
+                        dashes++;
+
+                str = str.replace("-", "");
+
+                StringBuilder strB = new StringBuilder(str);
+                if(backspaceDetected) {
+                    if (str.length() >= 20) {
+                        if(4 - dashes > 0) {
+                            strB.delete(strB.length() - (4 - dashes), strB.length());
+                            i -= (4 - dashes);
+                        }
+                    } else if (str.length() >= 16) {
+                        if(3 - dashes > 0) {
+                            strB.delete(strB.length() - (3 - dashes), strB.length());
+                            i -= (3 - dashes);
+                        }
+                    } else if (str.length() >= 12) {
+                        if(2 - dashes > 0) {
+                            strB.delete(strB.length() - (2 - dashes), strB.length());
+                            i -= (2 - dashes);
+                        }
+                    } else if (str.length() >= 8) {
+                        if(1 - dashes > 0) {
+                            strB.delete(strB.length() - (1 - dashes), strB.length());
+                            i -= (1 - dashes);
+                        }
+                    }
+                }
+
+                if(strB.length() >= 8){
+                    strB.insert(8, "-");
+                    if(strB.length() >= 12 + 1){
+                        strB.insert(12 + 1, "-");
+                        if(strB.length() >= 16 + 2){
+                            strB.insert(16 + 2, "-");
+                            if(strB.length() >= 20 + 3) {
+                                strB.insert(20 + 3, "-");
+                            }
+                        }
+                    }
+                }
+
+                if(backspaceDetected)
+                    i = i;
+                else if(str.length() == 8 || str.length() == 12 || str.length() == 16 || str.length() == 20)
+                    ++i;
+
+
+                businessRegion.setText(strB.toString());
+                businessRegion.setSelection(i);
+                originalInputLength = strB.length();
+                businessRegion.addTextChangedListener(this);
             }
-        });
+        };
+
+        businessRegion.addTextChangedListener(tw);
 
     }
 
@@ -160,12 +200,12 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
     public void updateRegion(View view) {
         EditText businessRegionEditText = findViewById(R.id.businessRegionEditText);
         String businessRegionName = businessRegionEditText.getText().toString().trim();
-        if (!businessRegionName.isEmpty() || businessRegionName.length() != BEACON_UUID_SIZE) {
+        if (!businessRegionName.isEmpty() && businessRegionName.length() == BEACON_UUID_SIZE) {
             business.setRegion(businessRegion.getText().toString());
             new DatabaseObj(BusinessBeaconDetailsActivity.this).setBusiness(business, null);
             Toast.makeText(this, "Business region updated.", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Ensure a region has been entered", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ensure a valid region has been entered", Toast.LENGTH_LONG).show();
         }
     }
 }
