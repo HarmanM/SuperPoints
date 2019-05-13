@@ -200,12 +200,12 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
     public void updateRegion(View view) {
         EditText businessRegionEditText = findViewById(R.id.businessRegionEditText);
         String businessRegionName = businessRegionEditText.getText().toString().trim();
-        if (!businessRegionName.isEmpty() || businessRegionName.length() != BEACON_UUID_SIZE) {
+        if (!businessRegionName.isEmpty() && businessRegionName.length() == BEACON_UUID_SIZE) {
             business.setRegion(businessRegion.getText().toString());
             new DatabaseObj(BusinessBeaconDetailsActivity.this).setBusiness(business, null);
             Toast.makeText(this, "Business region updated.", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Ensure a region has been entered", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ensure a valid region has been entered", Toast.LENGTH_LONG).show();
         }
     }
 }
