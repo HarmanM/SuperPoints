@@ -50,6 +50,7 @@ public class DatabaseObj extends AsyncTask {
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
         if(whereClause != "") {
             this.params = whereClause;
+            this.params = this.params.replace("&", "%26");
             //this.params = this.params.replace(" ", "%20");
             //this.params = this.params.replace("(", "%28");
             //this.params = this.params.replace(")", "%29");
