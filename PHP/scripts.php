@@ -530,7 +530,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
             }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Businesses` SET businessName = '$businessname',
-            latitude = $latitude, longitude = $longitude, region = $region WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
+            latitude = $latitude, longitude = $longitude, region = '$region' WHERE (`businessID` = '$businessid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$businessid" : "";
       }
@@ -568,7 +568,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
             }
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`Beacons` SET businessID = '$businessid',
-            major = '$major', minor = '$minor', txPower = $txPower, region = $region WHERE (`beaconID` = '$beaconid');", MYSQLI_STORE_RESULT);
+            major = '$major', minor = '$minor', txPower = $txPower, region = '$region' WHERE (`beaconID` = '$beaconid');", MYSQLI_STORE_RESULT);
 
         echo ($result) ? "$beaconid" : "";
       }
@@ -811,11 +811,11 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
         if (mysqli_connect_errno($con)) {
             echo "Failed to connect to database: " . mysqli_connect_error();
         }
-        $promoid = $_GET['pid'];
+        $promotionid = $_GET['PROMOTION_ID'];
 
         // Get number of clicks before increment
         $select = mysqli_query($con,"SELECT clicks FROM superpoints.Promotions
-            WHERE promotionID = '$promoid';", MYSQLI_STORE_RESULT);
+            WHERE promotionID = '$promotionid';", MYSQLI_STORE_RESULT);
         $clickNo = mysqli_fetch_array($select);
         // increment
         $clicks = $clickNo[0] + 1;
