@@ -16,7 +16,22 @@ Business Promotions
 On editting tier image dissapears FIXED HARMANDO VAN BUREN
 
 Signup
-Can signup as someone else
+Can signup as someone else FIXED
 
 User Setting
 Misaligned
+
+Points
+Points bar is a slider (that is movable) FIXED
+
+User promotion search bar
+Should search by tier name
+
+When tapping on search bar, images refresh
+
+When deleting a promotion, listview does not refresh
+
+When editing a promotion, changing the image, then editing again, shows the image before the first edit - FIXED
+
+Points progress bar does not show points
+
