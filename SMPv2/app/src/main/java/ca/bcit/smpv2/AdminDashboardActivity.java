@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     public void onSendKPIBtnClick(View view) {
         new DatabaseObj(this).sendEmail();
+        Toast.makeText(this, "Email sent", Toast.LENGTH_LONG).show();
     }
 
     public void setUpBusinessListView ()

@@ -43,13 +43,13 @@ public class PointsAdapter extends ArrayAdapter<Pair<Business, Points>> {
         if(curTier != UserPointsActivity.tiers.size() - 1) {
             seekBar.setProgress((int) ((float) (userPoints.second.getPoints() - UserPointsActivity.tiers.get(curTier).getMinPoints())
                     / (UserPointsActivity.tiers.get(curTier + 1).getMinPoints() - UserPointsActivity.tiers.get(curTier).getMinPoints()) * 100));
-            ((TextView) convertView.findViewById(R.id.pointsTextView)).setText(String.valueOf((float) seekBar.getProgress() / 100 * UserPointsActivity.tiers.get(curTier + 1).getMinPoints()));
+            ((TextView) convertView.findViewById(R.id.pointsTextView)).setText(String.valueOf((int)((float) seekBar.getProgress() / 100 * UserPointsActivity.tiers.get(curTier + 1).getMinPoints())) + " points");
 
             ((TextView) convertView.findViewById(R.id.curTier)).setText(UserPointsActivity.tiers.get(curTier).getName() + " (" + UserPointsActivity.tiers.get(curTier).getMinPoints() + ")");
             ((TextView) convertView.findViewById(R.id.nextTier)).setText(UserPointsActivity.tiers.get(curTier + 1).getName() + " (" + UserPointsActivity.tiers.get(curTier + 1).getMinPoints() + ")");
         }else{
             seekBar.setProgress(100);
-            ((TextView) convertView.findViewById(R.id.pointsTextView)).setText(String.valueOf((float) seekBar.getProgress() / 100 * UserPointsActivity.tiers.get(curTier).getMinPoints()));
+            ((TextView) convertView.findViewById(R.id.pointsTextView)).setText(String.valueOf((int)((float) seekBar.getProgress() / 100 * UserPointsActivity.tiers.get(curTier).getMinPoints())) + " points");
 
             ((TextView) convertView.findViewById(R.id.curTier)).setText(UserPointsActivity.tiers.get(curTier).getName() + " (" + UserPointsActivity.tiers.get(curTier).getMinPoints() + ")");
             ((TextView) convertView.findViewById(R.id.nextTier)).setText("");
