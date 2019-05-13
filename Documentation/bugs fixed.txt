@@ -29,9 +29,9 @@ Should search by tier name
 
 When tapping on search bar, images refresh
 
-When deleting a promotion, listview does not refresh
+When deleting a promotion, listview does not refresh - FIXED
 
 When editing a promotion, changing the image, then editing again, shows the image before the first edit - FIXED
 
-Points progress bar does not show points
+Points progress bar does not show points - FIXED
 
