@@ -28,8 +28,9 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <SeekBar
+    <ProgressBar
         android:id="@+id/tierProgress"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"

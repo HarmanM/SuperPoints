@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -37,7 +38,7 @@ public class PointsAdapter extends ArrayAdapter<Pair<Business, Points>> {
         for(int i = 0; i < UserPointsActivity.tiers.size(); ++i)
             if(UserPointsActivity.tiers.get(i).getName().equals(userPoints.second.getTier()))
                 curTier = i;
-        SeekBar seekBar = convertView.findViewById(R.id.tierProgress);
+        ProgressBar seekBar = convertView.findViewById(R.id.tierProgress);
 
         if(curTier != UserPointsActivity.tiers.size() - 1) {
             seekBar.setProgress((int) ((float) (userPoints.second.getPoints() - UserPointsActivity.tiers.get(curTier).getMinPoints())

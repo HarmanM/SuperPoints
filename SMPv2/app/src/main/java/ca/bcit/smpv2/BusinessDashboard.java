@@ -46,6 +46,8 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
@@ -239,13 +241,17 @@ public class BusinessDashboard extends AppCompatActivity {
                     Delete instance = new Delete();
                     instance.execute(String.valueOf(promoToDelete.getPromotionID()));
                 });
-                usersPromotions.remove(promoToDelete);
+                usersPromotions.remove(new Pair<>(promoToDelete, false));
                 alertDialog.dismiss();
                 listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                 listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 listView.refreshDrawableState();
             }
         });
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        listView.refreshDrawableState();
         buttonCancelDeletePromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -299,8 +305,9 @@ public class BusinessDashboard extends AppCompatActivity {
             if (updatedPromo != null) {
                 editTextPromotionDetail.setText(updatedPromo.getDetails());
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
-                Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
-                        + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
+                Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                        .into(promoImageView);
                 for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
                     if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
                         spinner.setSelection(i);
@@ -352,14 +359,16 @@ public class BusinessDashboard extends AppCompatActivity {
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
-                    Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/"
-                            + updatedPromo.getPromotionID() + ".jpg").into(promoImageView);
+                    Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                            .into(promoImageView);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
                                 ()->{
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                                     listView.setAdapter(adapter);
                                     selectedImage = null;
+
                                 });
                     });
 
