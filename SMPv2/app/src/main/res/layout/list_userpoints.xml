@@ -26,6 +26,12 @@
             android:id = "@+id/nextTier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/pointsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
     <ProgressBar
@@ -35,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp" />
+
 
     
 </LinearLayout>
