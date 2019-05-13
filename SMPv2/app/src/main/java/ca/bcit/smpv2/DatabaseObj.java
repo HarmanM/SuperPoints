@@ -35,7 +35,7 @@ public class DatabaseObj extends AsyncTask {
     }
 
     public static String SQLSafe(String s){
-        return s.replace("'", "''");
+        return s.replace("'", "''").replace("&", "%26");
     }
     public static String SQLSafe(int s){
         return Integer.toString(s);
@@ -50,7 +50,6 @@ public class DatabaseObj extends AsyncTask {
     private void setMembers(String whereClause, Consumer<ArrayList<Object>> f){
         if(whereClause != "") {
             this.params = whereClause;
-            this.params = this.params.replace("&", "%26");
             //this.params = this.params.replace(" ", "%20");
             //this.params = this.params.replace("(", "%28");
             //this.params = this.params.replace(")", "%29");
