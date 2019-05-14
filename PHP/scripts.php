@@ -428,7 +428,9 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
 
         $userid = $_GET['USER_ID'];
         $businessid = $_GET['BUSINESS_ID'];
-        $username = $_GET['USERNAME'];
+        $username1 = $_GET['USERNAME'];
+        $username2 = str_replace("~amp`", "~amp", $username1);
+        $username = str_replace("~amp", "&", $username2);
 
         if ($businessid == -1) {
             $businessid = "";
@@ -439,7 +441,9 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
         }
 
         if ($userid == "") {
-			       $password = $_GET['PASSWORD'];
+			       $password1 = $_GET['PASSWORD'];
+             $password2 = str_replace("~amp`", "~amp", $password1);
+             $password = str_replace("~amp", "&", $password2);
 
              if ($businessid != "") {
                $result = mysqli_query($con,"INSERT INTO `superpoints`.`Users`
@@ -449,8 +453,6 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
                if ($result == "true") {
                  $result2 = mysqli_query($con, "SELECT * FROM `superpoints`.`Users` WHERE userName = '$username' AND password = '$password'", MYSQLI_STORE_RESULT);
                  $row = mysqli_fetch_array($result2);
-
-                 $settingResult = mysqli_query($con,"INSERT INTO `superpoints`.`UserSettings` (`userID`,`settingID`,`value`) VALUES ($row[0], 1, '2');", MYSQLI_STORE_RESULT);
 
                  echo $row[0];
             }
@@ -502,7 +504,9 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       $businessname = $_GET['BUSINESS_NAME'];
       $latitude = $_GET['LATITUDE'];
       $longitude = $_GET['LONGITUDE'];
-      $region = $_GET['REGION'];
+      $region1 = $_GET['REGION'];
+      $region2 = str_replace("~amp`", "~amp", $region1);
+      $region = str_replace("~amp", "&", $region2);
 
       if ($businessid == -1 || !isset($businessid)) {
         $businessid = "";
@@ -548,7 +552,9 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       $major = $_GET['MAJOR'];
       $minor = $_GET['MINOR'];
       $txpower = $_GET['TX_POWER'];
-	    $region = $_GET['REGION'];
+      $region1 = $_GET['REGION'];
+      $region2 = str_replace("~amp`", "~amp", $region1);
+      $region = str_replace("~amp", "&", $region2);
 
       if ($beaconid == -1 || !isset($beaconid)) {
         $beaconid = "";
@@ -651,9 +657,13 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       $promotionid = $_GET['PROMOTION_ID'];
       $businessid = $_GET['BUSINESS_ID'];
       $tierid = $_GET['MIN_TIER'];
-      $details = $_GET['DETAILS'];
+      $details1 = $_GET['DETAILS'];
+      $details2 = str_replace("~amp`", "~amp", $details1);
+      $details = str_replace("~amp", "&", $details2);
       $clicks = $_GET['CLICKS'];
-      $shortDescription = $_GET['SHORT_DESCRIPTION'];
+      $shortDescription1 = $_GET['SHORT_DESCRIPTION'];
+      $shortDescription2 = str_replace("~amp`", "~amp", $shortDescription1);
+      $shortDescription = str_replace("~amp", "&", $shortDescription2);
 
       if ($promotionid == -1) {
         $promotionid = "";
@@ -813,8 +823,9 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
         }
         $promotionid = $_GET['PROMOTION_ID'];
 
-        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = clicks + 1
-            WHERE (`promotionID` = '$promoid');", MYSQLI_STORE_RESULT);
+
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = `clicks` + 1
+            WHERE (`promotionID` = $promotionid);", MYSQLI_STORE_RESULT);
 
         echo $result ? 'true' : 'false';
         mysqli_close($con);
@@ -1170,9 +1181,9 @@ function sendEmail() {
         } else {
             echo 'Message has been sent.';
         }
-
-
 }
+
+
 
     $func = $_GET['function'];
     switch ($func) {
