@@ -49,7 +49,7 @@ public class BusinessSignup extends AppCompatActivity {
             @Override
             public void accept(ArrayList<Object> objects) {
 
-                User u = new User(0, (Integer) objects.get(0), password, username);
+                User u = new User(0, Integer.parseInt((String) objects.get(0)), password, username);
 
                 new DatabaseObj (BusinessSignup.this).setUser(u, new Consumer<ArrayList<Object>>() {
                     @Override
