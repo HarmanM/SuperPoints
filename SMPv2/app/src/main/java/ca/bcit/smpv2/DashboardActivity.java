@@ -108,13 +108,12 @@ public class DashboardActivity extends AppCompatActivity {
                 Intent i = new Intent(DashboardActivity.this, DetailedDescription.class);
 
                 Promotions promo = usersPromotions.get(position).first;
-                promoImage = findViewById(R.id.iconImageView);
-                promoTitle = findViewById(R.id.promotionBusinessName);
-                promoDetails = findViewById(R.id.promotionDetailedDescription);
                 String promoID = String.valueOf(promo.getPromotionID());
 
+                new DatabaseObj(DashboardActivity.this).incrementPromoClicks(promo.getPromotionID());
+
                 i.putExtra("promoID", promoID);
-                i.putExtra("title", promoTitle.getText());
+                i.putExtra("title", promo.getBusinessName());
                 i.putExtra("details", promo.getDetails());
                 startActivity(i);
             }

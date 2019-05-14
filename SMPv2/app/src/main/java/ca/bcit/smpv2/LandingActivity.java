@@ -32,6 +32,7 @@ public class LandingActivity extends AppCompatActivity {
         Intent l = getIntent();
         if(l != null && l.getBooleanExtra("logout", false)) {
             LoginActivity.user = null;
+            BusinessDashboard.business = null;
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             editor.remove("username");
             editor.remove("password");
