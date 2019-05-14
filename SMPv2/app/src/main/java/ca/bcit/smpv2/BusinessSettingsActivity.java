@@ -35,9 +35,7 @@ public class BusinessSettingsActivity extends AppCompatActivity {
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         RadioGroup pointAccumulation = findViewById(R.id.pointOptions);
         if(BusinessDashboard.business.getSetting(0).getValue().equals("duration"))

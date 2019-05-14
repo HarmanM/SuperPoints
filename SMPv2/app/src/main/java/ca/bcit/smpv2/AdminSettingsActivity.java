@@ -22,9 +22,7 @@ public class AdminSettingsActivity extends AppCompatActivity {
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         ((CheckBox)findViewById(R.id.monthlyKPI)).setChecked(Boolean.valueOf(LoginActivity.user.getSetting(2).getValue()));
     }

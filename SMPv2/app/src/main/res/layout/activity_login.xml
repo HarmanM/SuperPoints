@@ -5,7 +5,8 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@color/defaultButtonColor">
 
     <EditText
         android:id="@+id/cityEditText"
@@ -50,6 +51,9 @@
         android:layout_marginBottom="70dp"
         android:onClick="login"
         android:text="Submit"
+        android:fontFamily="@font/theboldfont"
+        android:textColor="@color/defaultButtonColor"
+        android:background="@drawable/btn_rounded_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.74"
@@ -59,7 +63,7 @@
 
     <TextView
         android:id="@+id/emailTextView"
-        android:layout_width="67sp"
+        android:layout_width="wrap_content"
         android:layout_height="31sp"
         android:layout_alignLeft="@+id/cityEditText"
         android:layout_alignParentLeft="false"
@@ -69,6 +73,9 @@
         android:layout_marginTop="127dp"
         android:layout_marginEnd="16dp"
         android:text="Username"
+        android:fontFamily="@font/champagnebold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/postalTextView"
         app:layout_constraintEnd_toStartOf="@+id/cityEditText"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,6 +104,9 @@
         android:layout_toLeftOf="@+id/postalEditText"
         android:hapticFeedbackEnabled="false"
         android:text="Password"
+        android:fontFamily="@font/champagnebold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.281"
@@ -130,9 +140,9 @@
         android:layout_marginTop="7dp"
         android:layout_marginEnd="145sp"
         android:text="Log In"
-        android:textColor="#000000"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/theboldfont"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/cityEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

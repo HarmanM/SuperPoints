@@ -8,6 +8,9 @@
     <color name="buttonColor">#2EDAEF</color>
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
+    <color name="yellow">#FADA5E</color>
+    <color name="green">#50C878</color>
+    <color name="offWhite">#A0A0A0</color>
     <color name="defaultButtonColor">#00CED1</color>
     <color name="selectedColor">#C0C0C0</color>
     <color name="darkBlue">#2B547E</color>

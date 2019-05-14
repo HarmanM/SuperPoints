@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/darkBlue"
+    android:background="@color/defaultButtonColor"
     app:titleTextColor="@android:color/white"
-    android:fontFamily="@font/theboldfont"
+    android:theme="@style/ToolbarTheme"
     android:textSize="40sp"/>

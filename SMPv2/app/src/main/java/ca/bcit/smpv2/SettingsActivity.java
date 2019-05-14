@@ -30,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
     //Seekbar variables
     private SeekBar seekBarPrivacy;
     private int privacyStep = 50; // 3 levels of user privacy
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,8 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         seekBarPrivacy = findViewById(R.id.seekBarPrivacy);
         seekBarPrivacy.setProgress(Integer.parseInt(LoginActivity.user.getSetting(1).getValue()) * privacyStep);
@@ -62,8 +61,26 @@ public class SettingsActivity extends AppCompatActivity {
                     int privacySetting = seekBarPrivacy.getProgress();
                     int userID = LoginActivity.user.getUserID();
                     if (userID != 0) {
-                        LoginActivity.user.getSetting(1).setValue(Integer.toString(privacySetting/privacyStep));
+                        int newSetting = privacySetting/privacyStep;
+                        LoginActivity.user.getSetting(1).setValue(Integer.toString(newSetting));
                         new DatabaseObj (SettingsActivity.this).setUserSetting(LoginActivity.user.getSetting(1));
+                        String message = "";
+                        switch (newSetting)
+                        {
+                            case 0:
+                                message = "Notify me of the bare minimum!";
+                                break;
+                            case 1:
+                                message = "Notify me of some things!";
+                                break;
+                            case 2:
+                                message = "Notify you of everything!";
+                                break;
+                            default:
+                                break;
+                        }
+                        Toast.makeText(SettingsActivity.this, message, Toast.LENGTH_LONG).show();
+
                     }
                 } catch (Exception e) {
                     Log.i("SEEKBAR SETTINGS ACTIVITY:", e.toString());

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -71,6 +72,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     BeaconRanger br;
     Toolbar toolbar;
 
+    Marker currentLocationMarker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +88,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Find the toolbar view inside the activity layout
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(),R.drawable.baseline_person_black_18dp));
 
         //TODO useless?
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -190,7 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(latLng)
                 .title("I am here!")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_map_resize_p));
-        mMap.addMarker(options);
+        currentLocationMarker = mMap.addMarker(options);
         mMap.setOnMarkerClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom));
     }
@@ -314,7 +316,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             options = new MarkerOptions()
                     .position(latLng)
-                    .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized) : BitmapDescriptorFactory.fromResource(R.drawable.shop_resized))
+                    .icon((pair.getValue()) ? BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_2_resized) : BitmapDescriptorFactory.fromResource(R.drawable.shop_resized))
                     .title(BusinessName)
                     .snippet(pair.getKey().getBusinessAddress(MapsActivity.this));
 
@@ -337,12 +339,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public boolean onMarkerClick(final Marker marker) {
+        if(marker.equals(currentLocationMarker))
+        {
+            marker.showInfoWindow();
+            return true;
+        }
         LatLng oldMarkerLatLng = marker.getPosition();
         Boolean preferred = markerExtras.get(oldMarkerLatLng).isPreferred();
 
         marker.showInfoWindow();
         if(preferred)
-            preferBusinessButton.setImageResource(R.drawable.unprefer_business);
+            preferBusinessButton.setImageResource(R.drawable.white_rectangle);
 
         preferBusinessButton.setVisibility(View.VISIBLE);
         preferBusinessButton.setOnClickListener(new View.OnClickListener() {
@@ -357,8 +364,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 oldMarker.remove();
                 if(!preferred)
                 {
-                    oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_resized));
-                    preferBusinessButton.setImageResource(R.drawable.unprefer_business);
+                    oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.preferred_business_icon_2_resized));
+                    preferBusinessButton.setImageResource(R.drawable.white_rectangle);
                     new DatabaseObj(MapsActivity.this).setPreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
                         BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
                         updated.setPreferred(!preferred);
@@ -366,12 +373,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         updated.setMarker(newMarker);
                         markerExtras.put(oldMarkerLatLng, updated);
                         newMarker.showInfoWindow();
+                        Toast.makeText(MapsActivity.this, "You favourited this business!", Toast.LENGTH_SHORT).show();
                     });
                 }
                 else
                 {
                     oldMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.shop_resized));
-                    preferBusinessButton.setImageResource(R.drawable.prefer_business_icon);
+                    preferBusinessButton.setImageResource(R.drawable.prefer_business_icon_2);
                     new DatabaseObj(MapsActivity.this).deletePreferredBusiness(prefBusiness,(ArrayList<Object> objects)->{
                         BusinessMapMarker updated = markerExtras.get(oldMarkerLatLng);
                         updated.setPreferred(!preferred);
@@ -379,6 +387,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         updated.setMarker(newMarker);
                         markerExtras.put(oldMarkerLatLng, updated);
                         newMarker.showInfoWindow();
+                        Toast.makeText(MapsActivity.this, "This business has been from your favourites.", Toast.LENGTH_SHORT).show();
                     });
                 }
             }

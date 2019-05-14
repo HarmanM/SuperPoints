@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,11 +17,15 @@ public class DetailedDescription extends AppCompatActivity {
     TextView promoTitle;
     TextView detailedDescription;
     Bitmap b;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_description);
+        toolbar = (Toolbar) findViewById
+                (R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         String title= getIntent().getStringExtra("title");
         String details= getIntent().getStringExtra("details");
