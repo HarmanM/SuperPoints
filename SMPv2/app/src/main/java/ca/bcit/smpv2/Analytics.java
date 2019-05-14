@@ -169,7 +169,6 @@ public class Analytics extends AppCompatActivity {
                     {
                         lineDataValues.add(lineDataPoints.get(i).getData().get(k));
                     }
-
                 }
             }
             setUpLineChart(lineData, lineDataValues, "Last 12 Months of Visits");
