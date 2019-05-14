@@ -35,9 +35,9 @@ public class DatabaseObj extends AsyncTask {
     }
 
     public static String SQLSafe(String s){
-        //.replace("~amp", "~amp'").replace("&", "~amp");
-        //PHP: .replace("~amp", "&").replace("~amp`", "~amp")
-        return s.replace("'", "''").replace("&", "%26");
+        return s
+                .replace("'", "''")
+                .replace("~amp", "~amp`").replace("&", "~amp");
     }
     public static String SQLSafe(int s){
         return Integer.toString(s);
