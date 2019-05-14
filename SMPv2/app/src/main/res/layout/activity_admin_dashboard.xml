@@ -62,9 +62,7 @@
     <ListView
         android:id="@+id/businessListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:listSelector="@color/darkBlue"
-        android:background="@color/darkBlue">
+        android:layout_height="wrap_content">
     </ListView>
 
 

@@ -3,12 +3,14 @@ package ca.bcit.smpv2;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -47,11 +49,13 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
         if(getItem(position).second)
             convertView.setBackgroundColor(Color.YELLOW);
         else
-            convertView.setBackgroundColor(Color.WHITE);
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+
         if(BusinessDashboard.business != null)
             ((TextView) convertView.findViewById(R.id.promotionClicks)).setText("Views: " + Integer.toString(promotion.getClicks()));
         else
             ((TextView) convertView.findViewById(R.id.promotionClicks)).setText("");
+
         promotionBusinessName.setText(promotion.getBusinessName());
         shortPromotionDetails.setText(promotion.getShortDescription());
         promotionMinimumPoints.setText(String.valueOf(promotion.getMinTier().getName()));
