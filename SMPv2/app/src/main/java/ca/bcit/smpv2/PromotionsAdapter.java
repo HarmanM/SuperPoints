@@ -15,6 +15,8 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,6 +48,10 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
             convertView.setBackgroundColor(Color.YELLOW);
         else
             convertView.setBackgroundColor(Color.WHITE);
+        if(BusinessDashboard.business != null)
+            ((TextView) convertView.findViewById(R.id.promotionClicks)).setText("Views: " + Integer.toString(promotion.getClicks()));
+        else
+            ((TextView) convertView.findViewById(R.id.promotionClicks)).setText("");
         promotionBusinessName.setText(promotion.getBusinessName());
         shortPromotionDetails.setText(promotion.getShortDescription());
         promotionMinimumPoints.setText(String.valueOf(promotion.getMinTier().getName()));

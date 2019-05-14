@@ -35,7 +35,9 @@ public class DatabaseObj extends AsyncTask {
     }
 
     public static String SQLSafe(String s){
-        return s.replace("'", "''").replace("&", "%26");
+        return s
+                .replace("'", "''")
+                .replace("~amp", "~amp`").replace("&", "~amp");
     }
     public static String SQLSafe(int s){
         return Integer.toString(s);
@@ -233,6 +235,19 @@ public class DatabaseObj extends AsyncTask {
         params = "";
         params += "businessID=" + businessID;
         objConstructor = DataPoint::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void incrementPromoClicks(int promotionID){
+        incrementPromoClicks(promotionID, null);
+    }
+
+    public void incrementPromoClicks(int promotionID, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "promoClick";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "PROMOTION_ID=" + DatabaseObj.SQLSafe(promotionID);
         setMembers(params, f);
         this.execute();
     }
