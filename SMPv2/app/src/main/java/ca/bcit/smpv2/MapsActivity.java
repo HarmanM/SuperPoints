@@ -350,6 +350,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.showInfoWindow();
         if(preferred)
             preferBusinessButton.setImageResource(R.drawable.white_rectangle);
+        else
+            preferBusinessButton.setImageResource(R.drawable.prefer_business_icon_2);
 
         preferBusinessButton.setVisibility(View.VISIBLE);
         preferBusinessButton.setOnClickListener(new View.OnClickListener() {

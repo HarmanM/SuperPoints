@@ -35,3 +35,7 @@ When editing a promotion, changing the image, then editing again, shows the imag
 
 Points progress bar does not show points - FIXED
 
+Business sign-up changes admin user instead - FIXED
+
+Business sign-up does not set region (makes it into an empty string instead of the string "null")
+
