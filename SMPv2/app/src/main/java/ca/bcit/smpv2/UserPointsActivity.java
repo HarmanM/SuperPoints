@@ -18,15 +18,15 @@ public class UserPointsActivity extends AppCompatActivity {
 
     ArrayList<Pair<Business, Points>> userPoints = new ArrayList<>();
     ListView listView;
+    Toolbar toolbar;
     public static ArrayList<PointTiers> tiers = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_points);
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
         listView = (ListView) findViewById(R.id.lvUserPoints);
 
         new DatabaseObj(this).getTiers("", (ArrayList<Object> tierObjects) ->{

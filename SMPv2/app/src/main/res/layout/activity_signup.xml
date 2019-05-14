@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    tools:context=".SignupActivity"
+    android:background="@color/defaultButtonColor">
 
     <TextView
         android:id="@+id/UsernameTextView"
@@ -17,6 +18,9 @@
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="25dp"
         android:text="Username"
+        android:fontFamily="@font/champagnebold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/passwordTextView"
         app:layout_constraintEnd_toStartOf="@+id/usernameEditText"
         app:layout_constraintHorizontal_bias="1.0"
@@ -59,12 +63,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="152dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="84dp"
         android:layout_marginEnd="171dp"
+        android:background="@drawable/btn_rounded_white"
+        android:fontFamily="@font/theboldfont"
         android:onClick="register"
         android:text="Sign Up"
+        android:textColor="@color/defaultButtonColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmEditText" />
 
@@ -96,6 +103,9 @@
         android:layout_marginBottom="8dp"
         android:layout_toStartOf="@+id/logoImageView"
         android:text="Password"
+        android:fontFamily="@font/champagnebold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/confirmTextView"
         app:layout_constraintEnd_toStartOf="@+id/passwordEditText"
         app:layout_constraintHorizontal_bias="0.421"
@@ -113,7 +123,8 @@
         android:layout_marginTop="38dp"
         android:layout_marginEnd="158dp"
         android:text="Sign Up"
-        android:textColor="#000000"
+        android:fontFamily="@font/theboldfont"
+        android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,6 +140,9 @@
         android:layout_marginStart="17dp"
         android:layout_marginTop="29dp"
         android:text="Confirm Password"
+        android:fontFamily="@font/champagnebold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/confirmEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
@@ -162,7 +176,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmTextView"
-        app:layout_constraintVertical_bias="0.32">
+        app:layout_constraintVertical_bias="0.32"
+        >
 
         <RadioButton
             android:id="@+id/userRB"
@@ -174,7 +189,10 @@
             android:text="User"
             app:layout_constraintEnd_toStartOf="@+id/businessRB"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirmTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/confirmTextView"
+            android:fontFamily="@font/champagnebold"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/businessRB"
@@ -186,7 +204,10 @@
             android:text="Business"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/userRB"
-            app:layout_constraintTop_toBottomOf="@+id/confirmEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/confirmEditText"
+            android:fontFamily="@font/champagnebold"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
 
     </RadioGroup>
 </android.support.constraint.ConstraintLayout>

@@ -10,15 +10,24 @@
     </style>
 
     <style name="font" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:fontFamily">@font/robotoregular</item>
-        <item name="fontFamily">@font/robotoregular</item>
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="fontFamily">@font/theboldfont</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="listViewFont" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:fontFamily">@font/robotoregular</item>
-        <item name="fontFamily">@font/robotoregular</item>
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="fontFamily">@font/theboldfont</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">23dp</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+    </style>
+
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/down_arrow_resized</item>
     </style>
 </resources>

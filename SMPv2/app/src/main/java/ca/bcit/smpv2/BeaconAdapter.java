@@ -44,9 +44,9 @@ public class BeaconAdapter extends ArrayAdapter<Beacon> {
         TextView beaconMinor = (TextView) convertView.findViewById(R.id.beaconMinor);
         TextView beaconMajor = (TextView) convertView.findViewById(R.id.beaconMajor);
         // Populate the data into the template view using the data object
-        beaconName.setText(beacon.getBeaconID());
-        beaconMinor.setText(Integer.toString(beacon.getMinor()));
-        beaconMajor.setText(Integer.toString(beacon.getMajor()));
+        beaconName.setText(" " + beacon.getBeaconID());
+        beaconMinor.setText(" " + Integer.toString(beacon.getMinor()));
+        beaconMajor.setText(" " + Integer.toString(beacon.getMajor()));
         // Return the completed view to render on screen
         return convertView;
     }

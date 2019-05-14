@@ -43,8 +43,8 @@ public class BusinessAdapter extends ArrayAdapter<Business> {
         TextView businessName = (TextView) convertView.findViewById(R.id.businessName);
         TextView businessAddress = (TextView) convertView.findViewById(R.id.businessAddress);
         // Populate the data into the template view using the data object
-        businessName.setText(business.getBusinessName());
-        businessAddress.setText(business.getBusinessAddress(parent.getContext()));
+        businessName.setText(" " + business.getBusinessName());
+        businessAddress.setText(" " + business.getBusinessAddress(parent.getContext()));
         // Return the completed view to render on screen
         return convertView;
     }

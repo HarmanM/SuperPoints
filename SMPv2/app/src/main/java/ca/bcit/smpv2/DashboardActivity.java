@@ -42,6 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
     TextView promoDetails;
     private ArrayList<Pair<Promotions, Boolean>> usersPromotions;
     private ArrayList<Pair<Promotions, Boolean>> newusersPromotions;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.searchView);
         // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById
+        toolbar = (Toolbar) findViewById
                 (R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
         // Construct the data source, maybe construct arraylist beforehand
         usersPromotions = new ArrayList<Pair<Promotions, Boolean>>();
@@ -133,7 +133,8 @@ public class DashboardActivity extends AppCompatActivity {
                 for (int i = 0; i < usersPromotions.size(); i++) {
                     Pair<Promotions, Boolean> p = usersPromotions.get(i);
                     if (p.first.getBusinessName().toLowerCase().contains(userInput.trim())
-                            || p.first.getShortDescription().toLowerCase().contains(userInput.trim())) {
+                            || p.first.getShortDescription().toLowerCase().contains(userInput.trim())
+                            || p.first.getMinTier().getName().toLowerCase().contains(userInput.trim())) {
                         newusersPromotions.add(p);
                     }
                 }

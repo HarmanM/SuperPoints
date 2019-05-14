@@ -3,6 +3,7 @@ package ca.bcit.smpv2;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -32,12 +33,15 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
     private static final int BEACON_UUID_SIZE = 36;
 
     boolean delHyphen = false;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeDependencies();
         setContentView(R.layout.activity_business_beacon_details);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
         business = (Business) extras.get("business");
@@ -57,8 +61,8 @@ public class BusinessBeaconDetailsActivity extends AppCompatActivity {
         businessRegionName = (TextView) findViewById(R.id.businessRegionTextView);
         businessRegion = (EditText) findViewById(R.id.businessRegionEditText);
 
-        businessName.setText(business.getBusinessName());
-        businessAddress.setText(business.getBusinessAddress(this));
+        businessName.setText(" " + business.getBusinessName());
+        businessAddress.setText(" " + business.getBusinessAddress(this));
         businessRegionName.setText(R.string.business_region);
         if(!business.getRegion().equals("null"))
             businessRegion.setText(business.getRegion());

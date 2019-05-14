@@ -32,17 +32,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -79,6 +74,7 @@ public class BusinessDashboard extends AppCompatActivity {
     ImageView iconImageView;
     static List<PointTiers> tiers = new ArrayList<>();
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +89,10 @@ public class BusinessDashboard extends AppCompatActivity {
                     business.addSetting((BusinessSetting) setting);
 
                 setContentView(R.layout.activity_business_dashboard);
+                toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
 
                 // Find the toolbar view inside the activity layout
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
                 usersPromotions = new ArrayList<>();
 
@@ -112,9 +109,6 @@ public class BusinessDashboard extends AppCompatActivity {
                 });
 
                 listView.refreshDrawableState();
-
-                setSupportActionBar(toolbar);
-                toolbar.setOverflowIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_person_black_18dp));
 
                 listView.setOnItemClickListener((parent, view, position, id) -> {
                     selectedPromotion = usersPromotions.get(position).first;

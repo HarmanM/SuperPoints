@@ -25,6 +25,19 @@
     <string name="send_email_title">Send KPI</string>
     <string name="send_email_monthly">Send KPIs Monthly</string>\
 
-    <string name="business_region">Business Region:</string>
+    <string name="business_region">Region:</string>
+    <string name="business_name">Name:    </string>
+    <string name="business_address">Address:    </string>
+
+    <string name="beacon_name">Beacon ID:    </string>
+    <string name="beacon_minor_name">Minor:    </string>
+    <string name="beacon_major_name">Major:    </string>
+
+    <string name="business_information"><u>Business Information</u></string>
+    <string name="beacon_information"><u>Beacon Information</u></string>
+
+    <string name="promotion_information"><u>Promotions</u></string>
+
+    <string name="admin_business_information"><u>Businesses</u></string>
 
 </resources>
