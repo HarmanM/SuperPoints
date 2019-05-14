@@ -53,7 +53,7 @@
             android:id="@+id/businessAddressTextView"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:fontFamily="@font/champagnebold"
+            android:fontFamily="@font/theboldfont"
             android:textSize="18sp"/>
     </LinearLayout>
 
@@ -87,8 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            android:layout_marginEnd="120dp"
             android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
             android:background="@drawable/btn_rounded"
             android:fontFamily="@font/theboldfont"
             android:onClick="updateRegion"
