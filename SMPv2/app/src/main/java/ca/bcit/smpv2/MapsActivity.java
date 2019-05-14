@@ -57,7 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private float defaultZoom = 16.0f;
+    private float defaultZoom = 19.0f;
     private int locationRequestInterval = 1500; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;

@@ -6,4 +6,7 @@
     android:textStyle="italic"
     android:paddingEnd="10dp"
     android:textAlignment="textEnd"
+    android:background="@color/defaultButtonColor"
+    android:backgroundTint="@color/defaultButtonColor"
+    android:textColor="@color/white"
     />

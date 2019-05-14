@@ -3,13 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/defaultButtonColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="5dp">
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/titleHeader"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:theme="@style/TextViewHeaderWhite"
+        android:text="Add/Edit Promotion"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+    </TextView>
 
     <EditText
         android:id="@+id/editTextShortDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:theme="@style/EditTextWhite"
         android:hint="What is a short description about your promotion?" />
 
     <EditText
@@ -17,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:theme="@style/EditTextWhite"
         android:hint="Detailed description of your promotion (OPTIONAL)" />
 
     <LinearLayout
@@ -26,29 +48,36 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/minimum_tier_for_promo"/>
+            android:theme="@style/TextViewHeaderWhite"
+            android:text="@string/minimum_tier_for_promo"
+            android:layout_marginStart="5dp"/>
         <Spinner
             android:id="@+id/minTier"
             android:paddingStart="10dp"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
         </Spinner>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/promoImageView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
         android:onClick="uploadImage"
-        android:src="@drawable/insert_image_here_"
+        android:src="@drawable/insert_image_here_" />
 
-        />
-
-    <Button
-        android:id="@+id/buttonAddPromotion"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"></LinearLayout>
+    <Button
+        android:id="@+id/buttonAddPromotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/WhiteButtonDefault"
         android:text="@string/add_promotion_submit" />
 
 </LinearLayout>

@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -221,7 +222,8 @@ public class BusinessDashboard extends AppCompatActivity {
         final Button buttonCancelDeletePromotion = dialogView.findViewById(R.id.buttonCancelDeletePromotion);
 
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle("Delete Promotion");
+        TextView deleteHeader = findViewById(R.id.deleteHeaderTextView);
+        dialogBuilder.setCustomTitle(deleteHeader);
 
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
@@ -283,7 +285,9 @@ public class BusinessDashboard extends AppCompatActivity {
         Spinner spinner = (Spinner) dialogView.findViewById(R.id.minTier);
 
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
+        //dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
+        TextView titleHeader = findViewById(R.id.titleHeader);
+        dialogBuilder.setCustomTitle(titleHeader);
 
         final AlertDialog alertDialog = dialogBuilder.create();
 
