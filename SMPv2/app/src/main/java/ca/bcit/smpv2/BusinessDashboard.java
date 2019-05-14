@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -113,6 +114,7 @@ public class BusinessDashboard extends AppCompatActivity {
 
                 listView.setOnItemClickListener((parent, view, position, id) -> {
                     selectedPromotion = usersPromotions.get(position).first;
+
                 });
 
                 addBtn = findViewById(R.id.addBtn);

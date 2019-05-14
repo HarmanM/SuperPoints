@@ -13,25 +13,33 @@
 
 
     <ImageView
+        android:layout_marginTop="10dp"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxHeight="200dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        tools:srcCompat="@tools:sample/avatars[0]" />
+        tools:srcCompat="@tools:sample/avatars[0]"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/promotionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:theme="@style/TextViewHeaderDefault"
+        android:textSize="35sp"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
 
         android:id="@+id/promotionDetailedDescription"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:theme="@style/TextViewBodyDefault"
+        android:layout_marginStart="5dp"
+        />
 
 
 </LinearLayout>
