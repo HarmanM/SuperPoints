@@ -813,14 +813,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
         }
         $promotionid = $_GET['PROMOTION_ID'];
 
-        // Get number of clicks before increment
-        $select = mysqli_query($con,"SELECT clicks FROM superpoints.Promotions
-            WHERE promotionID = '$promotionid';", MYSQLI_STORE_RESULT);
-        $clickNo = mysqli_fetch_array($select);
-        // increment
-        $clicks = $clickNo[0] + 1;
-
-        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = '$clicks'
+        $result = mysqli_query($con,"UPDATE `superpoints`.`Promotions` SET `clicks` = clicks + 1
             WHERE (`promotionID` = '$promoid');", MYSQLI_STORE_RESULT);
 
         echo $result ? 'true' : 'false';
