@@ -94,7 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void updateSettings(View view) {
         EditText pw = findViewById(R.id.passwordEditText);
         EditText cpw = findViewById(R.id.confirmEditText);
-        if(pw.getText().toString().compareTo(cpw.getText().toString()) == 0 && pw.getText().toString().trim() != ""){
+        if(pw.getText().toString().compareTo(cpw.getText().toString()) == 0 && !pw.getText().toString().trim().isEmpty()){
             LoginActivity.user.setPassword(pw.getText().toString());
             new DatabaseObj (SettingsActivity.this)
                     .updatePassword(LoginActivity.user.getUserID(), pw.getText().toString());

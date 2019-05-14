@@ -51,6 +51,11 @@ public class SignupActivity extends AppCompatActivity {
         String username = usernameField.getText().toString();
         String password = passwordField.getText().toString();
         String confirmPassword = passwordConfirmField.getText().toString();
+        if(username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()){
+            Toast.makeText(SignupActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (confirmPassword.equals(password)) {
 
             if (businessRB.isChecked()) {

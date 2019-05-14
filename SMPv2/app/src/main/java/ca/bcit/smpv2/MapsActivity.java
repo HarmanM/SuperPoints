@@ -387,7 +387,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         updated.setMarker(newMarker);
                         markerExtras.put(oldMarkerLatLng, updated);
                         newMarker.showInfoWindow();
-                        Toast.makeText(MapsActivity.this, "This business has been from your favourites.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "This business has been removed from your favourites.", Toast.LENGTH_SHORT).show();
                     });
                 }
             }

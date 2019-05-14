@@ -129,14 +129,20 @@ public class BusinessDashboard extends AppCompatActivity {
                 editBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showUpdateDialog(selectedPromotion);
+                        if(selectedPromotion != null)
+                            showUpdateDialog(selectedPromotion);
+                        else
+                            Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 dltBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showDeleteDialog(selectedPromotion);
+                        if(selectedPromotion != null)
+                            showDeleteDialog(selectedPromotion);
+                        else
+                            Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
                     }
                 });
             });
