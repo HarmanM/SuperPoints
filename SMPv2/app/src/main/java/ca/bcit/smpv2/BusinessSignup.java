@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class BusinessSignup extends AppCompatActivity {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocationName(businessAddress, 1);
         //TODO null check on return
+        if(addresses.size() == 0)
+        {
+            Toast.makeText(BusinessSignup.this, "Sorry we do not recognize that address try again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Address address = addresses.get(0);
         longitude = address.getLongitude();
         latitude = address.getLatitude();
