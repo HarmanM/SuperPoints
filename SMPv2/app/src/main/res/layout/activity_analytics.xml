@@ -15,15 +15,70 @@
         tools:layout_editor_absoluteX="9dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="60dp">
+        <TextView
+            android:id="@+id/pieChartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextViewHeaderDefault"
+            android:textSize="30sp"
+            android:textColor="@color/defaultButtonColor"
+            android:text="@string/analytics_pie"
+            android:visibility="gone">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="60dp">
+        <TextView
+            android:id="@+id/lineChartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextViewHeaderDefault"
+            android:textSize="30sp"
+            android:textColor="@color/defaultButtonColor"
+            android:text="@string/analytics_line"
+            android:visibility="gone">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="60dp">
+        <TextView
+            android:id="@+id/barChartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextViewHeaderDefault"
+            android:textSize="30sp"
+            android:textColor="@color/defaultButtonColor"
+            android:text="@string/analytics_bar"
+            android:visibility="gone">
+        </TextView>
+    </LinearLayout>
+
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
         android:layout_width="400dp"
         android:layout_height="500dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginBottom="10dp"
         android:visibility="gone">
     </com.github.mikephil.charting.charts.PieChart>
 
@@ -34,11 +89,10 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="10dp"
         android:visibility="gone">
 
     </com.github.mikephil.charting.charts.LineChart>
-
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barchart"
@@ -47,10 +101,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="10dp"
         android:visibility="gone">
-
     </com.github.mikephil.charting.charts.BarChart>
-
 
 </RelativeLayout>

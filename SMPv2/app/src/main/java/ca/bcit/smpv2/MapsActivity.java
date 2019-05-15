@@ -58,9 +58,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private float defaultZoom = 19.0f;
-    private int locationRequestInterval = 1500; //in seconds, how often maps will update
+    private int locationRequestInterval = 500; //in seconds, how often maps will update
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int SMALLEST_DISPLACEMENT = 5;
+    private final static long FASTEST_INTERVAL = 500;
 
     static TreeSet<Business> businessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
     static TreeSet<Business> oldBusinessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
@@ -104,8 +106,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY) // may need to change we dont need incredibly accuracy for promotions
-                .setInterval(locationRequestInterval * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setInterval(locationRequestInterval)// 10 seconds, in milliseconds
+                .setFastestInterval(FASTEST_INTERVAL) // 1 second, in milliseconds
+                .setSmallestDisplacement(SMALLEST_DISPLACEMENT);
     }
 
     @Override

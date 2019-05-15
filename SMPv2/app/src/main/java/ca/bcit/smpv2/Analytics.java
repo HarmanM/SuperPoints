@@ -53,7 +53,10 @@ public class Analytics extends AppCompatActivity {
     LineChart lineChart;
     BarChart barChart;
 
+    TextView pieChartTitle, lineChartTitle, barChartTitle;
+
     ArrayList<View> charts = new ArrayList<>();
+    ArrayList<View> titles = new ArrayList<>();
 
     int chartDefaultFontSize = 18;
     float lineChartLineSize = 3.0f;
@@ -99,6 +102,7 @@ public class Analytics extends AppCompatActivity {
                 {
                     // Left to Right swipe action
                     charts.get(currentView).setVisibility(View.GONE);
+                    titles.get(currentView).setVisibility(View.GONE);
                     if (x2 > x1)
                     {
                         currentView++;
@@ -113,6 +117,7 @@ public class Analytics extends AppCompatActivity {
                             currentView = charts.size() - 1;
                     }
                     charts.get(currentView).setVisibility(1);
+                    titles.get(currentView).setVisibility(1);
                 }
                 else
                 {
@@ -173,6 +178,7 @@ public class Analytics extends AppCompatActivity {
             }
             setUpLineChart(lineData, lineDataValues, "Last 12 Months of Visits");
             charts.get(currentView).setVisibility(1);
+            titles.get(currentView).setVisibility(1);
         });
     }
 
@@ -228,6 +234,7 @@ public class Analytics extends AppCompatActivity {
         data.setValueTextSize(chartDefaultFontSize);
         data.setValueTextColor(Color.WHITE);
         pieChart = (PieChart) findViewById(R.id.pieChart);
+        pieChartTitle = (TextView) findViewById(R.id.pieChartTitle);
         pieChart.setData(data);
         pieChart.invalidate();
         pieChart.setTouchEnabled(false);
@@ -235,11 +242,13 @@ public class Analytics extends AppCompatActivity {
         pieChart.getDescription().setEnabled(false);
         //setUpLegend(pieChart);
         charts.add(pieChart);
+        titles.add(pieChartTitle);
     }
 
     private void setUpLineChart(ArrayList<Object> lineData, ArrayList<Object> lineDataValues, String lineChartName)
     {
         lineChart = (LineChart) findViewById(R.id.lineChart);
+        lineChartTitle = (TextView) findViewById(R.id.lineChartTitle);
         XAxis lineChartXAxis;
         ArrayList<Entry> lineEntries;
         LineDataSet lineDataSet;
@@ -289,15 +298,19 @@ public class Analytics extends AppCompatActivity {
         data = new LineData(dataSets);
         lineChart.setData(data);
         lineChart.setTouchEnabled(false);
-        setUpLegend(lineChart);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
+        //setUpLegend(lineChart);
         setUpFonts(lineChart);
         charts.add(lineChart);
+        titles.add(lineChartTitle);
     }
 
     void setUpBarChart(ArrayList<Object> barData, ArrayList<Object> barDataValues, String barChartName)
     {
         //Collections.sort((ArrayList<DataPoint>) (ArrayList<?>) barData,(DataPoint d1, DataPoint d2) -> Integer.compare(Integer.parseInt(d1.getData().get(0)), Integer.parseInt(d2.getData().get(0))));
         barChart = (BarChart) findViewById(R.id.barchart);
+        barChartTitle = (TextView) findViewById(R.id.barChartTitle);
         XAxis barChartXAxis = barChart.getXAxis();
         barChartXAxis.setValueFormatter(new TierValueFormatter());
 
@@ -319,9 +332,12 @@ public class Analytics extends AppCompatActivity {
         barChart.setData(data);
 
         barChart.setTouchEnabled(false);
-        setUpLegend(barChart);
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+        //setUpLegend(barChart);
         setUpFonts(barChart);
         charts.add(barChart);
+        titles.add(barChartTitle);
     }
 
     public void setUpLegend(Chart chart)
