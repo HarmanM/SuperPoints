@@ -43,13 +43,13 @@ public class BusinessSignup extends AppCompatActivity {
         longitude = address.getLongitude();
         latitude = address.getLatitude();
 
-        Business b = new Business(0, businessName, latitude, longitude, "");
+        Business b = new Business(-1, businessName, latitude, longitude, "null");
 
         new DatabaseObj (BusinessSignup.this).setBusiness(b, new Consumer<ArrayList<Object>>() {
             @Override
             public void accept(ArrayList<Object> objects) {
 
-                User u = new User(0, Integer.parseInt((String) objects.get(0)), password, username);
+                User u = new User(-1, Integer.parseInt((String) objects.get(0)), password, username);
 
                 new DatabaseObj (BusinessSignup.this).setUser(u, new Consumer<ArrayList<Object>>() {
                     @Override
