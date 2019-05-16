@@ -689,6 +689,38 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       }
     }
 
+    function handlePromotionUsage() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $promotionid = $_GET['PROMOTION_ID'];
+      $userid = $_GET['USER_ID'];
+
+      if ($promotionid == -1) {
+        $promotionid = "";
+      }
+
+      if ($promotionid != "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`PromotionUsage`
+              (promotionID, userID) VALUES ('$promotionid', '$userid');", MYSQLI_STORE_RESULT);
+
+          $result = $result ? "true" : "false";
+
+          if ($result == "true") {
+            $result2 = mysqli_query($con, "SELECT promotionUsageID FROM `superpoints`.`PromotionUsage` ORDER BY promotionUsageID DESC LIMIT 1");
+            $row = mysqli_fetch_array($result2);
+            echo $row[0];
+          }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`PromotionUsage` SET promotionID = '$promotionid',
+            userid = '$userid' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            echo $result ? "$promotionid" : "Went into the wrong case.";
+      }
+    }
+
     function handleVisits() {
 		$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -850,7 +882,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
             WHERE 6371 * acos( cos( radians('$lat') )
             * cos( radians( superpoints.Businesses.latitude ) )
             * cos( radians( superpoints.Businesses.longitude ) - radians('$long') ) + sin( radians('$lat') )
-            * sin(radians(superpoints.Businesses.latitude)) ) < 20;", MYSQLI_STORE_RESULT);
+            * sin(radians(superpoints.Businesses.latitude)) ) < 2;", MYSQLI_STORE_RESULT);
 
 
             $row_count = mysqli_num_rows($result);
@@ -1243,6 +1275,9 @@ function sendEmail() {
             break;
         case "setBeacon":
             handleBeacons();
+            break;
+        case "setPromotionUsage":
+            handlePromotionUsage();
             break;
         case "promoClick":
             incrementClick();
