@@ -418,6 +418,33 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       mysqli_close($con);
     }
 
+    function getTags() {
+        $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+        if (mysqli_connect_errno($con)) {
+            echo "Failed to connect to database: " . mysqli_connect_error();
+        }
+        $where = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
+        $result = mysqli_query($con,"SELECT * FROM superpoints.Tags $where", MYSQLI_STORE_RESULT);
+        $row_count = mysqli_num_rows($result);
+
+        if ($row_count <= 1) {
+            $row = mysqli_fetch_array($result);
+            $visitid = $row['tagID'];
+            $businessid = $row['businessID'];
+            $tagname = $row['tagName'];
+            echo $visitid . "~s" . $businessid . "~s" . $tagname;
+        } else {
+            while($row_data = mysqli_fetch_array($result)) {
+            $visitid = $row_data['tagID'];
+            $businessid = $row_data['businessID'];
+            $tagname = $row_data['tagName'];
+            echo $visitid . "~s" . $businessid . "~s" . $tagname . "~n";
+            }
+        }
+        mysqli_close($con);
+    }
+
     // NOTE: When updating one specific column, please pass back in the previous values for the other columns
     function handleUser() {
         $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
@@ -707,7 +734,7 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
           $result = mysqli_query($con,"INSERT INTO `superpoints`.`PromotionUsage`
               (promotionID, userID) VALUES ('$promotionid', '$userid');", MYSQLI_STORE_RESULT);
 
-          $result = $result ? "true" : "false";
+          $result = $result ? "true" : "";
 
           if ($result == "true") {
             $result2 = mysqli_query($con, "SELECT promotionUsageID FROM `superpoints`.`PromotionUsage` ORDER BY promotionUsageID DESC LIMIT 1");
@@ -717,7 +744,72 @@ require 'PHPMailer/PHPMailer/src/SMTP.php';
       } else {
           $result = mysqli_query($con, "UPDATE `superpoints`.`PromotionUsage` SET promotionID = '$promotionid',
             userid = '$userid' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
-            echo $result ? "$promotionid" : "Went into the wrong case.";
+            echo $result ? "$promotionid" : "";
+      }
+    }
+
+    function handleTags() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $tagid = $_GET['TAG_ID'];
+      $businessid = $_GET['BUSINESS_ID'];
+      $tagname = $_GET['TAG_NAME'];
+
+      if ($tagid == -1) {
+        $tagid = "";
+      }
+
+      if ($tagid == "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`Tags`
+              (businessID, tagName) VALUES ('$businessid', '$tagname');", MYSQLI_STORE_RESULT);
+
+          $result = $result ? "true" : "";
+
+          if ($result == "true") {
+            $result2 = mysqli_query($con, "SELECT tagID FROM `superpoints`.`Tags` ORDER BY tagID DESC LIMIT 1");
+            $row = mysqli_fetch_array($result2);
+            echo $row[0];
+          }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`Tags` SET businessID = '$businessid',
+            tagName = '$tagname' WHERE (`tagID` = '$tagid');", MYSQLI_STORE_RESULT);
+            echo $result ? "$tagid" : "";
+      }
+    }
+
+    function handlePromotionTags() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $tagid = $_GET['TAG_ID'];
+      $promotionid = $_GET['PROMOTION_ID'];
+
+      if ($promotionid == -1) {
+        $promotionid = "";
+      }
+
+      if ($tagid != "") {
+          $result = mysqli_query($con,"INSERT INTO `superpoints`.`PromotionTags`
+              (promotionID, tagID) VALUES ('$businessid', '$tagname');", MYSQLI_STORE_RESULT);
+
+          $result = $result ? "true" : "";
+
+          if ($result == "true") {
+            $result2 = mysqli_query($con, "SELECT promotionID FROM `superpoints`.`PromotionTags` ORDER BY promotionID DESC LIMIT 1");
+            $row = mysqli_fetch_array($result2);
+            echo $row[0];
+          }
+      } else {
+          $result = mysqli_query($con, "UPDATE `superpoints`.`PromotionTags` SET promotionID = '$promotionid',
+            tagid = '$tagid' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+            echo $result ? "$tagid" : "";
       }
     }
 
@@ -1098,6 +1190,22 @@ function calcAvgVisitsWeek () {
 
       $result = mysqli_query($con,"DELETE FROM `superpoints`.`PreferredBusinesses`
                                 WHERE userID = $userid AND businessID = $businessid;", MYSQLI_STORE_RESULT);
+
+      echo ($result) ? "true" : "";
+    }
+
+    function deletePromoionTags() {
+      $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+      if (mysqli_connect_errno($con)) {
+          echo "Failed to connect to database: " . mysqli_connect_error();
+      }
+
+      $tagid = $_GET['TAG_ID'];
+      $promotionid = $_GET['PROMOTION_ID'];
+
+      $result = mysqli_query($con,"DELETE FROM `superpoints`.`PromotionTags`
+                                WHERE tagID = $tagid AND promotionID = $promotionid;", MYSQLI_STORE_RESULT);
 
       echo ($result) ? "true" : "";
     }
