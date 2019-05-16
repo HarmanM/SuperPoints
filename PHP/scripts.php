@@ -1363,6 +1363,9 @@ function sendEmail() {
         case "getBeacons":
             getBeacons();
             break;
+        case "getTags":
+            getTags();
+            break;
         case "setUser":
             handleUser();
             break;
@@ -1386,6 +1389,12 @@ function sendEmail() {
             break;
         case "setPromotionUsage":
             handlePromotionUsage();
+            break;
+        case "setTags":
+            handleTags();
+            break;
+        case "setPromotionTags":
+            handlePromotionTags();
             break;
         case "promoClick":
             incrementClick();
@@ -1413,6 +1422,9 @@ function sendEmail() {
             break;
         case "deletePromotion":
             deletePromotion();
+            break;
+        case "deletePromotionTags":
+            deletePromoionTags();
             break;
         case "updatePassword":
             updatePassword();
