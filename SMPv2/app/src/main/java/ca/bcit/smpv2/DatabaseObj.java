@@ -168,22 +168,12 @@ public class DatabaseObj extends AsyncTask {
         get = true;
         this.execute();
     }
-    public void setBeacon(Beacon o){
-        setBeacon(o, null);
-    }
 
-    public void setBeacon(Beacon o, Consumer<ArrayList<Object>> f){
-        get = false;
-        function = "setBeacon";
-        objConstructor = DatabaseObj::dbReturnID;
-        params = "";
-        params += "BEACON_ID=" + o.getBeaconID() + "&";
-        params += "BUSINESS_ID=" + o.getBusinessID() + "&";
-        params += "MAJOR=" + o.getMajor() + "&";
-        params += "MINOR=" + o.getMajor() + "&";
-        params += "TXPOWER=" + o.getTxPower() + "&";
-        params += "REGION=" + o.getRegion() + "&";
-        setMembers(params, f);
+    public void getTags(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = Tag::new;
+        function = "getTags";
+        get = true;
         this.execute();
     }
 
@@ -239,6 +229,16 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void calcPromotionTagUsage(int businessID, Consumer<ArrayList<Object>> f)
+    {
+        function = "calcPromotionTagUsage";
+        params = "";
+        params += "businessID=" + businessID;
+        objConstructor = DataPoint::new;
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void incrementPromoClicks(int promotionID){
         incrementPromoClicks(promotionID, null);
     }
@@ -248,6 +248,56 @@ public class DatabaseObj extends AsyncTask {
         function = "promoClick";
         objConstructor = DatabaseObj::dbReturnID;
         params = "PROMOTION_ID=" + DatabaseObj.SQLSafe(promotionID);
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void setTag(Tag o){
+        setTag(o, null);
+    }
+
+    public void setTag(Tag o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setTag";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "";
+        params += "TAG_ID=" + DatabaseObj.SQLSafe(o.getTagID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "TAG_NAME=" + DatabaseObj.SQLSafe(o.getTag()) + "&";
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void setPromotionTag(Promotions p, Tag t, Consumer<ArrayList<Object>> f){
+        setPromotionTag(p.getPromotionID(), t.getTagID(), f);
+    }
+
+    public void setPromotionTag(int promoID, int tagID, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setPromotionTag";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "";
+        params += "TAG_ID=" + DatabaseObj.SQLSafe(promoID) + "&";
+        params += "PROMOTION_ID=" + DatabaseObj.SQLSafe(tagID) + "&";
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void setBeacon(Beacon o){
+        setBeacon(o, null);
+    }
+
+    public void setBeacon(Beacon o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setBeacon";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "";
+        params += "BEACON_ID=" + DatabaseObj.SQLSafe(o.getBeaconID()) + "&";
+        params += "BUSINESS_ID=" + DatabaseObj.SQLSafe(o.getBusinessID()) + "&";
+        params += "MAJOR=" + DatabaseObj.SQLSafe(o.getMajor()) + "&";
+        params += "MINOR=" + DatabaseObj.SQLSafe(o.getMajor()) + "&";
+        params += "TXPOWER=" + DatabaseObj.SQLSafe(o.getTxPower()) + "&";
+        params += "REGION=" + DatabaseObj.SQLSafe(o.getRegion()) + "&";
         setMembers(params, f);
         this.execute();
     }
@@ -426,6 +476,14 @@ public class DatabaseObj extends AsyncTask {
     public void deletePromotion(int id, Consumer<ArrayList<Object>> f) {
         get = false;
         function = "deletePromotion";
+        params = "PROMOTION_ID=" + id;
+        setMembers(params, f);
+        this.execute();
+    }
+
+    public void deletePromotionTags(int id, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "deletePromotionTags";
         params = "PROMOTION_ID=" + id;
         setMembers(params, f);
         this.execute();

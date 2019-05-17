@@ -1,5 +1,7 @@
 package ca.bcit.smpv2;
 
+import java.util.ArrayList;
+
 public class Promotions {
     private int promotionID;
     private int businessID;
@@ -8,6 +10,7 @@ public class Promotions {
     private int clicks;
     private String shortDescription;
     private String businessName;
+    private ArrayList<Tag> promotionTags = new ArrayList<>();
 
     public Promotions(int promotionID, int businessID, PointTiers minTier, String details, int clicks, String businessName, String shortDescription) {
         this.promotionID = promotionID;
@@ -85,4 +88,8 @@ public class Promotions {
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
     }
+
+    public ArrayList<Tag> getPromotionTags(){ return promotionTags; }
+
+    public void addPromotionTag(Tag t){ promotionTags.add(t); }
 }
