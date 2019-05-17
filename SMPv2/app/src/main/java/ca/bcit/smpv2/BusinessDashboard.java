@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,10 +35,22 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import me.originqiu.library.EditTag;
+
 
 public class BusinessDashboard extends AppCompatActivity {
     public static Business business;
@@ -45,6 +59,8 @@ public class BusinessDashboard extends AppCompatActivity {
     Button addBtn;
     Button editBtn;
     Button dltBtn;
+    EditTag editTag;
+    EditText tagEditText;
     ArrayList<Pair<Promotions, Boolean>> usersPromotions;
     PromotionsAdapter adapter;
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -62,8 +78,10 @@ public class BusinessDashboard extends AppCompatActivity {
 
         promoImageView = findViewById(R.id.promoImageView);
         iconImageView = findViewById(R.id.iconImageView);
+        tagEditText = findViewById(R.id.edit_tag_view);
         super.onCreate(savedInstanceState);
         checkPermission();
+
         new DatabaseObj(this).getBusinesses("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> businessObj) -> {
             business = (Business) businessObj.get(0);
             new DatabaseObj(this).getBusinessSettings("businessID=" + DatabaseObj.SQLSafe(business.getBusinessID()), (ArrayList<Object> settings)->{
@@ -379,5 +397,10 @@ public class BusinessDashboard extends AppCompatActivity {
     }
 
 
+    public void addTag(View view)
+    {
+        editTag = new EditTag(this);
+        editTag.addTag(String.valueOf(tagEditText.getText()));
+    }
 }
 
