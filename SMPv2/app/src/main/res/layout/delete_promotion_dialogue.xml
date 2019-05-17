@@ -34,6 +34,7 @@
         android:theme="@style/WhiteButtonDefault"
         android:text="@string/delete_promotion_cancel" />
 
+
     </LinearLayout>
 
 </LinearLayout>

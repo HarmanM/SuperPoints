@@ -64,4 +64,5 @@ dependencies {
     implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     implementation 'com.kontaktio:sdk:4.0.0'
+    implementation 'com.github.qiugang:EditTag:1.2.4-beta2'
 }
