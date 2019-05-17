@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.util.Consumer;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -18,6 +19,9 @@ import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -32,6 +36,24 @@ public class DatabaseObj extends AsyncTask {
 
     public DatabaseObj(Context context) {
         this.context = context;
+    }
+
+    public static void parseData(ArrayList<Object> dest, String source, Function<String[], Object> objConstructor){
+        if(source == null)
+            return;
+        int openBraceCount = 0;
+        int objStart = 0;
+        for(int i = 0; i < source.length(); ++i){
+            if(source.charAt(i) == '{') {
+                if(openBraceCount == 0)
+                    objStart = i;
+                openBraceCount++;
+            }
+            else if(source.charAt(i) == '}')
+                openBraceCount--;
+            if(openBraceCount == 0)
+                dest.add(objConstructor.apply(source.substring(objStart + 1, i - 1).split(",")));
+        }
     }
 
     public static String SQLSafe(String s){
@@ -63,6 +85,15 @@ public class DatabaseObj extends AsyncTask {
     static private Object dbReturnID(String[] result){
         return result[0];
         //return Integer.parseInt(result[0]);
+    }
+
+    private class PromotionTag{
+        public int promotionID;
+        public int tagID;
+        public PromotionTag(String[] result){
+            this.promotionID = Integer.parseInt(result[0]);
+            this.tagID = Integer.parseInt(result[1]);
+        }
     }
 
     public void getApplicablePromotions(int userID, Consumer<ArrayList<Object>> f){
@@ -109,6 +140,14 @@ public class DatabaseObj extends AsyncTask {
         setMembers(whereClause, f);
         objConstructor = Business::new;
         function = "getPreferredBusinesses";
+        get = true;
+        this.execute();
+    }
+
+    public void getPromotionTags(String whereClause, Consumer<ArrayList<Object>> f){
+        setMembers(whereClause, f);
+        objConstructor = PromotionTag::new;
+        function = "getPromotionTags";
         get = true;
         this.execute();
     }
@@ -398,7 +437,11 @@ public class DatabaseObj extends AsyncTask {
         params += "DETAILS=" + DatabaseObj.SQLSafe(o.getDetails()) + "&";
         params += "SHORT_DESCRIPTION=" + DatabaseObj.SQLSafe(o.getShortDescription()) + "&";
         params += "CLICKS=" + DatabaseObj.SQLSafe(o.getClicks()) + "&";
-        params += "MIN_TIER=" + DatabaseObj.SQLSafe(o.getMinTier().getTierID());
+        params += "MIN_TIER=" + DatabaseObj.SQLSafe(o.getMinTier().getTierID()) + "&";
+        params += "TAGS=";
+        for(Tag t : o.getPromotionTags())
+            params += t.getTagID() + ",";
+        params = params.substring(0, params.length() - 1);
         setMembers(params, f);
         this.execute();
     }
