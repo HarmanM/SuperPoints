@@ -1,33 +1,20 @@
 package ca.bcit.smpv2;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Consumer;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,7 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -86,9 +71,11 @@ public class BusinessDashboard extends AppCompatActivity {
     static List<PointTiers> tiers = new ArrayList<>();
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
     Toolbar toolbar;
+    FloatingActionButton scanBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         promoImageView = findViewById(R.id.promoImageView);
         iconImageView = findViewById(R.id.iconImageView);
         tagEditText = findViewById(R.id.edit_tag_view);
@@ -402,6 +389,13 @@ public class BusinessDashboard extends AppCompatActivity {
             return true;
         }
     }
+
+    public void openQRScanner(View view)
+    {
+        Intent i = new Intent(BusinessDashboard.this, QRScannerActivity.class);
+        startActivity(i);
+    }
+
 
     public void addTag(View view)
     {

@@ -131,8 +131,8 @@ public class DashboardActivity extends AppCompatActivity {
                 newusersPromotions = new ArrayList<>();
                 for (int i = 0; i < usersPromotions.size(); i++) {
                     Pair<Promotions, Boolean> p = usersPromotions.get(i);
-                    if (p.first.getBusinessName().toLowerCase().contains(userInput.trim())
-                            || p.first.getShortDescription().toLowerCase().contains(userInput.trim())
+                    if (p.first.getBusinessName().toLowerCase().contains(userInput.trim()) ||
+                    p.first.getShortDescription() != null && p.first.getShortDescription().toLowerCase().contains(userInput.trim())
                             || p.first.getMinTier().getName().toLowerCase().contains(userInput.trim())) {
                         newusersPromotions.add(p);
                     }

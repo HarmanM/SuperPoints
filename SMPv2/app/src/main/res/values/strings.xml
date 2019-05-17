@@ -42,6 +42,6 @@
 
     <string name="analytics_pie">Number Of New/Old Visitors</string>
     <string name="analytics_line">Number Of Visits In The Last 12 Months</string>
-    <string name="analytics_bar">Number of Users per Tier</string>
+    <string name="analytics_bar">Number of Users per Tier In The Last Month</string>
 
 </resources>

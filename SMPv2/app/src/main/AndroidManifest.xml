@@ -84,7 +84,8 @@
             android:name=".DetailedDescription"
             android:screenOrientation="sensorPortrait" />
         <activity android:name=".AdminDashboardActivity" />
-        <activity android:name=".BusinessBeaconDetailsActivity"></activity>
+        <activity android:name=".BusinessBeaconDetailsActivity" />
+        <activity android:name=".QRScannerActivity"></activity>
     </application>
 
 </manifest>
