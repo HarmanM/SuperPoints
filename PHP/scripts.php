@@ -832,7 +832,7 @@ function handlePromotionTags()
 
     if ($tagid != "") {
         $result = mysqli_query($con, "INSERT INTO `superpoints`.`PromotionTags`
-              (promotionID, tagID) VALUES ('$businessid', '$tagname');", MYSQLI_STORE_RESULT);
+              (promotionID, tagID) VALUES ('$promotionid', '$tagid');", MYSQLI_STORE_RESULT);
 
         $result = $result ? "true" : "";
 
@@ -1236,7 +1236,7 @@ function deletePreferredBusiness()
     echo ($result) ? "true" : "";
 }
 
-function deletePromoionTags()
+function deletePromotionTags()
 {
     $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
 
@@ -1244,11 +1244,10 @@ function deletePromoionTags()
         echo "Failed to connect to database: " . mysqli_connect_error();
     }
 
-    $tagid       = $_GET['TAG_ID'];
     $promotionid = $_GET['PROMOTION_ID'];
 
     $result = mysqli_query($con, "DELETE FROM `superpoints`.`PromotionTags`
-                                WHERE tagID = $tagid AND promotionID = $promotionid;", MYSQLI_STORE_RESULT);
+                                WHERE promotionID = $promotionid;", MYSQLI_STORE_RESULT);
 
     echo ($result) ? "true" : "";
 }
@@ -1471,7 +1470,7 @@ switch ($func) {
         deletePromotion();
         break;
     case "deletePromotionTags":
-        deletePromoionTags();
+        deletePromotionTags();
         break;
     case "updatePassword":
         updatePassword();
