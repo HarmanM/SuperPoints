@@ -243,6 +243,9 @@ if (count($monthlyVisits) > 0):
 <table class="table table-condensed table-striped table-hover">
   <thead>
     <tr>
+        <th colspan="2">The table header</th>
+    </tr>
+    <tr>
       <th><?php
     echo implode('</th><th>', array_keys(current($monthlyVisits)));
 ?></th>

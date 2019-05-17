@@ -1344,6 +1344,45 @@ function calcVisitorsPerTier()
     }
 }
 
+function calcPromotionUsage() {
+  $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+  if (mysqli_connect_errno($con)) {
+      echo "Failed to connect to database: " . mysqli_connect_error();
+  }
+
+  $businessid = $_GET['businessID'];
+
+  $result     = mysqli_query($con, "SELECT
+	COUNT(pt.tagID) / (
+        SELECT
+			COUNT(ptsub.tagID)
+		FROM
+			superpoints.PromotionTags ptsub
+			JOIN superpoints.Promotions psub ON ptsub.promotionID = psub.promotionID
+		WHERE
+			psub.businessID = $businessid
+        	AND ptsub.tagID = pt.tagID
+    ) AS 'UsesPerPromo',
+	t.tagName 'Tag'
+FROM
+	superpoints.PromotionUsage pu
+	JOIN superpoints.Promotions p ON pu.promotionID = p.promotionID
+	JOIN superpoints.PromotionTags pt ON pt.promotionID = p.promotionID
+	JOIN superpoints.Tags t ON pt.tagID = t.tagID
+WHERE
+	p.businessID = $businessid
+GROUP BY pt.tagID", MYSQLI_STORE_RESULT);
+
+
+
+  while ($row_data = mysqli_fetch_array($result)) {
+      $promouses = $row_data['UsesPerPromo'];
+      $tag    = $row_data['Tag'];
+      echo $promouses . "~s" . $tag . "~n";
+  }
+}
+
 function sendEmail()
 {
     $mail = new PHPMailer();
@@ -1465,6 +1504,9 @@ switch ($func) {
         break;
     case "calcVisitorsPerTier":
         calcVisitorsPerTier();
+        break;
+    case "calcPromotionUsage":
+        calcPromotionUsage();
         break;
     case "deletePromotion":
         deletePromotion();
