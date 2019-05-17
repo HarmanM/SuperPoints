@@ -53,7 +53,7 @@
         android:layout_marginBottom="70dp"
         android:onClick="login"
         android:text="Submit"
-        android:textSize="22sp"
+        android:textSize="24sp"
         android:fontFamily="@font/theboldfont"
         android:textColor="@color/defaultButtonColor"
         android:background="@drawable/btn_rounded_white"

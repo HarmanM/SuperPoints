@@ -87,6 +87,13 @@ public class Analytics extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+        currentView = 0;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         switch(event.getAction())
@@ -210,6 +217,24 @@ public class Analytics extends AppCompatActivity {
         });
     }
 
+    private void generateTagBarChart()
+    {
+        ArrayList<DataPoint> tagDataPoints = new ArrayList<>();
+        ArrayList<String> barData = new ArrayList<>();
+        ArrayList<Float> barDataValues = new ArrayList<>();
+        new DatabaseObj(Analytics.this).calcPromotionTagUsage(BusinessDashboard.business.getBusinessID(), (ArrayList<Object> objects) ->
+        {
+            for(Object o : objects)
+            {
+                DataPoint currentDP = (DataPoint) o;
+                barData.add(currentDP.getData().get(0));
+                barDataValues.add(Float.parseFloat(currentDP.getData().get(1)));
+            }
+            setUpTagBarChart(barData, barDataValues, "Tag Effectiveness");
+        });
+    }
+
+
     private void setupPieChart(ArrayList<Object> pieData, ArrayList<Object> pieDataValues, String pieChartName)
     {
         //Assumes equally
@@ -236,7 +261,6 @@ public class Analytics extends AppCompatActivity {
         pieChart = (PieChart) findViewById(R.id.pieChart);
         pieChartTitle = (TextView) findViewById(R.id.pieChartTitle);
         pieChart.setData(data);
-        pieChart.invalidate();
         pieChart.setTouchEnabled(false);
         pieChart.getLegend().setEnabled(false);
         pieChart.getDescription().setEnabled(false);
@@ -338,6 +362,47 @@ public class Analytics extends AppCompatActivity {
         setUpFonts(barChart);
         charts.add(barChart);
         titles.add(barChartTitle);
+    }
+
+    public void setUpTagBarChart(ArrayList<String> barData,  ArrayList<Float> barDataValues, String barChartName)
+    {
+        barChart = (BarChart) findViewById(R.id.barchart);
+        barChartTitle = (TextView) findViewById(R.id.barChartTitle);
+        barChart.getXAxis().setValueFormatter(new ValueFormatter()
+        {
+            @Override
+            public String getFormattedValue(float value)
+            {
+                int position = (int) value;
+                return barData.get(position);
+            }
+        });
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        for(int i = 0; i < barData.size(); ++i)
+        {
+            barEntries.add(new BarEntry (i, barDataValues.get(i)));
+        }
+
+        BarDataSet barDataSet  = new BarDataSet(barEntries, barChartName);
+        barDataSet.setValueTextSize(chartDefaultFontSize);
+        barDataSet.setValueTypeface(chartDefaultTitleFont);
+        barDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+        BarData data = new BarData(barDataSet);
+        data.setValueTextSize(chartDefaultFontSize);
+        data.setValueTypeface(chartDefaultFont);
+
+        barChart.setData(data);
+
+        barChart.setTouchEnabled(false);
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+        //setUpLegend(barChart);
+        setUpFonts(barChart);
+        charts.add(barChart);
+        titles.add(barChartTitle);
+
     }
 
     public void setUpLegend(Chart chart)

@@ -438,6 +438,22 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void setPromotionUsage(PromotionUsage o){
+        setPromotionUsage(o, null);
+    }
+
+    public void setPromotionUsage(PromotionUsage o, Consumer<ArrayList<Object>> f){
+        get = false;
+        function = "setPromotionUsage";
+        objConstructor = DatabaseObj::dbReturnID;
+        params = "";
+        params += "PROMOTION_ID=" +
+                "" + DatabaseObj.SQLSafe(o.getPromotionID()) + "&";
+        params += "USER_ID=" + DatabaseObj.SQLSafe(o.getUserID()) + "&";
+        setMembers(params, f);
+        this.execute();
+    }
+
     @Override
     protected String doInBackground(Object[] arg0) {
         try {

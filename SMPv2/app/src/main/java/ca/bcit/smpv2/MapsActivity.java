@@ -58,11 +58,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private float defaultZoom = 19.0f;
-    private int locationRequestInterval = 500; //in seconds, how often maps will update
+    private int locationRequestInterval = 100; //in seconds, how often maps will update 500
     int MY_PERMISSION_ACCESS_FINE_LOCATION = 100;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int SMALLEST_DISPLACEMENT = 5;
-    private final static long FASTEST_INTERVAL = 500;
+    private final static long FASTEST_INTERVAL = 100; //100
 
     static TreeSet<Business> businessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
     static TreeSet<Business> oldBusinessesNearby = new TreeSet<>(Comparator.comparingInt(Business::getBusinessID));
