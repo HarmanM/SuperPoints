@@ -1437,10 +1437,10 @@ switch ($func) {
     case "setPromotionUsage":
         handlePromotionUsage();
         break;
-    case "setTags":
+    case "setTag":
         handleTags();
         break;
-    case "setPromotionTags":
+    case "setPromotionTag":
         handlePromotionTags();
         break;
     case "promoClick":
