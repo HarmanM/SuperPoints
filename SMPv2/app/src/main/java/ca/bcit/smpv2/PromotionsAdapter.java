@@ -22,6 +22,9 @@ import org.w3c.dom.Text;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
+import me.originqiu.library.EditTag;
 
 public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
 
@@ -43,6 +46,7 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
         TextView promotionBusinessName = (TextView) convertView.findViewById(R.id.promotionBusinessName);
         TextView shortPromotionDetails = (TextView) convertView.findViewById(R.id.shortPromotionDetails);
         TextView promotionMinimumPoints = (TextView) convertView.findViewById(R.id.promotionMinimumPoints);
+
         ImageView promotionIcon = convertView.findViewById(R.id.iconImageView);
         ImageView promotionUploadImage = convertView.findViewById(R.id.promoImageView);
         // Populate the data into the template view using the data object

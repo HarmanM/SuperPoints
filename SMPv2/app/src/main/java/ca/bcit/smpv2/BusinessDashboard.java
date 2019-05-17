@@ -72,77 +72,86 @@ public class BusinessDashboard extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 1;
     Toolbar toolbar;
     FloatingActionButton scanBtn;
+    List<String> tagList = new ArrayList<>();
+    List<Tag> dbTagList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         promoImageView = findViewById(R.id.promoImageView);
         iconImageView = findViewById(R.id.iconImageView);
-        tagEditText = findViewById(R.id.edit_tag_view);
+
+
         super.onCreate(savedInstanceState);
         checkPermission();
 
         new DatabaseObj(this).getBusinesses("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> businessObj) -> {
             business = (Business) businessObj.get(0);
-            new DatabaseObj(this).getBusinessSettings("businessID=" + DatabaseObj.SQLSafe(business.getBusinessID()), (ArrayList<Object> settings)->{
-                for(Object setting : settings)
-                    business.addSetting((BusinessSetting) setting);
+            new DatabaseObj(this).getBusinessSettings("businessID=" + DatabaseObj.SQLSafe(business.getBusinessID()), (ArrayList<Object> settings) -> {
+                new DatabaseObj(this).getTags("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> tagObjects) -> {
+                    for (Object x : tagObjects) {
+                        dbTagList.add((Tag) x);
 
-                setContentView(R.layout.activity_business_dashboard);
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
+                        for (Object setting : settings)
+                            business.addSetting((BusinessSetting) setting);
 
-                // Find the toolbar view inside the activity layout
+                        setContentView(R.layout.activity_business_dashboard);
+                        toolbar = (Toolbar) findViewById(R.id.toolbar);
+                        setSupportActionBar(toolbar);
 
-                usersPromotions = new ArrayList<>();
+                        // Find the toolbar view inside the activity layout
 
-                listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                listView.setAdapter(adapter);
+                        usersPromotions = new ArrayList<>();
 
-                int businessID = LoginActivity.user.getBusinessID();
-                new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + DatabaseObj.SQLSafe(businessID), (ArrayList<Object> objects) -> {
-                    for (Object o : objects) {
-                        usersPromotions.add(new Pair<Promotions, Boolean>((Promotions) o, false));
-                    }
-                    adapter = new PromotionsAdapter(this, usersPromotions);
-                    listView.setAdapter(adapter);
-                });
+                        listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                        listView.setAdapter(adapter);
 
-                listView.refreshDrawableState();
+                        int businessID = LoginActivity.user.getBusinessID();
+                        new DatabaseObj(BusinessDashboard.this).getPromotions("businessID=" + DatabaseObj.SQLSafe(businessID), (ArrayList<Object> objects) -> {
+                            for (Object o : objects) {
+                                usersPromotions.add(new Pair<Promotions, Boolean>((Promotions) o, false));
+                            }
+                            adapter = new PromotionsAdapter(this, usersPromotions);
+                            listView.setAdapter(adapter);
+                        });
 
-                listView.setOnItemClickListener((parent, view, position, id) -> {
-                    selectedPromotion = usersPromotions.get(position).first;
+                        listView.refreshDrawableState();
 
-                });
+                        listView.setOnItemClickListener((parent, view, position, id) -> {
+                            selectedPromotion = usersPromotions.get(position).first;
 
-                addBtn = findViewById(R.id.addBtn);
-                editBtn = findViewById(R.id.editBtn);
-                dltBtn = findViewById(R.id.deleteBtn);
+                        });
 
-                addBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAddDialog();
-                    }
-                });
+                        addBtn = findViewById(R.id.addBtn);
+                        editBtn = findViewById(R.id.editBtn);
+                        dltBtn = findViewById(R.id.deleteBtn);
 
-                editBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(selectedPromotion != null)
-                            showUpdateDialog(selectedPromotion);
-                        else
-                            Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        addBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showAddDialog();
+                            }
+                        });
 
-                dltBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(selectedPromotion != null)
-                            showDeleteDialog(selectedPromotion);
-                        else
-                            Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
+                        editBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (selectedPromotion != null)
+                                    showUpdateDialog(selectedPromotion);
+                                else
+                                    Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        dltBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (selectedPromotion != null)
+                                    showDeleteDialog(selectedPromotion);
+                                else
+                                    Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
             });
@@ -278,7 +287,6 @@ public class BusinessDashboard extends AppCompatActivity {
     }
 
 
-
     private void showUpdateDialog(Promotions updatedPromo) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -289,6 +297,11 @@ public class BusinessDashboard extends AppCompatActivity {
         final EditText editTextShortDescription = dialogView.findViewById(R.id.editTextShortDescription);
         promoImageView = dialogView.findViewById(R.id.promoImageView);
         Spinner spinner = (Spinner) dialogView.findViewById(R.id.minTier);
+
+        LayoutInflater factory = getLayoutInflater();
+        EditTag editTag = (EditTag) dialogView.findViewById(R.id.edit_tag_view);
+        List<String> tagList = new ArrayList<String>();
+
 
         dialogBuilder.setView(dialogView);
         //dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
@@ -307,6 +320,10 @@ public class BusinessDashboard extends AppCompatActivity {
         if (updatedPromo != null) {
             editTextPromotionDetail.setText(updatedPromo.getDetails());
             if (updatedPromo != null) {
+                for (Tag x : updatedPromo.getPromotionTags()) {
+                    editTag.addTag(x.getTag());
+                }
+
                 editTextPromotionDetail.setText(updatedPromo.getDetails());
                 editTextShortDescription.setText(updatedPromo.getShortDescription());
                 Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
@@ -329,6 +346,7 @@ public class BusinessDashboard extends AppCompatActivity {
         buttonAddPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 checkPermission();
                 iconImageView = findViewById(R.id.iconImageView);
                 PointTiers promotionPoints = (PointTiers) spinner.getSelectedItem();
@@ -348,10 +366,33 @@ public class BusinessDashboard extends AppCompatActivity {
                     if (selectedImage == null) {
                         selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
                     }
+                    List<String> tagList = editTag.getTagList();
+                    for (int i = 0; i < tagList.size(); i++) {
+                        boolean found = false;
+                        int position = -1;
+                        for (int j = 0; j < dbTagList.size(); j++) {
+                            if (tagList.get(i).equalsIgnoreCase(dbTagList.get(j).getTag())) {
+                                found = true;
+                                position = j;
+                            }
+                        }
+                        if(!found)
+                        {
+                            String s = tagList.get(i);
+                            new DatabaseObj(BusinessDashboard.this).setTag(new Tag(-1, s), (ArrayList<Object> objects)->{
+                                promo.addPromotionTag(new Tag(Integer.parseInt((String) objects.get(0)), s));
+                            });
+
+                        }
+                        else
+                        {
+                            promo.addPromotionTag(dbTagList.get(position));
+                        }
+                    }
                     new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
                         promo.setPromotionID(Integer.parseInt(objects.get(0).toString()));
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
-                                ()->{
+                                () -> {
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                                     listView.setAdapter(adapter);
                                     selectedImage = null;
@@ -360,6 +401,7 @@ public class BusinessDashboard extends AppCompatActivity {
 
                     });
                 } else {
+
                     updatedPromo.setDetails(promotionDetails);
                     updatedPromo.setShortDescription(shortDescription);
                     updatedPromo.setMinTier(promotionPoints);
@@ -368,7 +410,7 @@ public class BusinessDashboard extends AppCompatActivity {
                             .into(promoImageView);
                     new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
                         ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
-                                ()->{
+                                () -> {
                                     ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
                                     listView.setAdapter(adapter);
                                     selectedImage = null;
@@ -390,17 +432,14 @@ public class BusinessDashboard extends AppCompatActivity {
         }
     }
 
-    public void openQRScanner(View view)
-    {
+    public void openQRScanner(View view) {
         Intent i = new Intent(BusinessDashboard.this, QRScannerActivity.class);
         startActivity(i);
     }
 
 
-    public void addTag(View view)
-    {
-        editTag = new EditTag(this);
-        editTag.addTag(String.valueOf(tagEditText.getText()));
+    public void addTag(View view) {
+        editTag.addTag("hello");
     }
 }
 
