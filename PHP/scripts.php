@@ -98,18 +98,20 @@ function getPromotion()
     $businessID = $_GET['whereClause'];
     $where      = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
-    $result = mysqli_query($con, "SELECT promotionID, businessID, pt.*, details, clicks, businessName, shortDescription
+    $result = mysqli_query($con, "SELECT t.promotionID, t.businessID AS regBusinessID, pt.*, details, clicks, businessName, shortDescription, tg.*
             FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p
             INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
             INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
+            INNER JOIN superpoints.PromotionTags ptg ON t.promotionID = ptg.promotionID
+            INNER JOIN superpoints.Tags tg ON ptg.tagID = tg.tagID
             $where", MYSQLI_STORE_RESULT);
 
     $row_count = mysqli_num_rows($result);
 
     if ($row_count <= 1) {
         $row              = mysqli_fetch_array($result);
-        $visitid          = $row['promotionID'];
-        $businessid       = $row['businessID'];
+        $promotionid          = $row['promotionID'];
+        $businessid       = $row['regBusinessID'];
         $tierID           = $row['tierID'];
         $minPoints        = $row['minPoints'];
         $name             = $row['name'];
@@ -117,13 +119,17 @@ function getPromotion()
         $clicks           = $row['clicks'];
         $businessName     = $row['businessName'];
         $shortDescription = $row['shortDescription'];
+        $tagid = $row['tagID'];
+        $tagBusId = $row['businessID'];
+        $tagName = $row['tagName'];
 
         if (isset($businessid) && $businessid != "") {
-            echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription;
+            echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~s" . "{$tagid, $tagBusId, $tagName}";
+            //{1,4134,tea},{2,4134,pizza},{3,4134,coffee}
         }
     } else {
         while ($row_data = mysqli_fetch_array($result)) {
-            $visitid          = $row_data['promotionID'];
+            $promotionid      = $row_data['promotionID'];
             $businessid       = $row_data['businessID'];
             $tierID           = $row_data['tierID'];
             $minPoints        = $row_data['minPoints'];
@@ -134,7 +140,7 @@ function getPromotion()
             $shortDescription = $row_data['shortDescription'];
 
             if (isset($businessid) && $businessid != "") {
-                echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
+                echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
             }
         }
     }
@@ -1375,7 +1381,6 @@ WHERE
 GROUP BY pt.tagID", MYSQLI_STORE_RESULT);
 
 
-
   while ($row_data = mysqli_fetch_array($result)) {
       $promouses = $row_data['UsesPerPromo'];
       $tag    = $row_data['Tag'];
@@ -1450,6 +1455,9 @@ switch ($func) {
         break;
     case "getTags":
         getTags();
+        break;
+    case "getPromotionTags":
+        getPromotionTags();
         break;
     case "setUser":
         handleUser();
