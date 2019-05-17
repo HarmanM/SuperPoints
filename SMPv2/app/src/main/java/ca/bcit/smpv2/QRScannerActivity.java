@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+import java.util.ArrayList;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class QRScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
@@ -28,9 +30,15 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
             if(results.length == 2)
             {
                 PromotionUsage o = new PromotionUsage(0, Integer.parseInt(results[1]), Integer.parseInt(results[0]));
-                new DatabaseObj(QRScannerActivity.this).setPromotionUsage(o);
-                onBackPressed();
-                Toast.makeText(this, "Purchase recorded!", Toast.LENGTH_SHORT).show();
+                new DatabaseObj(QRScannerActivity.this).setPromotionUsage(o, (ArrayList<Object> objects)->{
+                    if(objects.size() != 0)
+                    {
+                        onBackPressed();
+                        Toast.makeText(this, "Purchase recorded!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "This QR code is not recognized.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
