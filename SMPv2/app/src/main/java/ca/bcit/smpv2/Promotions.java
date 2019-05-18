@@ -23,7 +23,6 @@ public class Promotions {
     }
 
     public Promotions(String[] result) {
-        
         this.promotionID = Integer.parseInt(result[0]);
         this.businessID = Integer.parseInt(result[1]);
         this.minTier = new PointTiers(new String[]{result[2], result[3], result[4]});
@@ -31,6 +30,7 @@ public class Promotions {
         this.clicks = Integer.parseInt(result[6]);
         this.businessName = result[7];
         this.shortDescription = result[8];
+        DatabaseObj.parseData((ArrayList<Object>)(ArrayList<?>)promotionTags, result[9], Tag::new);
     }
 
     public String getShortDescription() {
