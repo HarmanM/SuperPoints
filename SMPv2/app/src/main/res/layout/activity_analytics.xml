@@ -75,6 +75,26 @@
         </TextView>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="60dp">
+        <TextView
+            android:id="@+id/tagBarChartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextViewHeaderDefault"
+            android:textSize="30sp"
+            android:textColor="@color/defaultButtonColor"
+            android:text="@string/analytics_tag_bar"
+            android:visibility="gone"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
+        </TextView>
+    </LinearLayout>
+
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
@@ -102,6 +122,17 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barchart"
+        android:layout_width="400dp"
+        android:layout_height="500dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone">
+    </com.github.mikephil.charting.charts.BarChart>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/tagbarchart"
         android:layout_width="400dp"
         android:layout_height="500dp"
         android:layout_centerVertical="true"

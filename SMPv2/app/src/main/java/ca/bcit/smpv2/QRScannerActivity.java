@@ -1,5 +1,9 @@
 package ca.bcit.smpv2;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +18,14 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class QRScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     ZXingScannerView scanner;
+    final static int PERMISSION_REQUEST_CAMERA = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         scanner = new ZXingScannerView(this);
         setContentView(scanner);
+        checkPermission();
 
     }
 
@@ -56,6 +62,24 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         super.onResume();
         scanner.setResultHandler(this);
         scanner.startCamera();
+    }
+
+    private void checkPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check
+            if (this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle("This app needs to access your camera to read QR codes.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
+                    }
+                });
+                builder.show();
+            }
+        }
     }
 
 }

@@ -48,6 +48,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import me.originqiu.library.EditTag;
 
@@ -73,7 +77,7 @@ public class BusinessDashboard extends AppCompatActivity {
     Toolbar toolbar;
     FloatingActionButton scanBtn;
     List<String> tagList = new ArrayList<>();
-    List<Tag> dbTagList = new ArrayList<>();
+    TreeMap<String, Tag> dbTagList = new TreeMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +93,8 @@ public class BusinessDashboard extends AppCompatActivity {
             business = (Business) businessObj.get(0);
             new DatabaseObj(this).getBusinessSettings("businessID=" + DatabaseObj.SQLSafe(business.getBusinessID()), (ArrayList<Object> settings) -> {
                 new DatabaseObj(this).getTags("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> tagObjects) -> {
-                    for (Object x : tagObjects) {
-                        dbTagList.add((Tag) x);
+                    for (Object x : tagObjects)
+                        dbTagList.put(((Tag) x).getTag(), (Tag)x);
 
                         for (Object setting : settings)
                             business.addSetting((BusinessSetting) setting);
@@ -152,7 +156,6 @@ public class BusinessDashboard extends AppCompatActivity {
                                     Toast.makeText(BusinessDashboard.this, "Select a promotion", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
                 });
             });
         });
@@ -216,7 +219,7 @@ public class BusinessDashboard extends AppCompatActivity {
                     && this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
                 builder.setTitle("This app needs to access your storage");
-                builder.setMessage("Please grant location access so this app can use images from your storage for promotions");
+                builder.setMessage("Please grant storage access so this app can use images from your storage for promotions");
                 builder.setPositiveButton(android.R.string.ok, null);
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
@@ -304,7 +307,6 @@ public class BusinessDashboard extends AppCompatActivity {
 
 
         dialogBuilder.setView(dialogView);
-        //dialogBuilder.setTitle((updatedPromo == null) ? "Add Promotion" : "Edit Promotion");
         TextView titleHeader = findViewById(R.id.titleHeader);
         dialogBuilder.setCustomTitle(titleHeader);
 
@@ -319,21 +321,20 @@ public class BusinessDashboard extends AppCompatActivity {
 
         if (updatedPromo != null) {
             editTextPromotionDetail.setText(updatedPromo.getDetails());
-            if (updatedPromo != null) {
+            if(updatedPromo.getPromotionTags().size() != 0)
+            {
                 for (Tag x : updatedPromo.getPromotionTags()) {
                     editTag.addTag(x.getTag());
                 }
-
-                editTextPromotionDetail.setText(updatedPromo.getDetails());
-                editTextShortDescription.setText(updatedPromo.getShortDescription());
-                Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
-                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
-                        .into(promoImageView);
-                for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
-                    if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
-                        spinner.setSelection(i);
             }
-
+            editTextPromotionDetail.setText(updatedPromo.getDetails());
+            editTextShortDescription.setText(updatedPromo.getShortDescription());
+            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .into(promoImageView);
+            for (int i = 0; i < spinnerArrayAdapter.getCount(); i++)
+                if ((spinnerArrayAdapter.getItem(i)).getTierID() == updatedPromo.getMinTier().getTierID())
+                    spinner.setSelection(i);
             alertDialog.show();
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -367,55 +368,74 @@ public class BusinessDashboard extends AppCompatActivity {
                         selectedImage = Uri.parse("android.resource://ca.bcit.smpv2/drawable/not_available");
                     }
                     List<String> tagList = editTag.getTagList();
-                    for (int i = 0; i < tagList.size(); i++) {
-                        boolean found = false;
-                        int position = -1;
-                        for (int j = 0; j < dbTagList.size(); j++) {
-                            if (tagList.get(i).equalsIgnoreCase(dbTagList.get(j).getTag())) {
-                                found = true;
-                                position = j;
-                            }
-                        }
-                        if(!found)
+                    ArrayList<Tag> newTagList = new ArrayList<>();
+                    for (int i = 0; i < tagList.size(); i++)
+                    {
+                        Tag newTag = new Tag(-1, LoginActivity.user.getBusinessID(), tagList.get(i));
+                        if(dbTagList.get(newTag.getTag()) == null)
                         {
-                            String s = tagList.get(i);
-                            new DatabaseObj(BusinessDashboard.this).setTag(new Tag(-1, s), (ArrayList<Object> objects)->{
-                                promo.addPromotionTag(new Tag(Integer.parseInt((String) objects.get(0)), s));
-                            });
-
-                        }
-                        else
-                        {
-                            promo.addPromotionTag(dbTagList.get(position));
+                            newTagList.add(newTag);
                         }
                     }
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
-                        promo.setPromotionID(Integer.parseInt(objects.get(0).toString()));
-                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
-                                () -> {
-                                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                                    listView.setAdapter(adapter);
-                                    selectedImage = null;
-                                });
-                        usersPromotions.add(new Pair<>(promo, false));
-
+                    new DatabaseObj(BusinessDashboard.this).setTag(newTagList, (ArrayList<Object> objects2) ->
+                    {
+                        new DatabaseObj(BusinessDashboard.this).getTags("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> tagObjects) -> {
+                            for (Object x : tagObjects) {
+                                dbTagList.put(((Tag) x).getTag(), (Tag) x);
+                            }
+                            for (int i = 0; i < tagList.size(); i++)
+                            {
+                                promo.addPromotionTag(dbTagList.get(tagList.get(i)));
+                            }
+                            new DatabaseObj(BusinessDashboard.this).setPromotion(promo, (ArrayList<Object> objects) -> {
+                                promo.setPromotionID(Integer.parseInt(objects.get(0).toString()));
+                                ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(promo.getPromotionID()), getApplicationContext(),
+                                        () -> {
+                                            ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                                            listView.setAdapter(adapter);
+                                            selectedImage = null;
+                                        });
+                                usersPromotions.add(new Pair<>(promo, false));
+                            });
+                        });
                     });
                 } else {
+                    List<String> tagList = editTag.getTagList();
+                    ArrayList<Tag> newTagList = new ArrayList<>();
+                    for (int i = 0; i < tagList.size(); i++)
+                    {
+                        Tag newTag = new Tag(-1, LoginActivity.user.getBusinessID(), tagList.get(i));
+                        if(dbTagList.get(newTag.getTag()) == null)
+                        {
+                            newTagList.add(newTag);
+                        }
+                    }
+                    new DatabaseObj(BusinessDashboard.this).setTag(newTagList, (ArrayList<Object> objects2) ->
+                    {
+                        new DatabaseObj(BusinessDashboard.this).getTags("businessID=" + DatabaseObj.SQLSafe(LoginActivity.user.getBusinessID()), (ArrayList<Object> tagObjects) -> {
+                            for (Object x : tagObjects) {
+                                dbTagList.put(((Tag) x).getTag(), (Tag) x);
+                            }
+                            updatedPromo.getPromotionTags().clear();
+                            for (int i = 0; i < tagList.size(); i++) {
+                                updatedPromo.addPromotionTag(dbTagList.get(tagList.get(i)));
+                            }
+                            updatedPromo.setDetails(promotionDetails);
+                            updatedPromo.setShortDescription(shortDescription);
+                            updatedPromo.setMinTier(promotionPoints);
+                            Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
+                                    .into(promoImageView);
+                            new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
+                                ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
+                                        () -> {
+                                            ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
+                                            listView.setAdapter(adapter);
+                                            selectedImage = null;
 
-                    updatedPromo.setDetails(promotionDetails);
-                    updatedPromo.setShortDescription(shortDescription);
-                    updatedPromo.setMinTier(promotionPoints);
-                    Picasso.get().load("https://s3.amazonaws.com/superpoints-userfiles-mobilehub-467637819/promo/" + updatedPromo.getPromotionID() + ".jpg")
-                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE)
-                            .into(promoImageView);
-                    new DatabaseObj(BusinessDashboard.this).setPromotion(updatedPromo, (ArrayList<Object> objects) -> {
-                        ImageHandler.getInstance().uploadFile(selectedImage, String.valueOf(updatedPromo.getPromotionID()), getApplicationContext(),
-                                () -> {
-                                    ListView listView = (ListView) findViewById(R.id.lvBusinessPromotions);
-                                    listView.setAdapter(adapter);
-                                    selectedImage = null;
-
-                                });
+                                        });
+                            });
+                        });
                     });
 
                 }

@@ -97,4 +97,5 @@ public class Promotions {
     {
         promotionTags = newTags;
     }
+
 }

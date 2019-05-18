@@ -307,6 +307,35 @@ public class DatabaseObj extends AsyncTask {
         this.execute();
     }
 
+    public void setTag(ArrayList<Tag> o) {setTag(o, null);}
+
+    public void setTag(ArrayList<Tag> o, Consumer<ArrayList<Object>> f)
+    {
+        get = false;
+        function = "setTags";
+        StringBuilder tagID = new StringBuilder();
+        StringBuilder businessID = new StringBuilder();
+        StringBuilder tagName = new StringBuilder();
+        if(o.size() > 0){
+            tagID.append("TAG_ID=");
+            businessID.append("BUSINESS_ID=");
+            tagName.append("TAG_NAME=");
+            for(Tag t : o) {
+                tagID.append(DatabaseObj.SQLSafe(t.getTagID()) + ",");
+                businessID.append(DatabaseObj.SQLSafe(t.getBusinessID()) + ",");
+                tagName.append(DatabaseObj.SQLSafe(t.getTag()) + ",");
+            }
+            tagID.deleteCharAt(tagID.length() - 1);
+            businessID.deleteCharAt(businessID.length() - 1);
+            tagName.deleteCharAt(tagName.length() - 1);
+            tagID.append("&");
+            businessID.append("&");
+        }
+        params = tagID.toString() + businessID.toString() + tagName.toString();
+        setMembers(params, f);
+        this.execute();
+    }
+
     public void setPromotionTag(Promotions p, Tag t, Consumer<ArrayList<Object>> f){
         setPromotionTag(p.getPromotionID(), t.getTagID(), f);
     }
@@ -441,7 +470,8 @@ public class DatabaseObj extends AsyncTask {
         params += "TAGS=";
         for(Tag t : o.getPromotionTags())
             params += t.getTagID() + ",";
-        params = params.substring(0, params.length() - 1);
+        if(o.getPromotionTags().size() > 0)
+            params = params.substring(0, params.length() - 1);
         setMembers(params, f);
         this.execute();
     }

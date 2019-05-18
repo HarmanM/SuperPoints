@@ -52,8 +52,9 @@ public class Analytics extends AppCompatActivity {
     PieChart pieChart;
     LineChart lineChart;
     BarChart barChart;
+    BarChart tagBarChart;
 
-    TextView pieChartTitle, lineChartTitle, barChartTitle;
+    TextView pieChartTitle, lineChartTitle, barChartTitle, tagBarChartTitle;
 
     ArrayList<View> charts = new ArrayList<>();
     ArrayList<View> titles = new ArrayList<>();
@@ -78,6 +79,7 @@ public class Analytics extends AppCompatActivity {
         generateLineData();
         generatePieData();
         generateBarData();
+        generateTagBarData();
         setContentView(R.layout.activity_analytics);
 
         // Find the toolbar view inside the activity layout
@@ -217,7 +219,7 @@ public class Analytics extends AppCompatActivity {
         });
     }
 
-    private void generateTagBarChart()
+    private void generateTagBarData()
     {
         ArrayList<DataPoint> tagDataPoints = new ArrayList<>();
         ArrayList<String> barData = new ArrayList<>();
@@ -366,9 +368,9 @@ public class Analytics extends AppCompatActivity {
 
     public void setUpTagBarChart(ArrayList<String> barData,  ArrayList<Float> barDataValues, String barChartName)
     {
-        barChart = (BarChart) findViewById(R.id.barchart);
-        barChartTitle = (TextView) findViewById(R.id.barChartTitle);
-        barChart.getXAxis().setValueFormatter(new ValueFormatter()
+        tagBarChart = (BarChart) findViewById(R.id.tagbarchart);
+        tagBarChartTitle = (TextView) findViewById(R.id.tagBarChartTitle);
+        tagBarChart.getXAxis().setValueFormatter(new ValueFormatter()
         {
             @Override
             public String getFormattedValue(float value)
@@ -377,6 +379,7 @@ public class Analytics extends AppCompatActivity {
                 return barData.get(position);
             }
         });
+        tagBarChart.getXAxis().setLabelCount(barData.size(), true);
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         for(int i = 0; i < barData.size(); ++i)
@@ -393,16 +396,15 @@ public class Analytics extends AppCompatActivity {
         data.setValueTextSize(chartDefaultFontSize);
         data.setValueTypeface(chartDefaultFont);
 
-        barChart.setData(data);
+        tagBarChart.setData(data);
 
-        barChart.setTouchEnabled(false);
-        barChart.getLegend().setEnabled(false);
-        barChart.getDescription().setEnabled(false);
+        tagBarChart.setTouchEnabled(false);
+        tagBarChart.getLegend().setEnabled(false);
+        tagBarChart.getDescription().setEnabled(false);
         //setUpLegend(barChart);
-        setUpFonts(barChart);
-        charts.add(barChart);
-        titles.add(barChartTitle);
-
+        setUpFonts(tagBarChart);
+        charts.add(tagBarChart);
+        titles.add(tagBarChartTitle);
     }
 
     public void setUpLegend(Chart chart)
