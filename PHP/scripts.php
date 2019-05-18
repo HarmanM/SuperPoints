@@ -98,13 +98,22 @@ function getPromotion()
     $businessID = $_GET['whereClause'];
     $where      = isset($_GET['whereClause']) ? "WHERE " . $_GET['whereClause'] : '';
 
-    $result = mysqli_query($con, "SELECT t.promotionID, t.businessID AS regBusinessID, pt.*, details, clicks, businessName, shortDescription, tg.*
-            FROM (SELECT p.*, b.businessName FROM superpoints.Promotions p
-            INNER JOIN superpoints.Businesses b ON p.businessID = b.businessID) t
-            INNER JOIN superpoints.PointTiers pt ON t.minTierID = pt.tierID
-            INNER JOIN superpoints.PromotionTags ptg ON t.promotionID = ptg.promotionID
-            INNER JOIN superpoints.Tags tg ON ptg.tagID = tg.tagID
-            $where", MYSQLI_STORE_RESULT);
+    $result = mysqli_query($con, "SELECT * FROM
+	(SELECT
+		p.promotionID, p.businessID, pts.*, details, clicks, businessName, shortDescription,
+		CONCAT('{', GROUP_CONCAT(
+			DISTINCT CONCAT(t.tagId,',',t.businessID,',',t.tagName)
+			SEPARATOR '},{'
+			),
+		'}') AS 'Tags'
+	FROM
+		(SELECT ps.*, b.businessName FROM superpoints.Promotions ps
+			INNER JOIN superpoints.Businesses b ON ps.businessID = b.businessID) p
+		INNER JOIN superpoints.PointTiers pts ON pts.tierID = p.minTierID
+		LEFT JOIN superpoints.PromotionTags pt ON p.promotionID = pt.promotionID
+		LEFT JOIN superpoints.Tags t ON t.tagID = pt.tagID
+	GROUP BY p.promotionID) t
+  $where", MYSQLI_STORE_RESULT);
 
     $row_count = mysqli_num_rows($result);
 
@@ -119,13 +128,10 @@ function getPromotion()
         $clicks           = $row['clicks'];
         $businessName     = $row['businessName'];
         $shortDescription = $row['shortDescription'];
-        $tagid = $row['tagID'];
-        $tagBusId = $row['businessID'];
-        $tagName = $row['tagName'];
+        $tags = $row['Tags'];
 
         if (isset($businessid) && $businessid != "") {
-            echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~s" . "{$tagid, $tagBusId, $tagName}";
-            //{1,4134,tea},{2,4134,pizza},{3,4134,coffee}
+            echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~s" . $tags;
         }
     } else {
         while ($row_data = mysqli_fetch_array($result)) {
@@ -138,9 +144,10 @@ function getPromotion()
             $clicks           = $row_data['clicks'];
             $businessName     = $row_data['businessName'];
             $shortDescription = $row_data['shortDescription'];
+            $tags = $row_data['Tags'];
 
             if (isset($businessid) && $businessid != "") {
-                echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
+                echo $promotionid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~s" . $tags . "~n";
             }
         }
     }
@@ -729,11 +736,13 @@ function handlePromotions()
     $shortDescription1 = $_GET['SHORT_DESCRIPTION'];
     $shortDescription2 = str_replace("~amp`", "~amp", $shortDescription1);
     $shortDescription  = str_replace("~amp", "&", $shortDescription2);
+    $tags = $_GET['TAGS'];
 
     if ($promotionid == -1) {
         $promotionid = "";
     }
 
+    $tagArray = explode(",", $tags);
 
     if ($promotionid == "") {
         $result = mysqli_query($con, "INSERT INTO `superpoints`.`Promotions`
@@ -741,6 +750,11 @@ function handlePromotions()
                 '$details', '$clicks', '$shortDescription');", MYSQLI_STORE_RESULT);
 
         $result = $result ? "true" : "";
+
+        for ($i = 0; $i < count($tagArray); $i++) {
+              $result3 = mysqli_query($con, "INSERT INTO `superpoints`.`PromotionTags`
+                    (promotionID, tagID) VALUES ('$promotionid', '$tagArray[$i]');", MYSQLI_STORE_RESULT);
+        }
 
         if ($result == "true") {
             $result2 = mysqli_query($con, "SELECT promotionID FROM `superpoints`.`Promotions` ORDER BY promotionID DESC LIMIT 1");
@@ -750,6 +764,14 @@ function handlePromotions()
     } else {
         $result = mysqli_query($con, "UPDATE `superpoints`.`Promotions` SET businessid = '$businessid',
             minTierID = '$tierid', details = '$details', clicks = $clicks, shortDescription = '$shortDescription' WHERE (`promotionID` = '$promotionid');", MYSQLI_STORE_RESULT);
+
+
+        $result1 = mysqli_query($con, "DELETE FROM `superpoints`.`PromotionTags`
+            WHERE promotionID = $promotionid;", MYSQLI_STORE_RESULT);
+        for ($i = 0; $i < count($tagArray); $i++) {
+            $result3 = mysqli_query($con, "INSERT INTO `superpoints`.`PromotionTags`
+                    (promotionID, tagID) VALUES ('$promotionid', '$tagArray[$i]');", MYSQLI_STORE_RESULT);
+        }
         echo $result ? "$promotionid" : "";
     }
 }
@@ -819,6 +841,43 @@ function handleTags()
             tagName = '$tagname' WHERE (`tagID` = '$tagid');", MYSQLI_STORE_RESULT);
         echo $result ? "$tagid" : "";
     }
+}
+
+function handleMultipleTags()
+{
+    $con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
+
+    if (mysqli_connect_errno($con)) {
+        echo "Failed to connect to database: " . mysqli_connect_error();
+    }
+
+    $tagid      = $_GET['TAG_ID'];
+    $businessid = $_GET['BUSINESS_ID'];
+    $tagname    = $_GET['TAG_NAME'];
+
+    $businessArray = explode(",", $businessid);
+    $tagArray = explode(",", $tagid);
+    $nameArray = explode(",", $tagname);
+
+    for ($i = 0; $i < count($tagArray); $i++) {
+    if ($tagArray[$i] != -1) {
+          $tagStrings = explode(" ", $tagArray);
+          $result = mysqli_query($con, "INSERT INTO `superpoints`.`Tags`
+              (businessID, tagName) VALUES ('$businessArray[$i]', '$nameArray[$i]');", MYSQLI_STORE_RESULT);
+
+          $result = $result ? "true" : "";
+
+        if ($result == "true") {
+            $result2 = mysqli_query($con, "SELECT tagID FROM `superpoints`.`Tags` ORDER BY tagID DESC LIMIT 1");
+            $row     = mysqli_fetch_array($result2);
+            echo $row[0];
+        }
+    } else {
+        $result = mysqli_query($con, "UPDATE `superpoints`.`Tags` SET businessID = '$businessArray[$i]',
+            tagName = '$nameArray[$i]' WHERE (`tagID` = '$tagArray[$i]');", MYSQLI_STORE_RESULT);
+        echo $result ? "$tagid" : "";
+    }
+  }
 }
 
 function handlePromotionTags()
@@ -976,7 +1035,7 @@ function getApplicablePromotions()
         $shortDescription = $row_data['shortDescription'];
 
         if (isset($businessid) && $businessid != "") {
-            echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~n";
+            echo $visitid . "~s" . $businessid . "~s" . $tierID . "~s" . $minPoints . "~s" . $name . "~s" . $details . "~s" . $clicks . "~s" . $businessName . "~s" . $shortDescription . "~s" . "~n";
         }
     }
 
@@ -1488,6 +1547,9 @@ switch ($func) {
         break;
     case "setPromotionTag":
         handlePromotionTags();
+        break;
+    case "setTags":
+        handleMultipleTags();
         break;
     case "promoClick":
         incrementClick();
