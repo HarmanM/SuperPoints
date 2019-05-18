@@ -92,4 +92,9 @@ public class Promotions {
     public ArrayList<Tag> getPromotionTags(){ return promotionTags; }
 
     public void addPromotionTag(Tag t){ promotionTags.add(t); }
+
+    public void addPromotionTags(ArrayList<Tag> newTags)
+    {
+        promotionTags = newTags;
+    }
 }
