@@ -50,8 +50,12 @@ public class PromotionsAdapter extends ArrayAdapter<Pair<Promotions, Boolean>> {
         ImageView promotionIcon = convertView.findViewById(R.id.iconImageView);
         ImageView promotionUploadImage = convertView.findViewById(R.id.promoImageView);
         // Populate the data into the template view using the data object
-        if(getItem(position).second)
-            convertView.setBackgroundColor(Color.YELLOW);
+        if(getItem(position).second) {
+            convertView.setBackgroundColor(getContext().getResources().getColor(R.color.green));
+            ((TextView) convertView.findViewById(R.id.promotionBusinessName)).setTextColor(getContext().getResources().getColor(R.color.white));
+            ((TextView) convertView.findViewById(R.id.promotionMinimumPoints)).setTextColor(getContext().getResources().getColor(R.color.white));
+            ((TextView) convertView.findViewById(R.id.shortPromotionDetails)).setTextColor(getContext().getResources().getColor(R.color.white));
+        }
         else
             convertView.setBackgroundColor(Color.TRANSPARENT);
 

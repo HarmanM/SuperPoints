@@ -14,5 +14,6 @@
     <color name="defaultButtonColor">#00CED1</color>
     <color name="selectedColor">#C0C0C0</color>
     <color name="darkBlue">#2B547E</color>
+    <color name="magenta">#D72FC6</color>
 
 </resources>
