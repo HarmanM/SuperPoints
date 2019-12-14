@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/defaultButtonColor">
+
+    <TextView
+        android:id="@+id/deleteHeaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/TextViewHeaderWhite"
+        android:text="Delete Promotion"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+    <Button
+        android:id="@+id/buttonDeletePromotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/WhiteButtonDefault"
+        android:text="@string/delete_promotion_submit" />
+
+    <Button
+        android:id="@+id/buttonCancelDeletePromotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/WhiteButtonDefault"
+        android:text="@string/delete_promotion_cancel" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

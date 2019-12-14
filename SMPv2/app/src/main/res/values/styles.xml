@@ -1,0 +1,70 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+    </style>
+
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/down_arrow_resized</item>
+    </style>
+
+    <style name="EditTextDefault" parent="">
+        <item name="android:fontFamily">@font/champagnebold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextViewHeaderDefault" parent="">
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextViewBodyDefault" parent="">
+        <item name="android:fontFamily">@font/champagnebold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="EditTextWhite" parent="">
+        <item name="android:fontFamily">@font/champagnebold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+    </style>
+
+    <style name="TextViewHeaderWhite" parent="">
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextViewBodyWhite" parent="">
+        <item name="android:fontFamily">@font/champagnebold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="WhiteButtonDefault" parent="">
+        <item name="android:background">@drawable/btn_rounded_white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:textColor">@color/defaultButtonColor</item>
+    </style>
+
+    <style name="CyanButtonDefault" parent="">
+        <item name="android:background">@drawable/btn_rounded</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/theboldfont</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>

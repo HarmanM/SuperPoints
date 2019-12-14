@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/defaultButtonColor"
+    android:id="@+id/add_promotion_dialogue">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="5dp">
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/titleHeader"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:theme="@style/TextViewHeaderWhite"
+        android:text="Add/Edit Promotion"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/editTextShortDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:theme="@style/EditTextWhite"
+        android:hint="What is a short description about your promotion?" />
+
+    <EditText
+        android:id="@+id/editTextPromotionDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:theme="@style/EditTextWhite"
+        android:hint="Detailed description of your promotion (OPTIONAL)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextViewHeaderWhite"
+            android:text="@string/minimum_tier_for_promo"
+            android:layout_marginStart="5dp"/>
+        <Spinner
+            android:id="@+id/minTier"
+            android:paddingStart="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </Spinner>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/promoImageView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:onClick="uploadImage"
+        android:src="@drawable/insert_image_here_" />
+    <TextView
+        android:id="@+id/addTagTextView"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:theme="@style/TextViewHeaderWhite"
+        android:text="Tags:"
+        android:layout_marginTop="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <me.originqiu.library.EditTag
+            android:id="@+id/edit_tag_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/buttonAddPromotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/WhiteButtonDefault"
+        android:text="@string/add_promotion_submit" />
+
+</LinearLayout>

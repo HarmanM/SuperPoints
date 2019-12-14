@@ -1,0 +1,33 @@
+The problem that many small businesses face in todays world is an inability to combat lower
+prices offered by bigger businesses who can afford lower margins and make up for the deficit in volume of sales.
+Small businesses cannot afford that luxury and thus do not have as many customers. Grass roots businesses are driven
+towards the ground in this manner. Our application offers an oppurtunity to create a lasting relationship
+between small businesses and their customers who are loyal. By offering incentives to customers, they can offer
+these lower prices while retaining a higher returning customer pool. The customer benefits from these reduced
+prices. THis creates a mutually exclusive relationship that allows customers to support their local communities
+businesses without having to ultimately up their cost. Our clients vision and ours as well is to offer this oppurtunity.
+It is a small start of course but in time this may allow businesses to grow bigger than they would have otherwise.
+This will allow community growth and niche markets that may have otherwise not have been developed.
+
+The future. The future we have planned for this application, is to add more value for businesses. We will offer
+them simple analytics that will allow them to create business solutions based on what they percieve.
+Promotions will have clicks tracked, visits will have a duration attached allowing them to see how often people
+spend time in their store. They will see changes in promotions offered, how it affects their daily visit average, and inform
+them how their promotions are influencing traffic.
+
+WE will create the administrator backend and ability for them to easily adjust common day to day operations like adding/editing
+deleting businesses and users. We will also include a small guide for them.
+
+Aesthetically we will be implementing modern deign patterns, high contrast colors, block segmentation of display
+elements. This will attract users to actually using the application.
+
+Continual refinement will happen, we will rigorously test and handle edge cases, we will also make our code production
+level quality easing future developer usage and understanding.
+
+
+47483647
+1234592
+10
+
+
+

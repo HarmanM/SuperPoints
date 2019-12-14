@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">SuperPoints</string>
+    <string name="title_activity_maps">SuperPoints</string>
+    <string name="channel_name">Notif Name</string>
+    <string name="channel_description">Notif Desc</string>
+    <string name="action_settings">Settings</string>
+    <string name="dashboard_title">Promotions</string>
+
+
+    <string name="add_promotion_points">How many points does this promotion need to be redeemed? (default 0)</string>
+    <string name="add_promotion_details">What should we say about your promotion?</string>
+    <string name="add_promotion_submit">All Done!</string>
+
+    <string name="delete_promotion_title">Are you sure?</string>
+    <string name="delete_promotion_submit">Yes</string>
+    <string name="delete_promotion_cancel">No</string>
+
+    <string name="super_slide_title">Super</string>
+    <string name="points_slide_title">Points</string>
+    <string name="title_activity_business_settings">BusinessSettingsActivity</string>
+
+    <string name="minimum_tier_for_promo">Minimum Tier:</string>
+
+    <string name="notif_business_nearby">SuperPoints are up for grabs near you!</string>
+    <string name="send_email_title">Send KPI</string>
+    <string name="send_email_monthly">Send KPIs Monthly</string>\
+
+    <string name="business_region">Region:</string>
+    <string name="business_name">Name:    </string>
+    <string name="business_address">Address:    </string>
+
+    <string name="beacon_name">Beacon ID:    </string>
+    <string name="beacon_minor_name">Minor:    </string>
+    <string name="beacon_major_name">Major:    </string>
+
+    <string name="business_information"><u>Business Information</u></string>
+    <string name="beacon_information"><u>Beacon Information</u></string>
+
+    <string name="promotion_information"><u>Promotions</u></string>
+
+    <string name="admin_business_information"><u>Businesses</u></string>
+
+    <string name="analytics_pie">Number Of New/Old Visitors</string>
+    <string name="analytics_line">Number Of Visits In The Last 12 Months</string>
+    <string name="analytics_bar">Number of Users per Tier In The Last Month</string>
+    <string name="analytics_tag_bar">Tag Effectiveness</string>
+
+</resources>
