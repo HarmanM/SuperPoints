@@ -1,0 +1,57 @@
+Users can log into app as either a business, shopper, or app administrator
+App can connect to Bluetooth beacons to detect shoppers entering the business
+App is connected to a database for data storage (logins, stats on shopper frequency/duration, etc.)
+App can connect to Bluetooth beacons to determine frequency and duration of shopper visits
+Shoppers are categorized into tiers based on their statistics (frequency/duration of visits)
+Businesses can create/edit/delete promotions for shopper tiers
+Businesses can see statistics on user data (number of visits)
+App will send a push notification to users to turn on Bluetooth if they are near a business
+App will send a push notification to users when they pass by a business with an applicable promotion
+App will send a push notification when the user connects to Bluetooth and has “entered the store”
+Shopper can view all applicable promotions
+Shopper can view all business offering applicable promotions on a map 
+
+
+Client Meeting Start (9:37)
+
+IP/NDA - 9:40
+
+Wireframe overview - 9:45
+
+Walkthrough - 10:55
+
+End Discussion - 11:00
+
+
+
+
+
+
+Updates to project:
+	- Use little person to display location
+	- Disable legend for map to get rid of indicators
+	- Look into other map styles (less colour?)
+	- Notification on app open to turn on bluetooth (check blue tooth)
+	- Dashboard screen, use single page instead of buttons with scrollable collapsable list
+	- On main screen, add slider to adjust displaying preferred/all/no notifications
+	- On main screen, add filter for preferred business
+	- Send notification to display end of visit, thank you, points accumulated, duration
+	- Send notification at start of visit showing all deals/coupons
+	- Tiers for notifications:
+		- All
+		- Preferred businesses
+		- Only if user is in the store
+	- Default test formula: 150 points for 15-30 min (lower points for longer and shorter visit) + 300 points for visit
+
+
+New Additional Components:
+	- Eat/Shop filter buttons (see wireframe)
+	- Red circle showing walking distance, only display promotions/stores within circle
+	- Store address/phone #, etc. on sign up
+	- Feed on dashboard be proximity based (filters or ordering)
+	- Option for preferred business (on notification at end of visit)
+	- App admin
+	- Allow business to configure own point formula
+	- Button for businesses to send promotion to best customers
+	- List of best customers (allow businesses to select how many to view)
+	
